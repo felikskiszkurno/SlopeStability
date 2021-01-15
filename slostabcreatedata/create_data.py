@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on 
+Created on 15.01.2021
 
-@author: 
+@author: Feliks Kiszkurno
 """
 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
-def create_data(tests_horizontal):
+import pygimli as pg
+import pygimli.meshtools as mt
+import pygimli.physics.ert as ert
+
+
+def create_data(test_name, test_config):
 
     world_boundary_v = [-200, 0]  # [right, left border] relatively to the middle
     world_boundary_h = [200, -100]  # [top, bottom border]
@@ -16,14 +24,14 @@ def create_data(tests_horizontal):
     test_results_grid = {}
     test_input = {}
 
-    test_name = 'hor_1'
+    #test_name = 'hor_1'
 
-    for test_name in tests_horizontal['']
+
     # tests_horizontal['layers_pos'][test_name] = [-5]
 
     # INPUT MODEL - SUBSURFACE START #
     world = mt.createWorld(start=world_boundary_v, end=world_boundary_h,
-                           layers=tests_horizontal['layers_pos'][test_name])  # ,
+                           layers=test_config['layers_pos'])  # ,
     # marker=np.linspace(1, tests_horizontal['layer_n']['hor_1'],
     #                  tests_horizontal['layer_n']['hor_1']))
 
@@ -36,7 +44,7 @@ def create_data(tests_horizontal):
 
     mesh = mt.createMesh(geometry, quality=34)  # , area=2)#
 
-    resistivity_map = tests_horizontal['rho_values'][test_name]  # [0]
+    resistivity_map = test_config['rho_values']  # [0]
     # resistivity_map[0] = [1, 50.0]
     # resistivity_map[1] = [2, 150.0]
 
