@@ -3,5 +3,10 @@
 """
 Created on 
 
-@author: 
+@author: Feliks Kiszkurno
 """
+
+
+def combine_results():
+
+    return

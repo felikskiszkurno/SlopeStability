@@ -3,5 +3,9 @@
 """
 Created on 
 
-@author: 
+@author: Feliks Kiszkurno
 """
+
+def run_all_tests():
+
+    return

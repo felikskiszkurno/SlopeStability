@@ -69,7 +69,11 @@ def model_params(n_of_tests, rho_spread, rho_max, layers_n_min, layers_n_max, de
 
         while layer < test_n_layers[test_names[test_id]] + 1:
 
-            new_rho = int(random.rand(1)[0] * rho_max)
+            new_rho = 0
+
+            while new_rho == 0:
+
+                new_rho = int(random.rand(1)[0] * rho_max)
 
             if len(rho_temp) == 0:
 

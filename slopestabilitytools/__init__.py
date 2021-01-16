@@ -14,6 +14,8 @@ directory_structure: create directory structure to contain figures and other fil
 
 from .model_params import model_params
 from .plot_and_save import plot_and_save
+from .set_labels import set_labels
+from .set_diff import set_diff
 
 from .folder_structure.create_folder_structure import create_folder_structure
 from .folder_structure.create_folder_for_test import create_folder_for_test

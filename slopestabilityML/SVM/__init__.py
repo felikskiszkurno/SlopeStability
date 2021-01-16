@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on 
+Created on 16.01.2021
 
-@author: 
+@author: Feliks Kiszkurno
 """
+
+from .svm_run import svm_run

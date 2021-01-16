@@ -19,6 +19,12 @@ def create_folder_structure():
     is_success = check_create_folder(folder_path)
     folder_path = os.getcwd() + '/results/figures/'
     is_success = check_create_folder(folder_path)
+    folder_path = os.getcwd() + '/results/figures/pdf'
+    is_success = check_create_folder(folder_path)
+    folder_path = os.getcwd() + '/results/figures/eps'
+    is_success = check_create_folder(folder_path)
+    folder_path = os.getcwd() + '/results/figures/png'
+    is_success = check_create_folder(folder_path)
 
     # Folder for results
     folder_path = os.getcwd()+'/results/'
