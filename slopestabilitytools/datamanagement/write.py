@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on 
+Created on 17.01.2021
 
-@author: 
+@author: Feliks Kiszkurno
 """
+
+
+def read_to_pandas():
+
+    return

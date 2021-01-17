@@ -23,7 +23,7 @@ import pygimli.physics.ert as ert
 is_success = slopestabilitytools.folder_structure.create_folder_structure()
 
 # Settings
-number_of_tests = 2
+number_of_tests = 10
 rho_spread_factor = 1.5
 rho_max = 150
 layers_min = 1
@@ -50,4 +50,4 @@ for test_name in tests_horizontal.keys():
     slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: '+test_name)
 
 
-slopestabilityML.svm_run(test_results)
+svm_accuracy_score, svm_accuracy_labels = slopestabilityML.svm_run(test_results)
