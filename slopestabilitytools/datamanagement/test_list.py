@@ -8,6 +8,8 @@ Created on 17.01.2021
 
 import os
 
+# TODO Add more flexibility in the way, that the path is handled
+
 
 def test_list(extension):
 
@@ -19,7 +21,12 @@ def test_list(extension):
     for file in file_list:
 
         test_names.append(file[:file.find(extension)])
+        print(file[:file.find(extension)])
 
-    test_names = test_names.sort()
+    print('start')
+    print(test_names)
+    print('end')
+    test_names = sorted(test_names)
+    print(test_names)
 
     return test_names

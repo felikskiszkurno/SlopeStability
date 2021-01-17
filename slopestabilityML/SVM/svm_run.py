@@ -26,7 +26,7 @@ def svm_run(test_results):
                                      k=math.ceil(test_number * 0.1))
 
     test_training = slopestabilitytools.set_diff(list(test_results.keys()), set(test_prediction))
-
+    print(test_prediction)
     # Create classifier
     clf = svm.SVC(gamma=0.001, C=100, kernel='linear')
 
@@ -35,7 +35,7 @@ def svm_run(test_results):
     for test_name in test_training:
         # Prepare data
         data_set = test_results[test_name]
-        x_train = data_set.drop('Z', 'INM', 'CLASS')
+        x_train = data_set.drop(['Z', 'INM', 'CLASS'], axis='columns')
         y_train = data_set['CLASS']
 
         # Train classifier
@@ -44,8 +44,10 @@ def svm_run(test_results):
     # Predict with classfier
     for test_name_pred in test_prediction:
         # Prepare data
-        data_set_pred = test_prediction[test_name_pred]
-        x_question = data_set_pred.drop('Z', 'INM', 'CLASS')
+
+        data_set_pred = test_results[test_name_pred]
+        print(data_set_pred)
+        x_question = data_set_pred.drop(['Z', 'INM', 'CLASS'], axis='columns')
         y_answer = data_set_pred['CLASS']
 
         y_pred = clf.predict(x_question)

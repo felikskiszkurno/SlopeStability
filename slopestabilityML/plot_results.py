@@ -11,13 +11,15 @@ import matplotlib.pyplot as plt
 
 def plot_results(accuracy_labels, accuracy_score):
 
-    plt.figure()
-    plt.scatter(accuracy_labels, accuracy_score)
-    plt.ylabel('Test name')
-    plt.xlabel('Correct points [%]')
+    fig = plt.figure()
+    ax = plt.subplot(111)
+    ax.scatter(accuracy_labels, accuracy_score)
+    plt.xlabel('Test name')
+    plt.ylabel('Correct points [%]')
     plt.title('SVM classification accuracy')
-    plt.savefig('results/figures/SVM.eps')
-    plt.savefig('results/figures/SVM.pdf')
-    plt.savefig('results/figures/SVM.png')
+    print('plot script is executed')
+    fig.savefig('results/figures/SVM.eps')
+    fig.savefig('results/figures/SVM.pdf')
+    fig.savefig('results/figures/SVM.png')
 
     return
