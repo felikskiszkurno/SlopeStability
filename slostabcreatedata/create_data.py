@@ -54,20 +54,20 @@ def create_data(test_name, test_config, max_depth):
     model_inverted = ert_manager.invert(data=data, lam=20, paraDX=0.25, paraMaxCellSize=5, paraDepth=max_depth,
                                         quality=34,
                                         zPower=0.4)
-    result = ert_manager.inv.model
-    result_array = result.array()
+    #result = ert_manager.inv.model
+    #result_array = result.array()
 
-    input_model2 = pg.interpolate(srcMesh=mesh, inVec=input_model, destPos=ert_manager.paraDomain.cellCenters())
+    #input_model2 = pg.interpolate(srcMesh=mesh, inVec=input_model, destPos=ert_manager.paraDomain.cellCenters())
 
-    input_model2_array = input_model2.array()
+    ##input_model2_array = input_model2.array()
 
-    experiment_results = pd.DataFrame(data={'X': ert_manager.paraDomain.cellCenters().array()[:, 0],
-                                            'Y': ert_manager.paraDomain.cellCenters().array()[:, 1],
-                                            'Z': ert_manager.paraDomain.cellCenters().array()[:, 2],
-                                            'INM': input_model2_array,
-                                            'RES': result_array,
-                                            'INPUT_MODEL': input_model2,
-                                            'RESULT': result})
+    # experiment_results = pd.DataFrame(data={'X': ert_manager.paraDomain.cellCenters().array()[:, 0],
+    #                                         'Y': ert_manager.paraDomain.cellCenters().array()[:, 1],
+    #                                         'Z': ert_manager.paraDomain.cellCenters().array()[:, 2],
+    #                                         'INM': input_model2_array,
+    #                                         'RES': result_array,
+    #                                         'INPUT_MODEL': input_model2,
+    #                                         'RESULT': result})
 
     # experiment_results.to_csv('results/results/'+test_name+'.csv')
 
@@ -80,16 +80,24 @@ def create_data(test_name, test_config, max_depth):
     input_model3 = pg.interpolate(srcMesh=mesh, inVec=input_model, destPos=grid.cellCenters())
     result_grid = ert_manager.invert(data=data, mesh=grid, lam=20, paraDX=0.25, paraMaxCellSize=5, paraDepth=max_depth, quality=34,
                                     zPower=0.4)
-    class_array = np.asarray(result_grid)
+
+    class_array = np.ones_like(input_model3) * resistivity_map[-1][0]
+    layer_id = 1
+    layer_depth_previous = 0
+
+    for depth in test_config['layers_pos']:
+
+        class_array[np.where((grid.cellCenters().array()[:, 1] >= depth) & (
+                    grid.cellCenters().array()[:, 1] < layer_depth_previous))] = layer_id
+        layer_depth_previous = depth
+        layer_id += 1
 
     experiment_results_grid = pd.DataFrame(data={'X': grid.cellCenters().array()[:, 0],
                                                  'Y': grid.cellCenters().array()[:, 1],
                                                  'Z': grid.cellCenters().array()[:, 2],
                                                  'INM': input_model3.array(),
                                                  'RES': result_grid.array(),
-                                                 'INPUT_MODEL': input_model3,
-                                                 'RESULT': result_grid,
-                                                 'CLASS': })
+                                                 'CLASS': class_array})
 
     experiment_results_grid.to_csv('results/results/' + test_name + '.csv')
 

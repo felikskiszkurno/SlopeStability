@@ -11,12 +11,13 @@ import slopestabilitytools
 import random
 import math
 
+
 def svm_run(test_results):
     # https://stackabuse.com/implementing-svm-and-kernel-svm-with-pythons-scikit-learn/
 
     test_number = len(test_results.keys())
-    test_prediction = random.choice(list(test_results.keys()),
-                                    k=math.ceil(test_number*0.1))
+    test_prediction = random.choices(list(test_results.keys()),
+                                     k=math.ceil(test_number * 0.1))
 
     test_training = slopestabilitytools.set_diff(list(test_results.keys()), set(test_prediction))
 
@@ -26,7 +27,6 @@ def svm_run(test_results):
     # Train classifier
 
     for test_name in test_training:
-
         # Prepare data
         data_set = test_results[test_name]
         X = data_set.drop('Z', '')
