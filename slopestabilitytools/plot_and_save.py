@@ -8,6 +8,7 @@ Created on 15.01.2021
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import slopestabilitytools
 
 
@@ -19,19 +20,29 @@ def plot_and_save(test_name, test_result, plot_title):
     inm = test_result['INM']
     res = test_result['RES']
 
+    x_vec = np.unique(np.array(x))
+    y_vec = np.unique(np.array(y))
+    print(y_vec)
+    X, Y = np.meshgrid(x_vec, y_vec)
+    [m, n] = X.shape
+    inm_plot = np.array(inm).reshape((m, n))
+    res_plot = np.array(res).reshape((m, n))
+    print('plot_and_save')
+    print(X)
+
     fig, ax = plt.subplots(3)
 
     fig.suptitle(plot_title)
-    
-    ax[0].scatter(x, y, inm)
+
+    ax[0].contourf(X, Y, inm_plot)
     ax[0].set_title('Input model')
     ax[0] = slopestabilitytools.set_labels(ax[0])
 
-    ax[1].scatter(x, y, res)
+    ax[1].contourf(X, Y, res_plot)
     ax[1].set_title('Result')
     ax[1] = slopestabilitytools.set_labels(ax[0])
 
-    ax[2].scatter(x, y, inm-res)
+    ax[2].contourf(X, Y, inm_plot-res_plot)
     ax[2].set_title('Difference')
     ax[2] = slopestabilitytools.set_labels(ax[0])
 
