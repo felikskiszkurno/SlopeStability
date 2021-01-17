@@ -20,7 +20,7 @@ import pygimli.meshtools as mt
 import pygimli.physics.ert as ert
 
 # Config
-create_new_data = False
+create_new_data = True
 
 # Prepare folder structure for output
 is_success = slopestabilitytools.folder_structure.create_folder_structure()
@@ -34,7 +34,7 @@ else:
     # TODO Put this part into a function
 
     # Settings
-    number_of_tests = 10
+    number_of_tests = 50
     rho_spread_factor = 1.5
     rho_max = 150
     layers_min = 1
