@@ -21,12 +21,7 @@ def test_list(extension):
     for file in file_list:
 
         test_names.append(file[:file.find(extension)])
-        print(file[:file.find(extension)])
 
-    print('start')
-    print(test_names)
-    print('end')
     test_names = sorted(test_names)
-    print(test_names)
 
     return test_names

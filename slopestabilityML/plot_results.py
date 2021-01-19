@@ -9,17 +9,17 @@ Created on 17.01.2021
 import matplotlib.pyplot as plt
 
 
-def plot_results(accuracy_labels, accuracy_score):
+def plot_results(accuracy_labels, accuracy_score, clf_name):
 
     fig = plt.figure()
     ax = plt.subplot(111)
     ax.scatter(accuracy_labels, accuracy_score)
     plt.xlabel('Test name')
     plt.ylabel('Correct points [%]')
-    plt.title('SVM classification accuracy')
+    plt.title(clf_name+' classification accuracy')
     print('plot script is executed')
-    fig.savefig('results/figures/SVM.eps')
-    fig.savefig('results/figures/SVM.pdf')
-    fig.savefig('results/figures/SVM.png')
+    fig.savefig('results/figures/'+clf_name+'.eps')
+    fig.savefig('results/figures/'+clf_name+'.pdf')
+    fig.savefig('results/figures/'+clf_name+'.png')
 
     return

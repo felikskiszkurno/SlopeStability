@@ -103,7 +103,6 @@ def model_params(n_of_tests, rho_spread, rho_max, layers_n_min, layers_n_max, de
         layer_id = 1
 
         for rho in rho_temp:
-            print(rho)
             rho_final.append([layer_id, rho])
             layer_id += 1
 

@@ -15,20 +15,17 @@ import slopestabilitytools
 def plot_and_save(test_name, test_result, plot_title):
 
     x = test_result['X']
-    print(x)
     y = test_result['Y']
     inm = test_result['INM']
     res = test_result['RES']
 
     x_vec = np.unique(np.array(x))
     y_vec = np.unique(np.array(y))
-    print(y_vec)
     X, Y = np.meshgrid(x_vec, y_vec)
     [m, n] = X.shape
     inm_plot = np.array(inm).reshape((m, n))
     res_plot = np.array(res).reshape((m, n))
     print('plot_and_save')
-    print(X)
 
     fig, ax = plt.subplots(3)
 

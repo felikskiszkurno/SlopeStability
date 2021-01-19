@@ -61,4 +61,6 @@ else:
 
 for test_name in test_results.keys():
     slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
-svm_accuracy_score, svm_accuracy_labels = slopestabilityML.svm_run(test_results)
+
+ml_results = slopestabilityML.run_all_tests(test_results)
+#svm_accuracy_score, svm_accuracy_labels = slopestabilityML.svm_run(test_results)
