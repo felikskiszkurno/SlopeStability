@@ -12,6 +12,6 @@ import matplotlib.pyplot as plt
 def set_labels(axis_obj):
 
     axis_obj.set_xlabel('X [m]')
-    axis_obj.set_xlabel('Depth [m]')
+    axis_obj.set_ylabel('Depth [m]')
 
     return axis_obj

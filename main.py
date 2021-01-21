@@ -21,6 +21,7 @@ import pygimli.physics.ert as ert
 
 # Config
 create_new_data = False
+create_new_data_only = False
 
 # Prepare folder structure for output
 is_success = slopestabilitytools.folder_structure.create_folder_structure()
@@ -34,13 +35,13 @@ else:
     # TODO Put this part into a function
 
     # Settings
-    number_of_tests = 10
+    number_of_tests = 5
     rho_spread_factor = 1.5
-    rho_max = 150
+    rho_max = 20
     layers_min = 1
-    layers_max = 5
-    min_depth = 1
-    max_depth = 25
+    layers_max = 3
+    min_depth = 2
+    max_depth = 10
 
     # Generate parameters for tests
     tests_horizontal = slopestabilitytools.model_params(number_of_tests,
@@ -59,8 +60,11 @@ else:
         # Plot and save figures
         slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
 
-for test_name in test_results.keys():
-    slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
+if not create_new_data_only:
+    for test_name in test_results.keys():
+        slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
 
-ml_results = slopestabilityML.run_all_tests(test_results)
-#svm_accuracy_score, svm_accuracy_labels = slopestabilityML.svm_run(test_results)
+    ml_results = slopestabilityML.run_all_tests(test_results)
+    # svm_accuracy_score, svm_accuracy_labels = slopestabilityML.svm_run(test_results)
+elif create_new_data_only:
+    print('Done')
