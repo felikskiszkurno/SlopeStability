@@ -56,6 +56,7 @@ def run_classification(test_training, test_prediction, test_results, clf):
         score = clf_pipeline_UM.score(x_question, y_answer)
         # print('score: '+str(score))
 
+        # TODO: Move plotting to a function for plotting a, b and a-b
         x = test_results[test_name_pred]['X']
         y = test_results[test_name_pred]['Y']
         class_in = test_results[test_name]['CLASS']
@@ -114,7 +115,8 @@ def run_classification(test_training, test_prediction, test_results, clf):
         fig.savefig('results/figures/pdf/{}_ML_class_res.pdf'.format(test_name_pred))
 
         # Evaluate result
-        accuracy_score.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
+        #accuracy_score.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
+        accuracy_score.append(score)
         accuracy_labels.append(test_name_pred)
 
     return accuracy_labels, accuracy_score

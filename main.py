@@ -20,8 +20,8 @@ import pygimli.meshtools as mt
 import pygimli.physics.ert as ert
 
 # Config
-create_new_data = False
-create_new_data_only = False
+create_new_data = True
+create_new_data_only = True
 
 # Prepare folder structure for output
 is_success = slopestabilitytools.folder_structure.create_folder_structure()
@@ -35,25 +35,25 @@ else:
     # TODO Put this part into a function
 
     # Settings
-    number_of_tests = 5
+    number_of_tests = 100
     rho_spread_factor = 1.5
-    rho_max = 10
+    rho_max = 25
     layers_min = 1
-    layers_max = 1
+    layers_max = 2
     min_depth = 4
-    max_depth = 8
+    max_depth = 15
 
     # Generate parameters for tests
-    # tests_horizontal = slopestabilitytools.model_params(number_of_tests,
-    #                                                     rho_spread_factor, rho_max,
-    #                                                     layers_min, layers_max,
-    #                                                     min_depth, max_depth)
+    tests_horizontal = slopestabilitytools.model_params(number_of_tests,
+                                                        rho_spread_factor, rho_max,
+                                                        layers_min, layers_max,
+                                                        min_depth, max_depth)
 
-    tests_horizontal = {'hor_1': {'layer_n': 1, 'rho_values': [[1, 5], [2, 15]], 'layers_pos': np.array([-5])},
-                        'hor_2': {'layer_n': 1, 'rho_values': [[1, 5], [2, 50]], 'layers_pos': np.array([-5])},
-                        'hor_3': {'layer_n': 1, 'rho_values': [[1, 15], [2, 20]], 'layers_pos': np.array([-8])},
-                        'hor_4': {'layer_n': 1, 'rho_values': [[1, 5], [2, 10]], 'layers_pos': np.array([-3])},
-                        'hor_5': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-3])}}
+    # tests_horizontal = {'hor_1': {'layer_n': 1, 'rho_values': [[1, 5], [2, 15]], 'layers_pos': np.array([-5])},
+    #                     'hor_2': {'layer_n': 1, 'rho_values': [[1, 5], [2, 50]], 'layers_pos': np.array([-5])},
+    #                     'hor_3': {'layer_n': 1, 'rho_values': [[1, 15], [2, 20]], 'layers_pos': np.array([-8])},
+    #                     'hor_4': {'layer_n': 1, 'rho_values': [[1, 5], [2, 10]], 'layers_pos': np.array([-3])},
+    #                     'hor_5': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-3])}}
 
     #  Create models and invert them
     test_results = {}

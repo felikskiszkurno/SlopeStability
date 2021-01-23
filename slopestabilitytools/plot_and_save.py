@@ -42,6 +42,7 @@ def plot_and_save(test_name, test_result, plot_title):
     print('plot_and_save')
 
     # Plot data input, inversion result and difference
+    # TODO: Move plotting to a function for plotting a, b and a-b
     cb = []
 
     fig, _ax = plt.subplots(nrows=3, ncols=1)
