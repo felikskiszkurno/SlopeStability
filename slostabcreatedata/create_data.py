@@ -16,8 +16,10 @@ import pygimli.physics.ert as ert
 
 
 def create_data(test_name, test_config, max_depth):
-    world_boundary_v = [-20 * max_depth, 0]  # [right, left border] relatively to the middle
-    world_boundary_h = [20 * max_depth, -4 * max_depth]  # [top, bottom border]
+    world_boundary_v = [-20 * max_depth, 0]  # [NW edge] relatively to the middle
+    world_boundary_h = [20 * max_depth, -5 * max_depth]  # [SE edge]
+    # world_boundary_v = [-500, 0]  # [right, left border] relatively to the middle
+    # world_boundary_h = [500, -100]  # [top, bottom border]
 
     test_results = {}
 
@@ -29,7 +31,12 @@ def create_data(test_name, test_config, max_depth):
 
     geometry = world  # +block
 
-    measurement_scheme = ert.createERTData(elecs=np.linspace(start=-5*max_depth, stop=5*max_depth, num=6*max_depth+1),
+    fig_geometry, ax_geometry = plt.subplots(1)
+    pg.show(geometry, ax=ax_geometry)
+    ax_geometry.set_title('1 Geometry of the model')
+    fig_geometry.savefig('results/figures/png/'+test_name+'_1_geometry.png')
+
+    measurement_scheme = ert.createERTData(elecs=np.linspace(start=-8*max_depth, stop=8*max_depth, num=16*max_depth+1),
                                            schemeName='dd')
 
     for electrode in measurement_scheme.sensors():
@@ -39,6 +46,11 @@ def create_data(test_name, test_config, max_depth):
     mesh = mt.createMesh(geometry, quality=34)  # , area=2)#
 
     resistivity_map = test_config['rho_values']  # [0]
+
+    fig_model, ax_model = plt.subplots(1)
+    pg.show(mesh, data=resistivity_map, label=pg.unit('res'), showMesh=True, ax=ax_model)
+    ax_model.set_title('2 Mesh and resistivity distribution')
+    fig_model.savefig('results/figures/png/' + test_name + '_2_meshdist.png')
 
     input_model = pg.solver.parseMapToCellArray(resistivity_map, mesh)  # rename to input_mesh
 
@@ -53,15 +65,25 @@ def create_data(test_name, test_config, max_depth):
 
     # RUN INVERSION #
     k0 = pg.physics.ert.createGeometricFactors(data)
-    model_inverted = ert_manager.invert(data=data, lam=20, paraDX=0.1, paraMaxCellSize=2, paraDepth=max_depth,
+    model_inverted = ert_manager.invert(data=data, lam=20, paraDX=0.25, paraMaxCellSize=2, paraDepth=2*max_depth,
                                         quality=34, zPower=0.4)
 
     result = ert_manager.inv.model
     result_array = result.array()
 
+    fig_result, ax_result = plt.subplots(1)
+    pg.show(ert_manager.paraDomain, result, label=pg.unit('res'), showMesh=True, ax=ax_result)
+    ax_result.set_title('3 Result')
+    fig_result.savefig('results/figures/png/' + test_name + '_3_result.png')
+
     input_model2 = pg.interpolate(srcMesh=mesh, inVec=input_model, destPos=ert_manager.paraDomain.cellCenters())
 
     input_model2_array = input_model2.array()
+
+    fig_input, ax_input = plt.subplots(1)
+    pg.show(ert_manager.paraDomain, input_model2, label=pg.unit('res'), showMesh=True, ax=ax_input)
+    ax_input.set_title('4 Model on inv mesh')
+    fig_input.savefig('results/figures/png/' + test_name + '_4_modelinv.png')
 
     # Create classes labels
     classes = []

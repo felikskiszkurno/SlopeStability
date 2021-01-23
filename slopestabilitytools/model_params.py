@@ -31,7 +31,10 @@ def model_params(n_of_tests, rho_spread, rho_max, layers_n_min, layers_n_max, de
     for test_id in range(n_of_tests):
 
         test_names[test_id] = 'hor_{}'.format(str(test_id + 1))
-        test_n_layers[test_names[test_id]] = np.random.randint(layers_n_min, layers_n_max)
+        if layers_n_max == layers_n_min:
+            test_n_layers[test_names[test_id]] = layers_n_max
+        else:
+            test_n_layers[test_names[test_id]] = np.random.randint(layers_n_min, layers_n_max)
         rho_temp = []
         rho_used = []
         layer_pos_temp = []
