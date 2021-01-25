@@ -20,8 +20,8 @@ import pygimli.meshtools as mt
 import pygimli.physics.ert as ert
 
 # Config
-create_new_data = True
-create_new_data_only = True
+create_new_data = False
+create_new_data_only = False
 
 # Prepare folder structure for output
 is_success = slopestabilitytools.folder_structure.create_folder_structure()
@@ -35,13 +35,13 @@ else:
     # TODO Put this part into a function
 
     # Settings
-    number_of_tests = 100
+    number_of_tests = 50
     rho_spread_factor = 1.5
-    rho_max = 25
+    rho_max = 20
     layers_min = 1
     layers_max = 2
     min_depth = 4
-    max_depth = 15
+    max_depth = 10
 
     # Generate parameters for tests
     tests_horizontal = slopestabilitytools.model_params(number_of_tests,
@@ -67,6 +67,7 @@ else:
         slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
 
 if not create_new_data_only:
+    print('Running ML stuff...')
     #for test_name in test_results.keys():
         #slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
 

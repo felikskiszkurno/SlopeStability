@@ -17,7 +17,7 @@ def split_dataset(test_names, random_seed):
 
     test_number = len(test_names)
     test_prediction = random.choices(list(test_names),
-                                     k=math.ceil(test_number * 0.1))
+                                     k=math.ceil(test_number * 0.25))
 
     test_training = slopestabilitytools.set_diff(list(test_names), set(test_prediction))
 

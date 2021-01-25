@@ -22,7 +22,8 @@ def gbc_run(test_results, random_seed):
     clf = ensemble.GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
 
     # Train classifier
-    accuracy_labels, accuracy_score = slopestabilityML.run_classification(test_training, test_prediction, test_results, clf)
+    accuracy_labels, accuracy_score = slopestabilityML.run_classification(test_training, test_prediction, test_results,
+                                                                          clf, 'GBC')
 
     # Plot
     slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'GBC')

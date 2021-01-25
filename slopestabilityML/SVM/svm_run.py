@@ -28,7 +28,8 @@ def svm_run(test_results, random_seed):
     clf = svm.SVC(gamma=0.001, C=100, kernel='linear')
 
     # Train classifier
-    accuracy_labels, accuracy_score = slopestabilityML.run_classification(test_training, test_prediction, test_results, clf)
+    accuracy_labels, accuracy_score = slopestabilityML.run_classification(test_training, test_prediction, test_results,
+                                                                          clf, 'SVM')
 
     # for test_name in test_training:
     #

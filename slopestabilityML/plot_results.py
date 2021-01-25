@@ -18,8 +18,8 @@ def plot_results(accuracy_labels, accuracy_score, clf_name):
     plt.ylabel('Correct points [%]')
     plt.title(clf_name+' classification accuracy')
     print('plot script is executed')
-    fig.savefig('results/figures/'+clf_name+'.eps')
-    fig.savefig('results/figures/'+clf_name+'.pdf')
-    fig.savefig('results/figures/'+clf_name+'.png')
+    fig.savefig('results/figures/ML/'+clf_name+'.eps')
+    fig.savefig('results/figures/ML/'+clf_name+'.pdf')
+    fig.savefig('results/figures/ML/'+clf_name+'.png')
 
     return

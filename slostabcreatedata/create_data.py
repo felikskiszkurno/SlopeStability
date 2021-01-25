@@ -36,7 +36,7 @@ def create_data(test_name, test_config, max_depth):
     ax_geometry.set_title('1 Geometry of the model')
     fig_geometry.savefig('results/figures/png/'+test_name+'_1_geometry.png')
 
-    measurement_scheme = ert.createERTData(elecs=np.linspace(start=-8*max_depth, stop=8*max_depth, num=16*max_depth+1),
+    measurement_scheme = ert.createERTData(elecs=np.linspace(start=-8*max_depth, stop=8*max_depth, num=8*max_depth+1),
                                            schemeName='dd')
 
     for electrode in measurement_scheme.sensors():

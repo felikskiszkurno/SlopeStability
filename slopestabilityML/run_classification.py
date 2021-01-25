@@ -18,21 +18,21 @@ from scipy import interpolate
 import slopestabilitytools
 
 
-def run_classification(test_training, test_prediction, test_results, clf):
+def run_classification(test_training, test_prediction, test_results, clf, clf_name):
 
     accuracy_score = []
     accuracy_labels = []
 
     num_feat = ['RES', 'SEN']
-    cat_feat = ['CLASS']
+    #cat_feat = ['CLASS']
 
     cat_lab = [0, 1]
 
     num_trans = StandardScaler()
-    cat_trans = OneHotEncoder(categories=[cat_lab])
+    #cat_trans = OneHotEncoder(categories=[cat_lab])
 
-    preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat),
-                                                   ('cat', cat_trans, cat_feat)])
+    preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat),])
+                                                   #('cat', cat_trans, cat_feat)])
 
     clf_pipeline_UM = make_pipeline(preprocessor, clf)
 
@@ -54,7 +54,7 @@ def run_classification(test_training, test_prediction, test_results, clf):
         y_pred = clf_pipeline_UM.predict(x_question)
         # print(y_pred)
         score = clf_pipeline_UM.score(x_question, y_answer)
-        # print('score: '+str(score))
+        print('score: '+str(score))
 
         # TODO: Move plotting to a function for plotting a, b and a-b
         x = test_results[test_name_pred]['X']
@@ -83,7 +83,7 @@ def run_classification(test_training, test_prediction, test_results, clf):
         fig, _ax = plt.subplots(nrows=3, ncols=1)
         ax = _ax.flatten()
 
-        fig.suptitle(test_name_pred)
+        fig.suptitle(test_name_pred+' '+clf_name)
         fig.subplots_adjust(hspace=0.8)
 
         im0 = ax[0].contourf(xi, yi, class_in_i)
@@ -110,9 +110,9 @@ def run_classification(test_training, test_prediction, test_results, clf):
         cb[2].locator = tick_locator
         cb[2].update_ticks()
 
-        fig.savefig('results/figures/eps/{}_ML_class_res.eps'.format(test_name_pred))
-        fig.savefig('results/figures/png/{}_ML_class_res.png'.format(test_name_pred))
-        fig.savefig('results/figures/pdf/{}_ML_class_res.pdf'.format(test_name_pred))
+        fig.savefig('results/figures/ML/eps/{}_ML_{}_class_res.eps'.format(test_name_pred, clf_name))
+        fig.savefig('results/figures/ML/png/{}_ML_{}_class_res.png'.format(test_name_pred, clf_name))
+        fig.savefig('results/figures/ML/pdf/{}_ML_{}_class_res.pdf'.format(test_name_pred, clf_name))
 
         # Evaluate result
         #accuracy_score.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
