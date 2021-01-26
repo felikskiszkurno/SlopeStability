@@ -21,4 +21,4 @@ def split_dataset(test_names, random_seed):
 
     test_training = slopestabilitytools.set_diff(list(test_names), set(test_prediction))
 
-    return test_training, test_prediction
+    return sorted(test_training), sorted(test_prediction)

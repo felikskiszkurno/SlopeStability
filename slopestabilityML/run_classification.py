@@ -16,12 +16,16 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 from scipy import interpolate
 import slopestabilitytools
+from pathlib import Path
 
 
 def run_classification(test_training, test_prediction, test_results, clf, clf_name):
 
     accuracy_score = []
     accuracy_labels = []
+
+    accuracy_score_training = []
+    accuracy_labels_training = []
 
     num_feat = ['RES', 'SEN']
     #cat_feat = ['CLASS']
@@ -44,6 +48,10 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         # print(type(x_train))
         # print(type(y_train))
         clf_pipeline_UM.fit(x_train, y_train)
+        score_training = clf_pipeline_UM.score(x_train, y_train)
+
+        accuracy_score_training.append(score_training * 100)
+        accuracy_labels_training.append(test_name)
 
     # Predict with classifier
     for test_name_pred in test_prediction:
@@ -105,19 +113,20 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         im2 = ax[2].contourf(xi, yi, class_diff)
         ax[2].set_title('Difference')
         ax[2] = slopestabilitytools.set_labels(ax[2])
-        cb.append(plt.colorbar(im2, ax=ax[2], label='Resistivity [om]'))  # , shrink=0.9)
+        cb.append(plt.colorbar(im2, ax=ax[2], label='Is class correct?'))  # , shrink=0.9)
         tick_locator = ticker.MaxNLocator(nbins=4)
         cb[2].locator = tick_locator
         cb[2].update_ticks()
 
-        fig.savefig('results/figures/ML/eps/{}_ML_{}_class_res.eps'.format(test_name_pred, clf_name))
-        fig.savefig('results/figures/ML/png/{}_ML_{}_class_res.png'.format(test_name_pred, clf_name))
-        fig.savefig('results/figures/ML/pdf/{}_ML_{}_class_res.pdf'.format(test_name_pred, clf_name))
+        fig.tight_layout()
+        fig.savefig(Path('results/figures/ML/prediction/eps/{}_ML_{}_class_res.eps'.format(test_name_pred, clf_name)), bbox_inches="tight")
+        fig.savefig(Path('results/figures/ML/prediction/png/{}_ML_{}_class_res.png'.format(test_name_pred, clf_name)), bbox_inches="tight")
+        fig.savefig(Path('results/figures/ML/prediction/pdf/{}_ML_{}_class_res.pdf'.format(test_name_pred, clf_name)), bbox_inches="tight")
 
         # Evaluate result
         #accuracy_score.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
-        accuracy_score.append(score)
+        accuracy_score.append(score*100)
         accuracy_labels.append(test_name_pred)
 
-    return accuracy_labels, accuracy_score
+    return accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training
 

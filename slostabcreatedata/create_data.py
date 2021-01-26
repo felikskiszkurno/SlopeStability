@@ -14,6 +14,8 @@ import pygimli as pg
 import pygimli.meshtools as mt
 import pygimli.physics.ert as ert
 
+import slopestabilitytools
+
 
 def create_data(test_name, test_config, max_depth):
     world_boundary_v = [-20 * max_depth, 0]  # [NW edge] relatively to the middle
@@ -33,8 +35,12 @@ def create_data(test_name, test_config, max_depth):
 
     fig_geometry, ax_geometry = plt.subplots(1)
     pg.show(geometry, ax=ax_geometry)
+    ax_geometry = slopestabilitytools.set_labels(ax_geometry)
     ax_geometry.set_title('1 Geometry of the model')
-    fig_geometry.savefig('results/figures/png/'+test_name+'_1_geometry.png')
+    fig_geometry.tight_layout()
+    fig_geometry.savefig('results/figures/png/'+test_name+'_1_geometry.png', bbox_inches="tight")
+    fig_geometry.savefig('results/figures/pdf/' + test_name + '_1_geometry.pdf', bbox_inches="tight")
+    fig_geometry.savefig('results/figures/eps/' + test_name + '_1_geometry.eps', bbox_inches="tight")
 
     measurement_scheme = ert.createERTData(elecs=np.linspace(start=-8*max_depth, stop=8*max_depth, num=8*max_depth+1),
                                            schemeName='dd')
@@ -49,8 +55,12 @@ def create_data(test_name, test_config, max_depth):
 
     fig_model, ax_model = plt.subplots(1)
     pg.show(mesh, data=resistivity_map, label=pg.unit('res'), showMesh=True, ax=ax_model)
+    ax_model = slopestabilitytools.set_labels(ax_model)
     ax_model.set_title('2 Mesh and resistivity distribution')
-    fig_model.savefig('results/figures/png/' + test_name + '_2_meshdist.png')
+    fig_model.tight_layout()
+    fig_model.savefig('results/figures/png/' + test_name + '_2_meshdist.png', bbox_inches="tight")
+    fig_model.savefig('results/figures/pdf/' + test_name + '_2_meshdist.pdf', bbox_inches="tight")
+    fig_model.savefig('results/figures/eps/' + test_name + '_2_meshdist.eps', bbox_inches="tight")
 
     input_model = pg.solver.parseMapToCellArray(resistivity_map, mesh)  # rename to input_mesh
 
@@ -68,13 +78,22 @@ def create_data(test_name, test_config, max_depth):
     model_inverted = ert_manager.invert(data=data, lam=20, paraDX=0.25, paraMaxCellSize=2, paraDepth=2*max_depth,
                                         quality=34, zPower=0.4)
 
-    result = ert_manager.inv.model
-    result_array = result.array()
+    result_full = ert_manager.inv.model
+    #result_array = pg.utils.interperc(result_full, 5)
+    #result_lim = result_full.array()
+    #result_lim[np.where(result_array > max(resistivity_map[1]))] = float("NaN")
+    #result_lim[np.where(result_array < min(resistivity_map[1]))] = float("NaN") # min(resistivity_map[1])
+    #result_array = result_lim
+    result_array = result_full.array()
 
     fig_result, ax_result = plt.subplots(1)
-    pg.show(ert_manager.paraDomain, result, label=pg.unit('res'), showMesh=True, ax=ax_result)
+    pg.show(ert_manager.paraDomain, result_full, label=pg.unit('res'), showMesh=True, ax=ax_result)
+    ax_result = slopestabilitytools.set_labels(ax_result)
     ax_result.set_title('3 Result')
-    fig_result.savefig('results/figures/png/' + test_name + '_3_result.png')
+    fig_result.tight_layout()
+    fig_result.savefig('results/figures/png/' + test_name + '_3_result.png', bbox_inches="tight")
+    fig_result.savefig('results/figures/pdf/' + test_name + '_3_result.pdf', bbox_inches="tight")
+    fig_result.savefig('results/figures/eps/' + test_name + '_3_result.eps', bbox_inches="tight")
 
     input_model2 = pg.interpolate(srcMesh=mesh, inVec=input_model, destPos=ert_manager.paraDomain.cellCenters())
 
@@ -82,8 +101,12 @@ def create_data(test_name, test_config, max_depth):
 
     fig_input, ax_input = plt.subplots(1)
     pg.show(ert_manager.paraDomain, input_model2, label=pg.unit('res'), showMesh=True, ax=ax_input)
+    ax_input = slopestabilitytools.set_labels(ax_input)
     ax_input.set_title('4 Model on inv mesh')
-    fig_input.savefig('results/figures/png/' + test_name + '_4_modelinv.png')
+    fig_input.tight_layout()
+    fig_input.savefig('results/figures/png/' + test_name + '_4_modelinv.png', bbox_inches="tight")
+    fig_input.savefig('results/figures/pdf/' + test_name + '_4_modelinv.pdf', bbox_inches="tight")
+    fig_input.savefig('results/figures/eps/' + test_name + '_4_modelinv.eps', bbox_inches="tight")
 
     # Create classes labels
     classes = []
@@ -108,6 +131,16 @@ def create_data(test_name, test_config, max_depth):
     cov = ert_manager.coverage()
     #pg.show(ert_manager.paraDomain, cov, label="Logarithm of cumulative sensitivity")
 
+    rho_arr = []
+    for entry in resistivity_map:
+        rho_arr.append(entry[1])
+    rho_arr = np.array(rho_arr)
+    rho_max = np.max(rho_arr)
+    rho_min = np.min(rho_arr)
+
+    result_array[np.where(result_array < rho_min)] = rho_min
+    result_array[np.where(result_array > rho_max)] = rho_max
+
     experiment_results = pd.DataFrame(data={'X': ert_manager.paraDomain.cellCenters().array()[:, 0],
                                             'Y': ert_manager.paraDomain.cellCenters().array()[:, 1],
                                             'Z': ert_manager.paraDomain.cellCenters().array()[:, 2],
@@ -122,4 +155,6 @@ def create_data(test_name, test_config, max_depth):
 
     experiment_results.to_csv('results/results/' + test_name + '.csv')
 
-    return experiment_results
+
+
+    return experiment_results, rho_max, rho_min

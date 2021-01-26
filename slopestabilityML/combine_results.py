@@ -7,19 +7,45 @@ Created on 19.01.2021
 """
 
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def combine_results(ml_results):
 
+    # TODO avoid reusing the same code twice
+    # Predictions
     fig = plt.figure()
-    #ax = fig.subplots(1)
-    fig.suptitle('Accuracy of different ML methods')
+    ax = fig.subplots(1)
+    fig.suptitle('Accuracy of different ML methods: predictions')
 
-    for method_name in ml_results.keys():
-        plt.scatter(ml_results[method_name]['labels'], ml_results[method_name]['score'], label=method_name)
+    for method_name in sorted(ml_results.keys()):
+        plt.plot(ml_results[method_name]['labels'], ml_results[method_name]['score'], marker='x',
+                 label=method_name)
 
-    plt.legend(loc='best')
+    plt.xlabel('Test name')
+    plt.setp(ax.get_xticklabels(), rotation=45)
+    plt.ylabel('Correct points [%]')
+    plt.legend(loc='lower right')
 
-    fig.savefig('results/figures/ML_summary.eps')
-    fig.savefig('results/figures/ML_summary.png')
-    fig.savefig('results/figures/ML_summary.pdf')
+    fig.savefig(Path('results/figures/ML_summary_prediction.eps'))
+    fig.savefig(Path('results/figures/ML_summary_prediction.png'))
+    fig.savefig(Path('results/figures/ML_summary_prediction.pdf'))
+
+    # Training
+    fig = plt.figure()
+    ax = fig.subplots(1)
+    fig.suptitle('Accuracy of different ML methods - training')
+
+    for method_name in sorted(ml_results.keys()):
+        plt.plot(ml_results[method_name]['labels_training'], ml_results[method_name]['score_training'], marker='x',
+                 label=method_name)
+
+    plt.xlabel('Test name')
+    plt.setp(ax.get_xticklabels(), rotation=90)
+    plt.ylabel('Correct points [%]')
+    plt.legend(loc='lower right')
+
+    fig.tight_layout()
+    fig.savefig(Path('results/figures/ML_summary_training.eps'), bbox_inches="tight")
+    fig.savefig(Path('results/figures/ML_summary_training.png'), bbox_inches="tight")
+    fig.savefig(Path('results/figures/ML_summary_training.pdf'), bbox_inches="tight")

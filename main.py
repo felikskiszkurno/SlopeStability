@@ -59,12 +59,12 @@ else:
     test_results = {}
 
     for test_name in tests_horizontal.keys():
-        test_result_curr = slostabcreatedata.create_data(test_name, tests_horizontal[test_name], max_depth)
+        test_result_curr, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name, tests_horizontal[test_name], max_depth)
         test_results.update({test_name: test_result_curr})
         del test_result_curr
 
         # Plot and save figures
-        slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
+        slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max, test_rho_min)
 
 if not create_new_data_only:
     print('Running ML stuff...')

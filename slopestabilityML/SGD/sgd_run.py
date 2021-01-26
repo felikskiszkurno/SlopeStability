@@ -21,10 +21,11 @@ def sgd_run(test_results, random_seed):
     clf = SGDClassifier(loss="hinge", penalty="l2", max_iter=5)
 
     # Train classifier
-    accuracy_labels, accuracy_score = slopestabilityML.run_classification(test_training, test_prediction, test_results,
-                                                                          clf, 'SGD')
+    accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training = \
+        slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'SGD')
 
     # Plot
-    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SGD')
+    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SGD_prediction')
+    slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'SGD_training')
 
-    return accuracy_score, accuracy_labels
+    return accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training

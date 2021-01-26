@@ -14,7 +14,7 @@ def check_create_folder(folder_path):
     if os.path.isdir(folder_path):
         print("Folder for figures exists!")
     else:
-        os.mkdir(folder_path)
+        os.makedirs(folder_path)
         print("Created folder for figures!")
 
     return worked
