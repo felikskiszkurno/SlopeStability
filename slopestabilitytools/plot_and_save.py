@@ -12,6 +12,7 @@ from matplotlib import ticker
 from scipy import interpolate
 import numpy as np
 import slopestabilitytools
+from pathlib import Path
 
 
 def plot_and_save(test_name, test_result, plot_title):
@@ -75,9 +76,9 @@ def plot_and_save(test_name, test_result, plot_title):
     cb[2].locator = tick_locator
     cb[2].update_ticks()
 
-    fig.savefig('results/figures/eps/{}_in_inv_diff.eps'.format(test_name))
-    fig.savefig('results/figures/png/{}_in_inv_diff.png'.format(test_name))
-    fig.savefig('results/figures/pdf/{}_in_inv_diff.pdf'.format(test_name))
+    fig.savefig(Path('results/figures/eps/{}_in_inv_diff.eps'.format(test_name)))
+    fig.savefig(Path('results/figures/png/{}_in_inv_diff.png'.format(test_name)))
+    fig.savefig(Path('results/figures/pdf/{}_in_inv_diff.pdf'.format(test_name)))
 
     # Plot coverage
     cb_cov = []
@@ -93,8 +94,8 @@ def plot_and_save(test_name, test_result, plot_title):
     cb_cov.locator = tick_locator
     cb_cov.update_ticks()
 
-    fig_cov.savefig('results/figures/eps/{}_cov.eps'.format(test_name))
-    fig_cov.savefig('results/figures/png/{}_cov.png'.format(test_name))
-    fig_cov.savefig('results/figures/pdf/{}_cov.pdf'.format(test_name))
+    fig_cov.savefig(Path('results/figures/eps/{}_cov.eps'.format(test_name)))
+    fig_cov.savefig(Path('results/figures/png/{}_cov.png'.format(test_name)))
+    fig_cov.savefig(Path('results/figures/pdf/{}_cov.pdf'.format(test_name)))
 
     return

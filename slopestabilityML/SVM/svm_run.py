@@ -28,30 +28,12 @@ def svm_run(test_results, random_seed):
     clf = svm.SVC(gamma=0.001, C=100, kernel='linear')
 
     # Train classifier
-    accuracy_labels, accuracy_score = slopestabilityML.run_classification(test_training, test_prediction, test_results,
-                                                                          clf, 'SVM')
+    accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training = \
+        slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'SVM')
 
-    # for test_name in test_training:
-    #
-    #     # Prepare data
-    #     x_train, y_train = slopestabilityML.preprocess_data(test_results[test_name])
-    #
-    #     # Train classifier
-    #     clf.fit(x_train, y_train)
-    #
-    # # Predict with classfier
-    # for test_name_pred in test_prediction:
-    #
-    #     # Prepare data
-    #     x_question, y_answer = slopestabilityML.preprocess_data(test_results[test_name_pred])
-    #
-    #     y_pred = clf.predict(x_question)
-    #
-    #     # Evaluate result
-    #     accuracy_score.append(len(np.where(y_pred == y_answer)) / len(y_answer) * 100)
-    #     accuracy_labels.append(test_name_pred)
 
     # Plot
-    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SVM')
+    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SVM_prediction')
+    slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'SVM_training')
 
-    return accuracy_score, accuracy_labels
+    return accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training

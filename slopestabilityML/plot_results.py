@@ -7,19 +7,23 @@ Created on 17.01.2021
 """
 
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def plot_results(accuracy_labels, accuracy_score, clf_name):
 
+    clf_name_title = clf_name.replace("_", " ")
+
     fig = plt.figure()
     ax = plt.subplot(111)
-    ax.scatter(accuracy_labels, accuracy_score)
+    ax.plot(accuracy_labels, accuracy_score, marker='x')
+    plt.setp(ax.get_xticklabels(), rotation=45)
     plt.xlabel('Test name')
     plt.ylabel('Correct points [%]')
-    plt.title(clf_name+' classification accuracy')
+    plt.title(clf_name_title+' accuracy score')
     print('plot script is executed')
-    fig.savefig('results/figures/ML/'+clf_name+'.eps')
-    fig.savefig('results/figures/ML/'+clf_name+'.pdf')
-    fig.savefig('results/figures/ML/'+clf_name+'.png')
+    fig.savefig(Path('results/figures/ML/'+clf_name+'.eps'))
+    fig.savefig(Path('results/figures/ML/'+clf_name+'.pdf'))
+    fig.savefig(Path('results/figures/ML/'+clf_name+'.png'))
 
     return
