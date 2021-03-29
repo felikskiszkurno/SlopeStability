@@ -6,6 +6,7 @@ Created on 19.01.2021
 @author: Feliks Kiszkurno
 """
 
+import settings
 import slopestabilityML
 import numpy as np
 import pandas as pd
@@ -21,13 +22,25 @@ from pathlib import Path
 
 def run_classification(test_training, test_prediction, test_results, clf, clf_name):
 
+    # global settings
+
+
+
+
     accuracy_score = []
     accuracy_labels = []
 
     accuracy_score_training = []
     accuracy_labels_training = []
 
-    num_feat = ['RES', 'SEN']
+    if settings.settings['norm'] is True and settings.settings['sen'] is True:
+        num_feat = ['RESN', 'SEN']
+    elif settings.settings['norm'] is False and settings.settings['sen'] is True:
+        num_feat = ['RES', 'SEN']
+    elif settings.settings['norm'] is False and settings.settings['sen'] is False:
+        num_feat = ['RES']
+    elif settings.settings['norm'] is True and settings.settings['sen'] is False:
+        num_feat = ['RESN']
     #cat_feat = ['CLASS']
 
     cat_lab = [0, 1]
@@ -42,8 +55,9 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
     for test_name in test_training:
         # Prepare data
+        print(test_name)
         x_train, y_train = slopestabilityML.preprocess_data(test_results[test_name])
-
+        # print('stop')
         # Train classifier
         # print(type(x_train))
         # print(type(y_train))
@@ -119,9 +133,9 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         cb[2].update_ticks()
 
         fig.tight_layout()
-        fig.savefig(Path('results/figures/ML/prediction/eps/{}_ML_{}_class_res.eps'.format(test_name_pred, clf_name)), bbox_inches="tight")
+        # fig.savefig(Path('results/figures/ML/prediction/eps/{}_ML_{}_class_res.eps'.format(test_name_pred, clf_name)), bbox_inches="tight")
         fig.savefig(Path('results/figures/ML/prediction/png/{}_ML_{}_class_res.png'.format(test_name_pred, clf_name)), bbox_inches="tight")
-        fig.savefig(Path('results/figures/ML/prediction/pdf/{}_ML_{}_class_res.pdf'.format(test_name_pred, clf_name)), bbox_inches="tight")
+        # fig.savefig(Path('results/figures/ML/prediction/pdf/{}_ML_{}_class_res.pdf'.format(test_name_pred, clf_name)), bbox_inches="tight")
 
         # Evaluate result
         #accuracy_score.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)

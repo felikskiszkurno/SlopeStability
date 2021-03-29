@@ -23,8 +23,8 @@ def plot_results(accuracy_labels, accuracy_score, clf_name):
     plt.title(clf_name_title+' accuracy score')
     print('plot script is executed')
     fig.tight_layout()
-    fig.savefig(Path('results/figures/ML/'+clf_name+'.eps'), bbox_inches="tight")
-    fig.savefig(Path('results/figures/ML/'+clf_name+'.pdf'), bbox_inches="tight")
+    # fig.savefig(Path('results/figures/ML/'+clf_name+'.eps'), bbox_inches="tight")
+    # fig.savefig(Path('results/figures/ML/'+clf_name+'.pdf'), bbox_inches="tight")
     fig.savefig(Path('results/figures/ML/'+clf_name+'.png'), bbox_inches="tight")
 
     return

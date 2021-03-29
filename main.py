@@ -6,25 +6,17 @@ Created on Fri Jan  8 10:29:00 2021
 @author: Feliks Kiszkurno
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-
-import slopestabilitytools
 import slopestabilitytools.datamanagement
 import slopestabilityML
 import slostabcreatedata
+import numpy as np
+import settings
 
-import pygimli as pg
-import pygimli.meshtools as mt
-import pygimli.physics.ert as ert
+settings.init()
 
 # Config
-create_new_data = False
-create_new_data_only = False
-
-# Prepare folder structure for output
-is_success = slopestabilitytools.folder_structure.create_folder_structure()
+create_new_data = True
+create_new_data_only = True
 
 if not create_new_data:
 
@@ -32,46 +24,69 @@ if not create_new_data:
 
 else:
 
+    # Prepare folder structure for output
+    is_success = slopestabilitytools.folder_structure.create_folder_structure()
+
     # TODO Put this part into a function
 
     # Settings
-    number_of_tests = 50
+    number_of_tests = 5
     rho_spread_factor = 1.5
     rho_max = 20
     layers_min = 1
     layers_max = 2
     min_depth = 4
-    max_depth = 10
+    max_depth = 8
 
     # Generate parameters for tests
-    tests_horizontal = slopestabilitytools.model_params(number_of_tests,
-                                                        rho_spread_factor, rho_max,
-                                                        layers_min, layers_max,
-                                                        min_depth, max_depth)
+    # tests_horizontal = slopestabilitytools.model_params(number_of_tests,
+    #                                                     rho_spread_factor, rho_max,
+    #                                                     layers_min, layers_max,
+    #                                                     min_depth, max_depth)
 
-    # tests_horizontal = {'hor_1': {'layer_n': 1, 'rho_values': [[1, 5], [2, 15]], 'layers_pos': np.array([-5])},
-    #                     'hor_2': {'layer_n': 1, 'rho_values': [[1, 5], [2, 50]], 'layers_pos': np.array([-5])},
-    #                     'hor_3': {'layer_n': 1, 'rho_values': [[1, 15], [2, 20]], 'layers_pos': np.array([-8])},
-    #                     'hor_4': {'layer_n': 1, 'rho_values': [[1, 5], [2, 10]], 'layers_pos': np.array([-3])},
-    #                     'hor_5': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-3])}}
+    tests_horizontal = {'hor_01': {'layer_n': 1, 'rho_values': [[1, 5], [2, 15]], 'layers_pos': np.array([-5])},
+                        'hor_02': {'layer_n': 1, 'rho_values': [[1, 5], [2, 50]], 'layers_pos': np.array([-5])},
+                        'hor_03': {'layer_n': 1, 'rho_values': [[1, 15], [2, 20]], 'layers_pos': np.array([-8])},
+                        'hor_04': {'layer_n': 1, 'rho_values': [[1, 5], [2, 10]], 'layers_pos': np.array([-3])},
+                        'hor_05': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-3])},
+                        'hor_06': {'layer_n': 1, 'rho_values': [[1, 2], [2, 10]], 'layers_pos': np.array([-4])},
+                        'hor_07': {'layer_n': 1, 'rho_values': [[1, 10], [2, 20]], 'layers_pos': np.array([-6])},
+                        'hor_08': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-3])},
+                        'hor_09': {'layer_n': 1, 'rho_values': [[1, 3], [2, 25]], 'layers_pos': np.array([-3])},
+                        'hor_10': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-7])},
+                        'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])},
+                        'hor_12': {'layer_n': 1, 'rho_values': [[1, 15], [2, 50]], 'layers_pos': np.array([-5])},
+                        'hor_13': {'layer_n': 2, 'rho_values': [[1, 3], [2, 5], [3, 15]],
+                                   'layers_pos': np.array([-3, -6])},
+                        'hor_14': {'layer_n': 2, 'rho_values': [[1, 2], [2, 4], [3, 8]],
+                                   'layers_pos': np.array([-4, -8])},
+                        'hor_15': {'layer_n': 1, 'rho_values': [[1, 4], [2, 15], [3, 25]],
+                                   'layers_pos': np.array([-4, -8])},
+                        'hor_16': {'layer_n': 1, 'rho_values': [[1, 5], [2, 20], [3, 50]],
+                                   'layers_pos': np.array([-4, -8])}
+                        }
+
+    # tests_horizontal = {'hor_9': {'layer_n': 1, 'rho_values': [[1, 3], [2, 25]], 'layers_pos': np.array([-3])},}
 
     #  Create models and invert them
     test_results = {}
 
     for test_name in tests_horizontal.keys():
-        test_result_curr, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name, tests_horizontal[test_name], max_depth)
+        test_result_curr, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
+                                                                                     tests_horizontal[test_name],
+                                                                                     max_depth)
         test_results.update({test_name: test_result_curr})
         del test_result_curr
 
         # Plot and save figures
-        slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max, test_rho_min)
+        slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
+                                          test_rho_min)
 
 if not create_new_data_only:
-    print('Running ML stuff...')
-    #for test_name in test_results.keys():
-        #slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name)
 
+    print('Running ML stuff...')
     ml_results = slopestabilityML.run_all_tests(test_results)
-    # svm_accuracy_score, svm_accuracy_labels = slopestabilityML.svm_run(test_results)
+
 elif create_new_data_only:
+
     print('Done')

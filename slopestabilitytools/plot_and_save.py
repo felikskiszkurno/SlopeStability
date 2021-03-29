@@ -78,8 +78,8 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
 
     fig.tight_layout()
     fig.savefig(Path('results/figures/eps/{}_in_inv_diff.eps'.format(test_name)), bbox_inches="tight")
-    fig.savefig(Path('results/figures/png/{}_in_inv_diff.png'.format(test_name)), bbox_inches="tight")
-    fig.savefig(Path('results/figures/pdf/{}_in_inv_diff.pdf'.format(test_name)), bbox_inches="tight")
+    #fig.savefig(Path('results/figures/png/{}_in_inv_diff.png'.format(test_name)), bbox_inches="tight")
+    #fig.savefig(Path('results/figures/pdf/{}_in_inv_diff.pdf'.format(test_name)), bbox_inches="tight")
 
     # Plot coverage
     cb_cov = []
@@ -97,7 +97,7 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
 
     fig_cov.tight_layout()
     fig_cov.savefig(Path('results/figures/eps/{}_cov.eps'.format(test_name)), bbox_inches="tight")
-    fig_cov.savefig(Path('results/figures/png/{}_cov.png'.format(test_name)), bbox_inches="tight")
-    fig_cov.savefig(Path('results/figures/pdf/{}_cov.pdf'.format(test_name)), bbox_inches="tight")
+    #fig_cov.savefig(Path('results/figures/png/{}_cov.png'.format(test_name)), bbox_inches="tight")
+    #fig_cov.savefig(Path('results/figures/pdf/{}_cov.pdf'.format(test_name)), bbox_inches="tight")
 
     return

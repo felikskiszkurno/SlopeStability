@@ -27,9 +27,9 @@ def combine_results(ml_results):
     plt.ylabel('Correct points [%]')
     plt.legend(loc='lower right')
 
-    fig.savefig(Path('results/figures/ML_summary_prediction.eps'))
+    # fig.savefig(Path('results/figures/ML_summary_prediction.eps'))
     fig.savefig(Path('results/figures/ML_summary_prediction.png'))
-    fig.savefig(Path('results/figures/ML_summary_prediction.pdf'))
+    # fig.savefig(Path('results/figures/ML_summary_prediction.pdf'))
 
     # Training
     fig = plt.figure()
@@ -46,6 +46,6 @@ def combine_results(ml_results):
     plt.legend(loc='lower right')
 
     fig.tight_layout()
-    fig.savefig(Path('results/figures/ML_summary_training.eps'), bbox_inches="tight")
+    # fig.savefig(Path('results/figures/ML_summary_training.eps'), bbox_inches="tight")
     fig.savefig(Path('results/figures/ML_summary_training.png'), bbox_inches="tight")
-    fig.savefig(Path('results/figures/ML_summary_training.pdf'), bbox_inches="tight")
+    # fig.savefig(Path('results/figures/ML_summary_training.pdf'), bbox_inches="tight")

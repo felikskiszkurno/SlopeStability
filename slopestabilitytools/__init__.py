@@ -16,6 +16,9 @@ from .model_params import model_params
 from .plot_and_save import plot_and_save
 from .set_labels import set_labels
 from .set_diff import set_diff
+from .normalize import normalize
+from .assign_classes import assign_classes
+from .def_classes import def_classes
 
 from .folder_structure.create_folder_structure import create_folder_structure
 from .folder_structure.create_folder_for_test import create_folder_for_test
