@@ -7,6 +7,7 @@ Created on Fri Jan  8 10:29:00 2021
 """
 
 import slopestabilitytools.datamanagement
+import slopestabilitytools
 import slopestabilityML
 import slostabcreatedata
 import numpy as np
@@ -15,13 +16,22 @@ import settings
 settings.init()
 
 # Config
-create_new_data = True
-create_new_data_only = True
+create_new_data = False # set to True if you need to reassign the classes
+create_new_data_only = False
+reassign_classes = True; class_type = 'norm'
 
+# Load existing data instead of creating new one.
 if not create_new_data:
 
     test_results = slopestabilitytools.datamanagement.import_tests()
 
+    if reassign_classes is True:
+        test_results = slopestabilitytools.reassign_classes(test_results, class_type)
+
+    # Check if folder structure for figures exists and create it if not
+    is_success = slopestabilitytools.folder_structure.create_folder_structure()
+
+# Create new data
 else:
 
     # Prepare folder structure for output
@@ -66,7 +76,7 @@ else:
                                    'layers_pos': np.array([-4, -8])}
                         }
 
-    # tests_horizontal = {'hor_9': {'layer_n': 1, 'rho_values': [[1, 3], [2, 25]], 'layers_pos': np.array([-3])},}
+    # tests_horizontal = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
 
     #  Create models and invert them
     test_results = {}
@@ -82,11 +92,13 @@ else:
         slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
                                           test_rho_min)
 
+# Evaluate data with ML techniques
 if not create_new_data_only:
 
     print('Running ML stuff...')
     ml_results = slopestabilityML.run_all_tests(test_results)
 
+# Finish the script if ML classifiaction was not executed
 elif create_new_data_only:
 
     print('Done')

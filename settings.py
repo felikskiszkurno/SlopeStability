@@ -16,13 +16,21 @@ def init():
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids
     settings['norm_class_num'] = 5  # Number of classes for normalized data
-    settings['norm'] = False  # True to use normalized data, False to use raw data
+    settings['norm'] = True  # True to use normalized data, False to use raw data
 
     # Include sensitivity
     settings['sen'] = False  # True - include sensitivity, False - ignore sensitivity
 
+    # Include depth
+    settings['depth'] = True  # True - include depth, False - ignore depth
+
+    # Clip data to max and min values from the input model
+    settings['clip'] = True  # True - clip data, False - use unclipped data
+
     # Paths
-    settings['results_folder'] = "results"
+    settings['results_folder'] = 'results'
+    settings['data_folder'] = settings['results_folder'] + '/data/'
+    settings['figures_folder'] = settings['results_folder'] + '/figures/'
 
     # Plots
-    settings['plot_formats'] = ['png']
+    settings['plot_formats'] = ['png', 'pdf']  # list of formats to save plots as, supported formats: eps, jpeg, jpg, pdf, pgf, png, ps, raw, rgba, svg, svgz, tif, tiff

@@ -77,7 +77,8 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     cb[2].update_ticks()
 
     fig.tight_layout()
-    fig.savefig(Path('results/figures/eps/{}_in_inv_diff.eps'.format(test_name)), bbox_inches="tight")
+    slopestabilitytools.save_plot(fig, test_name, '_in_inv_diff')
+    #fig.savefig(Path('results/figures/eps/{}_in_inv_diff.eps'.format(test_name)), bbox_inches="tight")
     #fig.savefig(Path('results/figures/png/{}_in_inv_diff.png'.format(test_name)), bbox_inches="tight")
     #fig.savefig(Path('results/figures/pdf/{}_in_inv_diff.pdf'.format(test_name)), bbox_inches="tight")
 
@@ -96,7 +97,8 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     cb_cov.update_ticks()
 
     fig_cov.tight_layout()
-    fig_cov.savefig(Path('results/figures/eps/{}_cov.eps'.format(test_name)), bbox_inches="tight")
+    slopestabilitytools.save_plot(fig_cov, test_name, '_cov')
+    # fig_cov.savefig(Path('results/figures/eps/{}_cov.eps'.format(test_name)), bbox_inches="tight")
     #fig_cov.savefig(Path('results/figures/png/{}_cov.png'.format(test_name)), bbox_inches="tight")
     #fig_cov.savefig(Path('results/figures/pdf/{}_cov.pdf'.format(test_name)), bbox_inches="tight")
 

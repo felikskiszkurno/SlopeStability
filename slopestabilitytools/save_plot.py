@@ -6,9 +6,18 @@ Created on 25.03.2021
 @author: Feliks Kiszkurno
 """
 
-def save_plot(figure_handler, test_name, figure_name):
-    figure_handler.savefig('results/figures/png/' + test_name + '_1_geometry'+'.png', bbox_inches="tight")
+import os
+from pathlib import Path
 
-    # fig_geometry.savefig('results/figures/pdf/' + test_name + '_1_geometry.pdf', bbox_inches="tight")
-    # fig_geometry.savefig('results/figures/eps/' + test_name + '_1_geometry.eps', bbox_inches="tight")
+import settings
 
+
+def save_plot(figure_handler, test_name, figure_name, *, subfolder=False):  # keep in mind, that subfolder has to exist, it wont be created here
+
+    if isinstance(subfolder, str) is True:
+        subfolder = '/' + subfolder + '/'
+
+    for file_format in settings.settings['plot_formats']:
+        figure_handler.savefig(Path(os.getcwd() + '/' + settings.settings[
+            'figures_folder'] + subfolder + file_format + '/' + test_name + figure_name + '.' + file_format),
+                               bbox_inches="tight")

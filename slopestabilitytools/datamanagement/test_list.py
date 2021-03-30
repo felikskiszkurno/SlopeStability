@@ -8,12 +8,14 @@ Created on 17.01.2021
 
 import os
 
+import settings
+
 # TODO Add more flexibility in the way, that the path is handled
 
 
 def test_list(extension):
 
-    path = 'results/results'
+    path = settings.settings['data_folder']
     file_list = os.listdir(path)
 
     test_names = []

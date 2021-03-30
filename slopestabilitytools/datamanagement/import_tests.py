@@ -7,6 +7,8 @@ Created on 17.01.2021
 """
 
 import slopestabilitytools.datamanagement.test_list
+import settings
+
 import pandas as pd
 
 
@@ -17,7 +19,7 @@ def import_tests():
     #print(test_names)
 
     for test_name in test_names:
-        test_result_curr = pd.read_csv('results/results/' + test_name + '.csv', index_col=0)
+        test_result_curr = pd.read_csv(settings.settings['data_folder'] + '/' + test_name + '.csv', index_col=0)
         test_results.update({test_name: test_result_curr})
 
     return test_results

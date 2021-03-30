@@ -15,10 +15,11 @@ import pygimli.meshtools as mt
 import pygimli.physics.ert as ert
 
 import slopestabilitytools
+import slostabcreatedata
+import settings
 
 
 def create_data(test_name, test_config, max_depth):
-    from main import settings
 
     world_boundary_v = [-9 * max_depth, 0]  # [NW edge] relatively to the middle
     world_boundary_h = [9 * max_depth, -9 * max_depth]  # [SE edge]
@@ -40,7 +41,8 @@ def create_data(test_name, test_config, max_depth):
     ax_geometry = slopestabilitytools.set_labels(ax_geometry)
     ax_geometry.set_title('1 Geometry of the model')
     fig_geometry.tight_layout()
-    fig_geometry.savefig('results/figures/png/' + test_name + '_1_geometry.png', bbox_inches="tight")
+    slopestabilitytools.save_plot(fig_geometry, test_name, '_1_geometry')
+    # fig_geometry.savefig('results/figures/png/' + test_name + '_1_geometry.png', bbox_inches="tight")
     #fig_geometry.savefig('results/figures/pdf/' + test_name + '_1_geometry.pdf', bbox_inches="tight")
     #fig_geometry.savefig('results/figures/eps/' + test_name + '_1_geometry.eps', bbox_inches="tight")
 
@@ -61,7 +63,9 @@ def create_data(test_name, test_config, max_depth):
     ax_model = slopestabilitytools.set_labels(ax_model)
     ax_model.set_title('2 Mesh and resistivity distribution')
     fig_model.tight_layout()
-    fig_model.savefig('results/figures/png/' + test_name + '_2_meshdist.png', bbox_inches="tight")
+    plot_name = '_2_meshdist.png'
+    slopestabilitytools.save_plot(fig_model, test_name, '_2_meshdist')
+    #fig_model.savefig('results/figures/png/' + test_name + '_2_meshdist.png', bbox_inches="tight")
     #fig_model.savefig('results/figures/pdf/' + test_name + '_2_meshdist.pdf', bbox_inches="tight")
     #fig_model.savefig('results/figures/eps/' + test_name + '_2_meshdist.eps', bbox_inches="tight")
 
@@ -82,34 +86,44 @@ def create_data(test_name, test_config, max_depth):
                                         quality=34, zPower=0.4)
 
     result_full = ert_manager.inv.model
+
     # result_array = pg.utils.interperc(result_full, 5)
     # result_lim = result_full.array()
     # result_lim[np.where(result_array > max(resistivity_map[1]))] = float("NaN")
     # result_lim[np.where(result_array < min(resistivity_map[1]))] = float("NaN") # min(resistivity_map[1])
     # result_array = result_lim
     result_array = result_full.array()
-    result_array_norm = slopestabilitytools.normalize(result_array)
+    # result_array_norm = slopestabilitytools.normalize(result_array)
 
     fig_result, ax_result = plt.subplots(1)
     pg.show(ert_manager.paraDomain, result_full, label=pg.unit('res'), showMesh=True, ax=ax_result)
     ax_result = slopestabilitytools.set_labels(ax_result)
     ax_result.set_title('3 Result')
     fig_result.tight_layout()
-    fig_result.savefig('results/figures/png/' + test_name + '_3_result.png', bbox_inches="tight")
+    slopestabilitytools.save_plot(fig_result, test_name, '_3_result')
+    # fig_result.savefig('results/figures/png/' + test_name + '_3_result.png', bbox_inches="tight")
     #fig_result.savefig('results/figures/pdf/' + test_name + '_3_result.pdf', bbox_inches="tight")
     #fig_result.savefig('results/figures/eps/' + test_name + '_3_result.eps', bbox_inches="tight")
 
     input_model2 = pg.interpolate(srcMesh=mesh, inVec=input_model, destPos=ert_manager.paraDomain.cellCenters())
 
     input_model2_array = input_model2.array()
+    if settings.settings['clip'] is True:
+        array_max = np.max(input_model2_array)
+        array_min = np.min(input_model2_array)
+        #input_model2_array = slostabcreatedata.clip_data(input_model2_array, array_max, array_min)
+        result_array = slostabcreatedata.clip_data(result_array, array_max, array_min)
     input_model2_array_norm = slopestabilitytools.normalize(input_model2_array)
+
+
 
     fig_input, ax_input = plt.subplots(1)
     pg.show(ert_manager.paraDomain, input_model2, label=pg.unit('res'), showMesh=True, ax=ax_input)
     ax_input = slopestabilitytools.set_labels(ax_input)
     ax_input.set_title('4 Model on inv mesh')
     fig_input.tight_layout()
-    fig_input.savefig('results/figures/png/' + test_name + '_4_modelinv.png', bbox_inches="tight")
+    slopestabilitytools.save_plot(fig_input, test_name, '_4_modelinv')
+    #fig_input.savefig('results/figures/png/' + test_name + '_4_modelinv.png', bbox_inches="tight")
     #fig_input.savefig('results/figures/pdf/' + test_name + '_4_modelinv.pdf', bbox_inches="tight")
     #fig_input.savefig('results/figures/eps/' + test_name + '_4_modelinv.eps', bbox_inches="tight")
 
@@ -171,6 +185,6 @@ def create_data(test_name, test_config, max_depth):
 
     # test_results[test_name] = experiment_results
 
-    experiment_results.to_csv('results/results/' + test_name + '.csv')
+    experiment_results.to_csv(settings.settings['data_folder'] + '/' + test_name + '.csv')
 
     return experiment_results, rho_max, rho_min

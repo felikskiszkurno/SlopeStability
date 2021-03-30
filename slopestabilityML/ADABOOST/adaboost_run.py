@@ -11,12 +11,14 @@ import slopestabilityML.split_dataset
 import slopestabilityML.run_classi
 
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 
 def adaboost_run(test_results, random_seed):
     test_training, test_prediction = slopestabilityML.split_dataset(test_results.keys(), random_seed)
 
-    clf = AdaBoostClassifier(n_estimators=50, random_state=0)
+    clf = AdaBoostClassifier(base_estimator=DecisionTreeClassifier(max_depth=3),
+                             n_estimators=20, random_state=0)
 
     # Train classifier
     accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training = \
@@ -27,4 +29,3 @@ def adaboost_run(test_results, random_seed):
     slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'ADA_training')
 
     return accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training
-

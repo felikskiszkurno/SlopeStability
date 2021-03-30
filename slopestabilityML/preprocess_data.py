@@ -13,9 +13,9 @@ import pandas as pd
 def preprocess_data(data_set):
 
     if settings.settings['norm'] is True:
-        x_train = data_set.drop(['X', 'Y', 'Z', 'INM', 'RES', 'CLASS', 'CLASSN'], axis='columns')
+        x_train = data_set.drop(['X', 'Z', 'INM', 'INMN', 'RES', 'CLASS', 'CLASSN'], axis='columns')
     else:
-        x_train = data_set.drop(['X', 'Y', 'Z', 'INM', 'RESN', 'CLASS', 'CLASSN'], axis='columns')
+        x_train = data_set.drop(['X', 'Z', 'INM', 'INMN', 'RESN', 'CLASS', 'CLASSN'], axis='columns')
 
     if settings.settings['sen'] is False:
         x_train = x_train.drop(['SEN'], axis='columns')
@@ -24,5 +24,8 @@ def preprocess_data(data_set):
         y_train = pd.DataFrame(data_set['CLASSN'])
     else:
         y_train = pd.DataFrame(data_set['CLASS'])
+
+    if settings.settings['depth'] is False:
+        x_train = x_train.drop(['Y'], axis='columns')
 
     return x_train, y_train
