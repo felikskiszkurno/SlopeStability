@@ -50,6 +50,17 @@ def run_all_tests(test_results):
     ml_results['ADA'] = {'score': ada_accuracy_score, 'labels': ada_accuracy_labels,
                          'score_training': ada_accuracy_score_training, 'labels_training': ada_accuracy_labels_training}
 
+    # print('Running RVM...')
+    # rvm_accuracy_score, rvm_accuracy_labels, rvm_accuracy_score_training, rvm_accuracy_labels_training = \
+    #     slopestabilityML.RVM.rvm_run(test_results, random_seed)
+    # ml_results['RVM'] = {'score': rvm_accuracy_score, 'labels': rvm_accuracy_labels,
+    #                      'score_training': rvm_accuracy_score_training, 'labels_training': rvm_accuracy_labels_training}
+
+    print('Running MGC')
+    mgc_accuracy_score, mgc_accuracy_labels = slopestabilityML.MGC.mgc_run(test_results, random_seed)
+    ml_results['MGC'] = {'score': mgc_accuracy_score, 'labels': mgc_accuracy_labels,
+                         'score_training': [], 'labels_training': []}
+
     slopestabilityML.combine_results(ml_results)
     print('ML classification finished')
 

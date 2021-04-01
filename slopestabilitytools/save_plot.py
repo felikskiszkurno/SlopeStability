@@ -12,12 +12,19 @@ from pathlib import Path
 import settings
 
 
-def save_plot(figure_handler, test_name, figure_name, *, subfolder=False):  # keep in mind, that subfolder has to exist, it wont be created here
+def save_plot(figure_handler, test_name, figure_name, *, subfolder=False, skip_fileformat=False):  # keep in mind, that subfolder has to exist, it wont be created here
 
     if isinstance(subfolder, str) is True:
         subfolder = '/' + subfolder + '/'
+    else:
+        subfolder = ''
 
     for file_format in settings.settings['plot_formats']:
-        figure_handler.savefig(Path(os.getcwd() + '/' + settings.settings[
-            'figures_folder'] + subfolder + file_format + '/' + test_name + figure_name + '.' + file_format),
-                               bbox_inches="tight")
+        if skip_fileformat is True:
+            figure_handler.savefig(Path(os.getcwd() + '/' + settings.settings[
+                'figures_folder'] + subfolder + '/' + test_name + figure_name + '.' + file_format),
+                                   bbox_inches="tight")
+        else:
+            figure_handler.savefig(Path(os.getcwd() + '/' + settings.settings[
+                'figures_folder'] + subfolder + file_format + '/' + test_name + figure_name + '.' + file_format),
+                                   bbox_inches="tight")

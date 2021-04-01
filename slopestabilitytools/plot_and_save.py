@@ -6,41 +6,38 @@ Created on 15.01.2021
 @author: Feliks Kiszkurno
 """
 
-import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-from scipy import interpolate
-import numpy as np
 import slopestabilitytools
-from pathlib import Path
+import settings
 
 
 def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
 
     x = test_result['X']
     y = test_result['Y']
-    inm = test_result['INM']
-    res = test_result['RES']
-    cov = test_result['SEN']
 
-    x_min = np.min(x)
-    x_max = np.max(x)
-    x_n = len(x)
+    if settings.settings['norm'] is True:
+        plot_title = plot_title + '_norm'
+        data = {'INM': test_result['INMN'],
+                'RES': test_result['RESN'],
+                'COV': test_result['SEN']}
+    elif settings.settings['norm'] is False:
+        data = {'INM': test_result['INM'],
+                'RES': test_result['RES'],
+                'COV': test_result['SEN']}
 
-    y_min = np.min(y)
-    y_max = np.max(y)
-    y_start = y_max
-    y_end = y_min
-    y_n = len(y)
+    else:
+        print('I don\'t know which kind of data to use! Exiting...')
+        exit(0)
 
-    xi = np.linspace(x_min, x_max, x_n)
-    yi = np.linspace(y_start, y_end, y_n)
-    xx, yy = np.meshgrid(xi, yi)
-    inm_i = interpolate.griddata((x, y), inm, (xx, yy), method='nearest')
-    res_i = interpolate.griddata((x, y), res, (xx, yy), method='nearest')
-    cov_i = interpolate.griddata((x, y), cov, (xx, yy), method='nearest')
+    xi, yi, data_gridded = slopestabilitytools.grid_data(x, y, data)
 
-    print('plot_and_save')
+    inm_i = data_gridded['INM']
+    res_i = data_gridded['RES']
+    cov_i = data_gridded['SEN']
+
+    print('Plotting and saving overview figure... ')
 
     # Plot data input, inversion result and difference
     # TODO: Move plotting to a function for plotting a, b and a-b
@@ -78,9 +75,6 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
 
     fig.tight_layout()
     slopestabilitytools.save_plot(fig, test_name, '_in_inv_diff')
-    #fig.savefig(Path('results/figures/eps/{}_in_inv_diff.eps'.format(test_name)), bbox_inches="tight")
-    #fig.savefig(Path('results/figures/png/{}_in_inv_diff.png'.format(test_name)), bbox_inches="tight")
-    #fig.savefig(Path('results/figures/pdf/{}_in_inv_diff.pdf'.format(test_name)), bbox_inches="tight")
 
     # Plot coverage
     cb_cov = []
@@ -98,8 +92,5 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
 
     fig_cov.tight_layout()
     slopestabilitytools.save_plot(fig_cov, test_name, '_cov')
-    # fig_cov.savefig(Path('results/figures/eps/{}_cov.eps'.format(test_name)), bbox_inches="tight")
-    #fig_cov.savefig(Path('results/figures/png/{}_cov.png'.format(test_name)), bbox_inches="tight")
-    #fig_cov.savefig(Path('results/figures/pdf/{}_cov.pdf'.format(test_name)), bbox_inches="tight")
 
     return

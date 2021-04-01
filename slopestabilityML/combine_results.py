@@ -9,10 +9,11 @@ Created on 19.01.2021
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+import slopestabilitytools
+
 
 def combine_results(ml_results):
 
-    # TODO avoid reusing the same code twice
     # Predictions
     fig = plt.figure()
     ax = fig.subplots(1)
@@ -27,9 +28,7 @@ def combine_results(ml_results):
     plt.ylabel('Correct points [%]')
     plt.legend(loc='lower right')
 
-    # fig.savefig(Path('results/figures/ML_summary_prediction.eps'))
-    fig.savefig(Path('results/figures/ML_summary_prediction.png'))
-    # fig.savefig(Path('results/figures/ML_summary_prediction.pdf'))
+    slopestabilitytools.save_plot(fig, '', 'ML_summary_prediction', skip_fileformat=True)
 
     # Training
     fig = plt.figure()
@@ -46,6 +45,4 @@ def combine_results(ml_results):
     plt.legend(loc='lower right')
 
     fig.tight_layout()
-    # fig.savefig(Path('results/figures/ML_summary_training.eps'), bbox_inches="tight")
-    fig.savefig(Path('results/figures/ML_summary_training.png'), bbox_inches="tight")
-    # fig.savefig(Path('results/figures/ML_summary_training.pdf'), bbox_inches="tight")
+    slopestabilitytools.save_plot(fig, '', 'ML_summary_training', skip_fileformat=True)

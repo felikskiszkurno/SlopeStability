@@ -7,11 +7,11 @@ Created on 16.01.2021
 """
 
 from sklearn import svm
-import numpy as np
+
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
 import slopestabilityML.run_classi
-import random
+
 
 # TODO: for comparability with other ML methods, add option to define which test should be used for training externaly
 

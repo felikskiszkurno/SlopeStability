@@ -19,13 +19,13 @@ def init():
     settings['norm'] = True  # True to use normalized data, False to use raw data
 
     # Include sensitivity
-    settings['sen'] = False  # True - include sensitivity, False - ignore sensitivity
+    settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
 
     # Include depth
     settings['depth'] = True  # True - include depth, False - ignore depth
 
     # Clip data to max and min values from the input model
-    settings['clip'] = True  # True - clip data, False - use unclipped data
+    settings['clip'] = False  # True - clip data, False - use unclipped data
 
     # Paths
     settings['results_folder'] = 'results'
@@ -33,4 +33,4 @@ def init():
     settings['figures_folder'] = settings['results_folder'] + '/figures/'
 
     # Plots
-    settings['plot_formats'] = ['png', 'pdf']  # list of formats to save plots as, supported formats: eps, jpeg, jpg, pdf, pgf, png, ps, raw, rgba, svg, svgz, tif, tiff
+    settings['plot_formats'] = ['png']  # list of formats to save plots as, supported formats: eps, jpeg, jpg, pdf, pgf, png, ps, raw, rgba, svg, svgz, tif, tiff

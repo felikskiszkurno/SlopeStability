@@ -25,9 +25,6 @@ def plot_results(accuracy_labels, accuracy_score, clf_name):
     plt.title(clf_name_title+' accuracy score')
     print('plot script is executed')
     fig.tight_layout()
-    slopestabilitytools.save_plot(fig, clf_name, '_accuracy', subfolder='ML')
-    # fig.savefig(Path('results/figures/ML/'+clf_name+'.eps'), bbox_inches="tight")
-    # fig.savefig(Path('results/figures/ML/'+clf_name+'.pdf'), bbox_inches="tight")
-    # fig.savefig(Path('results/figures/ML/'+clf_name+'.png'), bbox_inches="tight")
+    slopestabilitytools.save_plot(fig, clf_name, '_accuracy', subfolder='ML/')
 
     return

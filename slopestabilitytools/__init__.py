@@ -21,6 +21,8 @@ from .assign_classes import assign_classes
 from .def_classes import def_classes
 from .save_plot import save_plot
 from .reassign_classes import reassign_classes
+from .grid_data import grid_data
+from .mov_avg import mov_avg
 
 from .folder_structure.create_folder_structure import create_folder_structure
 from .folder_structure.create_folder_for_test import create_folder_for_test

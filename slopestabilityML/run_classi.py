@@ -9,23 +9,15 @@ Created on 19.01.2021
 import settings
 import slopestabilityML
 import numpy as np
-import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import make_pipeline
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-from scipy import interpolate
 import slopestabilitytools
-from pathlib import Path
 
 
 def run_classification(test_training, test_prediction, test_results, clf, clf_name):
-
-    # global settings
-
-
-
 
     accuracy_score = []
     accuracy_labels = []
@@ -57,10 +49,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         # Prepare data
         print(test_name)
         x_train, y_train = slopestabilityML.preprocess_data(test_results[test_name])
-        # print('stop')
+
         # Train classifier
-        # print(type(x_train))
-        # print(type(y_train))
         clf_pipeline_UM.fit(x_train, y_train)
         score_training = clf_pipeline_UM.score(x_train, y_train)
 
@@ -78,64 +68,16 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         score = clf_pipeline_UM.score(x_question, y_answer)
         print('score: '+str(score))
 
-        # TODO: Move plotting to a function for plotting a, b and a-b
-        x = test_results[test_name_pred]['X']
-        y = test_results[test_name_pred]['Y']
-        class_in = test_results[test_name]['CLASS']
-        class_out = y_pred
-        x_min = np.min(x)
-        x_max = np.max(x)
-        x_n = len(x)
 
-        y_min = np.min(y)
-        y_max = np.max(y)
-        y_start = y_max
-        y_end = y_min
-        y_n = len(y)
+        if settings.settings['norm_class'] is True:
+            class_in = test_results[test_name]['CLASSN']
+        elif settings.settings['norm_class'] is False:
+            class_in = test_results[test_name]['CLASS']
+        else:
+            print('I don\'t know which class to use! Exiting...')
+            exit(0)
 
-        xi = np.linspace(x_min, x_max, x_n)
-        yi = np.linspace(y_start, y_end, y_n)
-        xx, yy = np.meshgrid(xi, yi)
-        class_in_i = interpolate.griddata((x, y), class_in, (xx, yy), method='nearest')
-        class_out_i = interpolate.griddata((x, y), class_out, (xx, yy), method='nearest')
-        class_diff = np.zeros_like(class_out_i)
-        class_diff[np.where(class_in_i == class_out_i)] = 1
-        cb = []
-
-        fig, _ax = plt.subplots(nrows=3, ncols=1)
-        ax = _ax.flatten()
-
-        fig.suptitle(test_name_pred+' '+clf_name)
-        fig.subplots_adjust(hspace=0.8)
-
-        im0 = ax[0].contourf(xi, yi, class_in_i)
-        ax[0].set_title('Input classes')
-        ax[0] = slopestabilitytools.set_labels(ax[0])
-        cb.append(plt.colorbar(im0, ax=ax[0], label='Class'))  # , shrink=0.9)
-        tick_locator = ticker.MaxNLocator(nbins=4)
-        cb[0].locator = tick_locator
-        cb[0].update_ticks()
-
-        im1 = ax[1].contourf(xi, yi, class_out_i)
-        ax[1].set_title('Result of classification')
-        ax[1] = slopestabilitytools.set_labels(ax[1])
-        cb.append(plt.colorbar(im1, ax=ax[1], label='Class'))  # , shrink=0.9)
-        tick_locator = ticker.MaxNLocator(nbins=4)
-        cb[1].locator = tick_locator
-        cb[1].update_ticks()
-
-        im2 = ax[2].contourf(xi, yi, class_diff)
-        ax[2].set_title('Difference')
-        ax[2] = slopestabilitytools.set_labels(ax[2])
-        cb.append(plt.colorbar(im2, ax=ax[2], label='Is class correct?'))  # , shrink=0.9)
-        tick_locator = ticker.MaxNLocator(nbins=4)
-        cb[2].locator = tick_locator
-        cb[2].update_ticks()
-
-        fig.tight_layout()
-        # fig.savefig(Path('results/figures/ML/prediction/eps/{}_ML_{}_class_res.eps'.format(test_name_pred, clf_name)), bbox_inches="tight")
-        fig.savefig(Path('results/figures/ML/prediction/png/{}_ML_{}_class_res.png'.format(test_name_pred, clf_name)), bbox_inches="tight")
-        # fig.savefig(Path('results/figures/ML/prediction/pdf/{}_ML_{}_class_res.pdf'.format(test_name_pred, clf_name)), bbox_inches="tight")
+        slopestabilityML.plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name)
 
         # Evaluate result
         #accuracy_score.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="mw516732@login18-2.hpc.itc.rwth-aachen.de:22" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="mw516732@login18-2.hpc.itc.rwth-aachen.de:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/mw516732/Dokumente/SlopeStability" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

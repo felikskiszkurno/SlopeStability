@@ -17,7 +17,7 @@ settings.init()
 
 # Config
 create_new_data = False # set to True if you need to reassign the classes
-create_new_data_only = False
+create_new_data_only = False # set to False in order to run ML classifications
 reassign_classes = True; class_type = 'norm'
 
 # Load existing data instead of creating new one.
@@ -25,8 +25,8 @@ if not create_new_data:
 
     test_results = slopestabilitytools.datamanagement.import_tests()
 
-    if reassign_classes is True:
-        test_results = slopestabilitytools.reassign_classes(test_results, class_type)
+    # if reassign_classes is True:
+    #        test_results = slopestabilitytools.reassign_classes(test_results, class_type)
 
     # Check if folder structure for figures exists and create it if not
     is_success = slopestabilitytools.folder_structure.create_folder_structure()
