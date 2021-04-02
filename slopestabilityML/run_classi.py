@@ -25,34 +25,57 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     accuracy_score_training = []
     accuracy_labels_training = []
 
-    if settings.settings['norm'] is True and settings.settings['sen'] is True:
-        num_feat = ['RESN', 'SEN']
-    elif settings.settings['norm'] is False and settings.settings['sen'] is True:
-        num_feat = ['RES', 'SEN']
-    elif settings.settings['norm'] is False and settings.settings['sen'] is False:
-        num_feat = ['RES']
-    elif settings.settings['norm'] is True and settings.settings['sen'] is False:
-        num_feat = ['RESN']
+    num_feat = []
+
+    if settings.settings['norm'] is True:
+        num_feat.append('RESN')
+    else:
+        num_feat.append('RES')
+
+    if settings.settings['sen'] is True:
+        num_feat.append('SEN')
+
+    if settings.settings['depth'] is True:
+        num_feat.append('Y')
+
+    # if settings.settings['norm'] is True and settings.settings['sen'] is True:
+    #     num_feat = ['RESN', 'SEN']
+    # elif settings.settings['norm'] is False and settings.settings['sen'] is True:
+    #     num_feat = ['RES', 'SEN']
+    # elif settings.settings['norm'] is False and settings.settings['sen'] is False:
+    #     num_feat = ['RES']
+    # elif settings.settings['norm'] is True and settings.settings['sen'] is False:
+    #     num_feat = ['RESN']
+
     #cat_feat = ['CLASS']
+    #cat_lab = [0, 1]
 
-    cat_lab = [0, 1]
+    if settings.settings['norm_class'] is True:
+        #cat_feat = ['CLASSN']
+        cat_lab = np.linspace(0, settings.settings['norm_class_num'] - 1, settings.settings['norm_class_num'])
 
-    num_trans = StandardScaler()
+    elif settings.settings['norm_class'] is False:
+        #cat_feat = ['CLASS']
+        cat_lab = [0, 1]
+
     #cat_trans = OneHotEncoder(categories=[cat_lab])
 
-    preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat),])
+    num_trans = StandardScaler()
+
+    preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat)])#,
                                                    #('cat', cat_trans, cat_feat)])
 
-    clf_pipeline_UM = make_pipeline(preprocessor, clf)
+    clf_pipeline = make_pipeline(preprocessor, clf)
 
     for test_name in test_training:
         # Prepare data
         print(test_name)
         x_train, y_train = slopestabilityML.preprocess_data(test_results[test_name])
-
+        #x_train = test_results[test_name]
+        #y_train = test_results[test_name]
         # Train classifier
-        clf_pipeline_UM.fit(x_train, y_train)
-        score_training = clf_pipeline_UM.score(x_train, y_train)
+        clf_pipeline.fit(x_train, y_train)
+        score_training = clf_pipeline.score(x_train, y_train)
 
         accuracy_score_training.append(score_training * 100)
         accuracy_labels_training.append(test_name)
@@ -62,10 +85,10 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         # Prepare data
         x_question, y_answer = slopestabilityML.preprocess_data(test_results[test_name_pred])
 
-        # y_pred = clf_pipeline_UM.score(x_question, y_answer)
-        y_pred = clf_pipeline_UM.predict(x_question)
+        # y_pred = clf_pipeline.score(x_question, y_answer)
+        y_pred = clf_pipeline.predict(x_question)
         # print(y_pred)
-        score = clf_pipeline_UM.score(x_question, y_answer)
+        score = clf_pipeline.score(x_question, y_answer)
         print('score: '+str(score))
 
 

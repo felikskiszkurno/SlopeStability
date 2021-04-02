@@ -36,7 +36,7 @@ def max_grad_classi(test_result):
 
     inds = np.zeros(gradient2.T.shape[0])
     classes = np.ones_like(gradient2.T)
-    print(gradient2.T.shape[1])
+
     for num, column in enumerate(gradient2.T):
         # print(num)
         inds[num] = np.argmax(column)

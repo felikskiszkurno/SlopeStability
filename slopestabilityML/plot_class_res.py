@@ -12,7 +12,7 @@ from matplotlib import ticker
 import slopestabilitytools
 
 
-def plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name):
+def plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name, *, training=False):
     # TODO: Move plotting to a function for plotting a, b and a-b
     x = test_results[test_name_pred]['X']
     y = test_results[test_name_pred]['Y']
@@ -61,7 +61,13 @@ def plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name):
     cb[2].update_ticks()
 
     fig.tight_layout()
-    slopestabilitytools.save_plot(fig, clf_name, '{}_ML_{}_class_res'.format(test_name_pred, clf_name),
-                                  subfolder='ML/prediction')
+
+    if training is True:
+        slopestabilitytools.save_plot(fig, clf_name, '{}_ML_{}_class_res'.format(test_name_pred, clf_name),
+                                    subfolder='ML/training')
+
+    else:
+        slopestabilitytools.save_plot(fig, clf_name, '{}_ML_{}_class_res'.format(test_name_pred, clf_name),
+                                      subfolder='ML/prediction')
 
     return

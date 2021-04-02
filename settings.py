@@ -25,7 +25,7 @@ def init():
     settings['depth'] = True  # True - include depth, False - ignore depth
 
     # Clip data to max and min values from the input model
-    settings['clip'] = False  # True - clip data, False - use unclipped data
+    settings['clip'] = True  # True - clip data, False - use unclipped data
 
     # Paths
     settings['results_folder'] = 'results'
