@@ -21,11 +21,11 @@ def adaboost_run(test_results, random_seed):
                              n_estimators=20, random_state=0)
 
     # Train classifier
-    accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training = \
+    result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training = \
         slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'ADA')
 
     # Plot
     slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'ADA_prediction')
     slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'ADA_training')
 
-    return accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training
+    return result_class, accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training

@@ -80,6 +80,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         accuracy_score_training.append(score_training * 100)
         accuracy_labels_training.append(test_name)
 
+    result_class = {}
+
     # Predict with classifier
     for test_name_pred in test_prediction:
         # Prepare data
@@ -87,6 +89,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
         # y_pred = clf_pipeline.score(x_question, y_answer)
         y_pred = clf_pipeline.predict(x_question)
+        result_class[test_name_pred] = y_pred
         # print(y_pred)
         score = clf_pipeline.score(x_question, y_answer)
         print('score: '+str(score))
@@ -107,5 +110,5 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         accuracy_score.append(score*100)
         accuracy_labels.append(test_name_pred)
 
-    return accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training
+    return result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training
 
