@@ -62,12 +62,12 @@ def run_all_tests(test_results):
     # ml_results['RVM'] = {'score': rvm_accuracy_score, 'labels': rvm_accuracy_labels,
     #                      'score_training': rvm_accuracy_score_training, 'labels_training': rvm_accuracy_labels_training}
 
-    print('Running MGC')
-    mgc_result_class, mgc_accuracy_score, mgc_accuracy_labels, mgc_accuracy_score_training, mgc_accuracy_labels_training \
-        = slopestabilityML.MGC.mgc_run(test_results, random_seed)
-    ml_results['MGC'] = {'score': mgc_accuracy_score, 'labels': mgc_accuracy_labels,
-                         'score_training': mgc_accuracy_score_training, 'labels_training': mgc_accuracy_labels_training}
-    ml_results_class['mgc'] = mgc_result_class
+    # print('Running MGC')
+    # mgc_result_class, mgc_accuracy_score, mgc_accuracy_labels, mgc_accuracy_score_training, mgc_accuracy_labels_training \
+    #     = slopestabilityML.MGC.mgc_run(test_results, random_seed)
+    # ml_results['MGC'] = {'score': mgc_accuracy_score, 'labels': mgc_accuracy_labels,
+    #                      'score_training': mgc_accuracy_score_training, 'labels_training': mgc_accuracy_labels_training}
+    # ml_results_class['mgc'] = mgc_result_class
 
     print('Asking committee for verdict')
     committee_accuracy_score, committee_accuracy_labels, committee_accuracy_score_training, committee_accuracy_labels_training  \

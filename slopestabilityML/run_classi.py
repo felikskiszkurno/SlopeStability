@@ -12,6 +12,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import make_pipeline
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 import slopestabilitytools
@@ -19,10 +20,10 @@ import slopestabilitytools
 
 def run_classification(test_training, test_prediction, test_results, clf, clf_name):
 
-    accuracy_score = []
+    accuracy_result = []
     accuracy_labels = []
 
-    accuracy_score_training = []
+    accuracy_result_training = []
     accuracy_labels_training = []
 
     num_feat = []
@@ -71,13 +72,16 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         # Prepare data
         print(test_name)
         x_train, y_train = slopestabilityML.preprocess_data(test_results[test_name])
-        #x_train = test_results[test_name]
-        #y_train = test_results[test_name]
         # Train classifier
         clf_pipeline.fit(x_train, y_train)
-        score_training = clf_pipeline.score(x_train, y_train)
-
-        accuracy_score_training.append(score_training * 100)
+        y_pred = clf_pipeline.predict(x_train)
+        score_training1 = clf_pipeline.score(x_train, y_train)
+        score_training = accuracy_score(y_train, y_pred)
+        if score_training1 == score_training:
+            print('MATCH!')
+        else:
+            print('MISMATCH!')
+        accuracy_result_training.append(score_training * 100)
         accuracy_labels_training.append(test_name)
 
     result_class = {}
@@ -91,9 +95,13 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         y_pred = clf_pipeline.predict(x_question)
         result_class[test_name_pred] = y_pred
         # print(y_pred)
-        score = clf_pipeline.score(x_question, y_answer)
+        score1 = clf_pipeline.score(x_question, y_answer)
+        score = accuracy_score(y_answer, y_pred)
+        if score1 == score:
+            print('MATCH!')
+        else:
+            print('MISMATCH!')
         print('score: '+str(score))
-
 
         if settings.settings['norm_class'] is True:
             class_in = test_results[test_name]['CLASSN']
@@ -106,9 +114,9 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         slopestabilityML.plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name)
 
         # Evaluate result
-        #accuracy_score.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
-        accuracy_score.append(score*100)
+        #accuracy_.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
+        accuracy_result.append(score*100)
         accuracy_labels.append(test_name_pred)
 
-    return result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training
+    return result_class, accuracy_labels, accuracy_result, accuracy_labels_training, accuracy_result_training
 

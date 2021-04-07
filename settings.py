@@ -22,10 +22,7 @@ def init():
     settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
 
     # Include depth
-    settings['depth'] = True  # True - include depth, False - ignore depth
-
-    # Clip data to max and min values from the input model
-    settings['clip'] = True  # True - clip data, False - use unclipped data
+    settings['depth'] = True   # True - include depth, False - ignore depth
 
     # Paths
     settings['results_folder'] = 'results'
@@ -34,3 +31,8 @@ def init():
 
     # Plots
     settings['plot_formats'] = ['png']  # list of formats to save plots as, supported formats: eps, jpeg, jpg, pdf, pgf, png, ps, raw, rgba, svg, svgz, tif, tiff
+
+
+    ## LEGACY STUFF - SET TO FALSE UNLESS THERE IS A VERY GOOD REASON!!!!
+    # Clip data to max and min values from the input model
+    settings['clip'] = False  # True - clip data, False - use unclipped data
