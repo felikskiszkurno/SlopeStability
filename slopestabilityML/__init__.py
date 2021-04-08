@@ -14,6 +14,7 @@ from .run_classi import run_classification
 from .preprocess_data import preprocess_data
 from .plot_class_res import plot_class_res
 from .ask_committee import ask_committee
+from .plot_class_overview import plot_class_overview
 
 
 from .SVM.svm_run import svm_run

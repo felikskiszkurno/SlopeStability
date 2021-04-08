@@ -84,6 +84,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         accuracy_result_training.append(score_training * 100)
         accuracy_labels_training.append(test_name)
 
+        slopestabilityML.plot_class_overview(test_results[test_name], test_name, y_train, y_pred, clf_name, training=True)
+
     result_class = {}
 
     # Predict with classifier
@@ -111,6 +113,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
             print('I don\'t know which class to use! Exiting...')
             exit(0)
 
+        slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name)
         slopestabilityML.plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name)
 
         # Evaluate result
