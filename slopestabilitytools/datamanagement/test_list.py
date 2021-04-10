@@ -13,9 +13,9 @@ import settings
 # TODO Add more flexibility in the way, that the path is handled
 
 
-def test_list(extension):
+def test_list(extension, *, abs_path=''):
 
-    path = settings.settings['data_folder']
+    path = abs_path + settings.settings['data_folder']
     file_list = os.listdir(path)
 
     test_names = []
