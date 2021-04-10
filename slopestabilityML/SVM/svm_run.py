@@ -34,7 +34,7 @@ def svm_run(test_results, random_seed):
 
 
     # Plot
-    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SVM_prediction')
-    slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'SVM_training')
+    # slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SVM_prediction')
+    # slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'SVM_training')
 
     return result_class, accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training

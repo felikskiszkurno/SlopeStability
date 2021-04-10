@@ -114,7 +114,6 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
             exit(0)
 
         slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name)
-        # slopestabilityML.plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name)
 
         # Evaluate result
         #accuracy_.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)

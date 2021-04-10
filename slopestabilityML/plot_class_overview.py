@@ -9,31 +9,21 @@ Created on 08.04.2021
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-import gc
 
 import slopestabilitytools
 import test_definitions
 
+
 def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, training=False):
 
-    x = test_results['X']
-    y = test_results['Y']
+    x = test_results['X'].to_numpy()
+    y = test_results['Y'].to_numpy()
 
     class_in = class_in.to_numpy()
     class_in = class_in.reshape(class_in.size)
-    data = {'class_in': class_in, 'class_out': y_pred, 'sen': test_results['SEN'].to_numpy(), 'depth': y.to_numpy(),
-            'input': test_results['INMN'].to_numpy()}
 
-    xi, yi, data_gridded = slopestabilitytools.grid_data(x, y, data)
-
-    class_in_i = data_gridded['class_in']
-    class_out_i = data_gridded['class_out']
-
-    class_diff = np.zeros_like(class_out_i)
-    class_diff[np.where(class_in_i == class_out_i)] = 1
-
-    del data, x, y, class_in_i, class_out_i
-    gc.collect()
+    class_diff = np.zeros_like(y_pred)
+    class_diff[np.where(class_in == y_pred)] = 1
 
     # Create plot
     fig, _ax = plt.subplots(nrows=4, ncols=2, figsize=(1.35*10, 10))
@@ -44,10 +34,9 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     fig.subplots_adjust(hspace=0.8)
 
     # Plot input classes
-    im0 = ax[0].contourf(xi, yi, data_gridded['class_in'].reshape((data_gridded['class_in'].shape[0],
-                                                                   data_gridded['class_in'].shape[1])))
+    im0 = plt.scatter(x, y, c=class_in)
     for depth in test_definitions.test_definitions[test_name]['layers_pos']:
-        ax[0].hlines(y=depth, xmin=xi.min(), xmax=xi.max(), linestyle='-', color='r')
+        ax[0].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     ax[0].set_title('Input classes')
     ax[0] = slopestabilitytools.set_labels(ax[0])
     cb.append(plt.colorbar(im0, ax=ax[0], label='Class'))  # , shrink=0.9)
@@ -56,9 +45,9 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[0].update_ticks()
 
     # Plot prediction
-    im1 = ax[1].contourf(xi, yi, data_gridded['class_out'])
+    im1 = ax[1].scatter(x, y, c=y_pred)
     for depth in test_definitions.test_definitions[test_name]['layers_pos']:
-        ax[1].hlines(y=depth, xmin=xi.min(), xmax=xi.max(), linestyle='-', color='r')
+        ax[1].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     ax[1].set_title('Predicted classes')
     ax[1] = slopestabilitytools.set_labels(ax[1])
     cb.append(plt.colorbar(im1, ax=ax[1], label='Class'))  # , shrink=0.9)
@@ -67,9 +56,9 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[1].update_ticks()
 
     # Plot input model
-    im2 = ax[2].contourf(xi, yi, data_gridded['input'])
+    im2 = ax[2].scatter(x, y, c=test_results['INMN'].to_numpy())
     for depth in test_definitions.test_definitions[test_name]['layers_pos']:
-        ax[2].hlines(y=depth, xmin=xi.min(), xmax=xi.max(), linestyle='-', color='r')
+        ax[2].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     ax[2].set_title('Input model')
     ax[2] = slopestabilitytools.set_labels(ax[2])
     cb.append(plt.colorbar(im2, ax=ax[2], label='Resistivity log(ohm*m)'))  # , shrink=0.9)
@@ -78,9 +67,9 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[2].update_ticks()
 
     # Plot difference between correct and predicted classes
-    im3 = ax[3].contourf(xi, yi, class_diff)
+    im3 = ax[3].scatter(x, y, c=class_diff)
     for depth in test_definitions.test_definitions[test_name]['layers_pos']:
-        ax[3].hlines(y=depth, xmin=xi.min(), xmax=xi.max(), linestyle='-', color='r')
+        ax[3].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     ax[3].set_title('Difference')
     ax[3] = slopestabilitytools.set_labels(ax[3])
     cb.append(plt.colorbar(im3, ax=ax[3], label='Is class correct?'))  # , shrink=0.9)
@@ -89,9 +78,9 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[3].update_ticks()
 
     # Plot sensitivity
-    im4 = ax[4].contourf(xi, yi, data_gridded['sen'])
+    im4 = ax[4].scatter(x, y, c=test_results['SEN'].to_numpy())
     for depth in test_definitions.test_definitions[test_name]['layers_pos']:
-        ax[4].hlines(y=depth, xmin=xi.min(), xmax=xi.max(), linestyle='-', color='r')
+        ax[4].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     ax[4].set_title('Sensitivity')
     ax[4] = slopestabilitytools.set_labels(ax[4])
     cb.append(plt.colorbar(im4, ax=ax[4], label='Sensitivity'))  # , shrink=0.9)
@@ -100,7 +89,7 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[4].update_ticks()
 
     # Plot depth
-    im5 = ax[5].contourf(xi, yi, data_gridded['depth'])
+    im5 = ax[5].scatter(x, y, c=y)
     ax[5].set_title('Depth')
     ax[5] = slopestabilitytools.set_labels(ax[5])
     cb.append(plt.colorbar(im5, ax=ax[5], label='Depth [m]'))  # , shrink=0.9)
@@ -109,16 +98,16 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[5].update_ticks()
 
     # Plot histogramm of input model
-    ax[6].hist(data_gridded['input'])
+    ax[6].hist(test_results['INMN'].to_numpy())
     ax[6].set_title('Input histogramm')
     ax[6].set_xlabel('Value (Bin)')
     ax[6].set_ylabel('Count')
 
     # Plot histogramm of predicted classes
-    ax[6].hist(data_gridded['input'])
-    ax[6].set_title('Predicted classes histogramm')
-    ax[6].set_xlabel('Value (Bin)')
-    ax[6].set_ylabel('Count')
+    ax[7].hist(y_pred)
+    ax[7].set_title('Predicted classes histogramm')
+    ax[7].set_xlabel('Value (Bin)')
+    ax[7].set_ylabel('Count')
 
     fig.tight_layout()
 

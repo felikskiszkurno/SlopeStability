@@ -25,7 +25,7 @@ def sgd_run(test_results, random_seed):
         slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'SGD')
 
     # Plot
-    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SGD_prediction')
-    slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'SGD_training')
+    # slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'SGD_prediction')
+    # slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'SGD_training')
 
     return result_class, accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training

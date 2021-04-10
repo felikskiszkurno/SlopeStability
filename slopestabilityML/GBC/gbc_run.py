@@ -26,7 +26,7 @@ def gbc_run(test_results, random_seed):
         slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'GBC')
 
     # Plot
-    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'GBC_prediction')
-    slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'GBC_training')
+    # slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'GBC_prediction')
+    # slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'GBC_training')
 
     return result_class, accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training

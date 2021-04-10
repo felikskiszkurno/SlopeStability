@@ -53,6 +53,6 @@ def mgc_run(test_results, random_seed):
     #     slopestabilityML.plot_class_res(test_results, test_name, classes_correct, classes, 'MGC_training')
 
     # Plot
-    slopestabilityML.plot_results(accuracy_labels_prediction, accuracy_score_prediction, 'MGC_training')
+    # slopestabilityML.plot_results(accuracy_labels_prediction, accuracy_score_prediction, 'MGC_training')
 
     return result_class, accuracy_score_prediction, accuracy_labels_prediction, accuracy_score_training, accuracy_labels_training

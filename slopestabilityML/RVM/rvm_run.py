@@ -28,7 +28,7 @@ def rvm_run(test_results, random_seed):
         slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'RVM')
 
     # Plot
-    slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'RVM_prediction')
-    slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'RVM_training')
+    # slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'RVM_prediction')
+    # slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'RVM_training')
 
     return accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training
