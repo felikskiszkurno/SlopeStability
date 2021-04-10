@@ -106,15 +106,15 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         print('score: '+str(score))
 
         if settings.settings['norm_class'] is True:
-            class_in = test_results[test_name]['CLASSN']
+            class_in = test_results[test_name_pred]['CLASSN']
         elif settings.settings['norm_class'] is False:
-            class_in = test_results[test_name]['CLASS']
+            class_in = test_results[test_name_pred]['CLASS']
         else:
             print('I don\'t know which class to use! Exiting...')
             exit(0)
 
         slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name)
-        slopestabilityML.plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name)
+        # slopestabilityML.plot_class_res(test_results, test_name_pred, class_in, y_pred, clf_name)
 
         # Evaluate result
         #accuracy_.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)

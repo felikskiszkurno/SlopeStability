@@ -6,6 +6,8 @@ Created on 08.04.2021
 @author: Feliks Kiszkurno
 """
 
+import numpy as np
+
 
 def init():
 
@@ -27,8 +29,8 @@ def init():
                                    'layers_pos': np.array([-3, -6])},
                         'hor_14': {'layer_n': 2, 'rho_values': [[1, 2], [2, 4], [3, 8]],
                                    'layers_pos': np.array([-4, -8])},
-                        'hor_15': {'layer_n': 1, 'rho_values': [[1, 4], [2, 15], [3, 25]],
+                        'hor_15': {'layer_n': 2, 'rho_values': [[1, 4], [2, 15], [3, 25]],
                                    'layers_pos': np.array([-4, -8])},
-                        'hor_16': {'layer_n': 1, 'rho_values': [[1, 5], [2, 20], [3, 50]],
+                        'hor_16': {'layer_n': 2, 'rho_values': [[1, 5], [2, 20], [3, 50]],
                                    'layers_pos': np.array([-4, -8])}
                         }

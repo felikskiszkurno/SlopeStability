@@ -12,9 +12,10 @@ import slopestabilityML
 import slostabcreatedata
 import numpy as np
 import settings
+import test_definitions
 
 settings.init()
-
+test_definitions.init()
 # Config
 create_new_data = False # set to True if you need to reassign the classes
 create_new_data_only = False # set to False in order to run ML classifications

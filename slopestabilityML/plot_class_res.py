@@ -6,6 +6,8 @@ Created on 31.03.2021
 @author: Feliks Kiszkurno
 """
 
+# LEGACY: NOW A PART OF plot_class_overview
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker

@@ -32,6 +32,12 @@ def create_folder_structure():
         folder_path = Path(os.getcwd() + '/' + settings.settings['figures_folder'] + 'ML/prediction/' + file_format)
         is_success = check_create_folder(folder_path)
 
+        folder_path = Path(os.getcwd() + '/' + settings.settings['figures_folder'] + 'ML/training/overview/' + file_format)
+        is_success = check_create_folder(folder_path)
+
+        folder_path = Path(os.getcwd() + '/' + settings.settings['figures_folder'] + 'ML/prediction/overview/' + file_format)
+        is_success = check_create_folder(folder_path)
+
 
     # Folder for results
     folder_path = Path(os.getcwd() + '/' + settings.settings['data_folder'])

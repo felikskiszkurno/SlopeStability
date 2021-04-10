@@ -9,6 +9,7 @@ Created on 31.03.2021
 import numpy as np
 from scipy import interpolate
 import math
+import gc
 
 
 def grid_data(x, y, data, *, regular_grid=False):  # data has to be a dictionary, output in dictionary in the same order as input
@@ -36,5 +37,8 @@ def grid_data(x, y, data, *, regular_grid=False):  # data has to be a dictionary
     for key in data.keys():
         result_temp = interpolate.griddata((x, y), data[key], (xx, yy), method='nearest')
         data_out[key] = result_temp
+
+    del data
+    gc.collect()
 
     return xi, yi, data_out
