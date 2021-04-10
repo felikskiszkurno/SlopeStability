@@ -34,7 +34,7 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     fig.subplots_adjust(hspace=0.8)
 
     # Plot input classes
-    im0 = plt.scatter(x, y, c=class_in)
+    im0 = ax[0].scatter(x, y, c=class_in)
     for depth in test_definitions.test_definitions[test_name]['layers_pos']:
         ax[0].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     ax[0].set_title('Input classes')
@@ -113,10 +113,10 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
 
     if training is True:
         slopestabilitytools.save_plot(fig, clf_name, '_ML_{}_class_overview_training'.format(test_name),
-                                      subfolder='ML/training/overview')
+                                      subfolder='ML/training')
 
     else:
         slopestabilitytools.save_plot(fig, clf_name, '_ML_{}_class_overview_prediction'.format(test_name),
-                                      subfolder='ML/prediction/overview')
+                                      subfolder='ML/prediction')
 
     return
