@@ -17,8 +17,8 @@ import test_definitions
 settings.init()
 test_definitions.init()
 # Config
-create_new_data = False # set to True if you need to reassign the classes
-create_new_data_only = False # set to False in order to run ML classifications
+create_new_data = True # set to True if you need to reassign the classes
+create_new_data_only = True # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
 
 # Load existing data instead of creating new one.

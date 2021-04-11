@@ -20,7 +20,6 @@ import settings
 
 
 def create_data(test_name, test_config, max_depth):
-
     world_boundary_v = [-9 * max_depth, 0]  # [NW edge] relatively to the middle
     world_boundary_h = [9 * max_depth, -9 * max_depth]  # [SE edge]
     # world_boundary_v = [-500, 0]  # [right, left border] relatively to the middle
@@ -98,7 +97,7 @@ def create_data(test_name, test_config, max_depth):
         array_min = np.min(input_model2_array)
         result_array = slostabcreatedata.clip_data(result_array, array_max, array_min)
     input_model2_array_norm = np.log(input_model2_array)
-    #input_model2_array_norm = slopestabilitytools.normalize(input_model2_array)
+    # input_model2_array_norm = slopestabilitytools.normalize(input_model2_array)
 
     fig_input, ax_input = plt.subplots(1)
     pg.show(ert_manager.paraDomain, input_model2, label=pg.unit('res'), showMesh=True, ax=ax_input)
@@ -136,11 +135,23 @@ def create_data(test_name, test_config, max_depth):
     rho_min = np.min(rho_arr)
 
     # TODO: this assumes only two resistivities, extend it to consider more
-    #result_array[np.where(result_array < rho_min)] = rho_min
-    #result_array[np.where(result_array > rho_max)] = rho_max
+    # result_array[np.where(result_array < rho_min)] = rho_min
+    # result_array[np.where(result_array > rho_max)] = rho_max
 
     result_array_norm = np.log(result_array)
-    #result_array_norm = slopestabilitytools.normalize(result_array)
+    # result_array_norm = slopestabilitytools.normalize(result_array)
+
+    labels_translator = {0: 'Very Low',
+                         1: 'Low',
+                         2: 'Medium',
+                         3: 'High',
+                         4: 'Very High'}
+    labels = [None] * len(classesn)
+    find_all = lambda x, xs: [i for (y, i) in zip(xs, range(len(xs))) if x == y]
+    for key in labels_translator.keys():
+        id_new = find_all(key, classesn)
+        for idx in id_new:
+            labels[idx] = labels_translator[key]
 
     experiment_results = pd.DataFrame(data={'X': ert_manager.paraDomain.cellCenters().array()[:, 0],
                                             'Y': ert_manager.paraDomain.cellCenters().array()[:, 1],
@@ -151,7 +162,8 @@ def create_data(test_name, test_config, max_depth):
                                             'RESN': result_array_norm,
                                             'SEN': cov,
                                             'CLASS': classes,
-                                            'CLASSN': classesn})
+                                            'CLASSN': classesn,
+                                            'LABELS': labels})
 
     experiment_results.to_csv(settings.settings['data_folder'] + '/' + test_name + '.csv')
 

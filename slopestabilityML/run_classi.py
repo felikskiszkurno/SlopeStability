@@ -59,12 +59,16 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         #cat_feat = ['CLASS']
         cat_lab = [0, 1]
 
-    #cat_trans = OneHotEncoder(categories=[cat_lab])
-
     num_trans = StandardScaler()
 
-    preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat)])#,
-                                                   #('cat', cat_trans, cat_feat)])
+    if settings.settings['use_labels']  is True:
+        cat_feat = ['LABEL']
+        cat_trans = OneHotEncoder(categories=[cat_lab])
+        preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat),
+                                                       ('cat', cat_trans, cat_feat)])
+
+    else:
+        preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat)])
 
     clf_pipeline = make_pipeline(preprocessor, clf)
 
