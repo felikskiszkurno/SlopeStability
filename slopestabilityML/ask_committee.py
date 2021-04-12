@@ -14,15 +14,15 @@ import slopestabilityML
 
 
 def ask_committee(ml_result_class, test_results, *, random_seed=False):
-    
-    results = np.array([])
+
     classes_correct = {}
     for test_name in sorted(test_results.keys()):
         if settings.settings['norm_class'] is True:
             class_in = test_results[test_name]['CLASSN']
-        elif settings.settings['norm_class'] is False:
+        elif settings.settings['norm_class'] is False and settings.settings['use_labels'] is False:
             class_in = test_results[test_name]['CLASS']
         elif settings.settings['use_labels'] is True:
+            class_in = test_results[test_name]['LABELS']
             class_in = slopestabilitytools.label2numeric(class_in)
         else:
             print('I don\'t know which class to use! Exiting...')
@@ -79,7 +79,7 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
 
     for test_group in sorted(tests_ordered.keys()):
         for test_name in tests_ordered[test_group]:
-            classes_correct_temp = classes_correct[test_name].to_numpy()
+            classes_correct_temp = np.array(classes_correct[test_name])
             classes_correct_temp = classes_correct_temp.reshape([len(results_voting[test_name]), 1])
             score = len(np.argwhere(results_voting[test_name] == classes_correct_temp)) / len(classes_correct_temp)
             if test_group is 'train':

@@ -65,8 +65,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         cat_feat = ['LABELS']
         cat_lab = ['Very Low', 'Low', 'Medium', 'High', 'Very High']
         cat_trans = OneHotEncoder(categories=[cat_lab])
-        preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat),
-                                                       ('cat', cat_trans, cat_feat)])
+        preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat)])
+                                                       #('cat', cat_trans, cat_feat)])
 
     else:
         preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat)])
@@ -97,25 +97,18 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     for test_name_pred in test_prediction:
         # Prepare data
         x_question, y_answer = slopestabilityML.preprocess_data(test_results[test_name_pred])
-
-        # y_pred = clf_pipeline.score(x_question, y_answer)
         y_pred = clf_pipeline.predict(x_question)
         result_class[test_name_pred] = y_pred
         # print(y_pred)
-        score1 = clf_pipeline.score(x_question, y_answer)
         score = accuracy_score(y_answer, y_pred)
-        if score1 == score:
-            print('MATCH!')
-        else:
-            print('MISMATCH!')
         print('score: {score:.2f} %'.format(score=score*100))
 
         if settings.settings['norm_class'] is True:
             class_in = test_results[test_name_pred]['CLASSN']
-        elif settings.settings['norm_class'] is False:
+        elif settings.settings['norm_class'] is False and settings.settings['use_labels'] is False:
             class_in = test_results[test_name_pred]['CLASS']
         elif settings.settings['use_labels'] is True:
-            class_in = test_results[test_name]['LABELS']
+            class_in = test_results[test_name_pred]['LABELS']
         else:
             print('I don\'t know which class to use! Exiting...')
             exit(0)
