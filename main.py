@@ -17,8 +17,8 @@ import test_definitions
 settings.init()
 test_definitions.init()
 # Config
-create_new_data = True # set to True if you need to reassign the classes
-create_new_data_only = True # set to False in order to run ML classifications
+create_new_data = False # set to True if you need to reassign the classes
+create_new_data_only = False # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
 
 # Load existing data instead of creating new one.
@@ -55,27 +55,8 @@ else:
     #                                                     layers_min, layers_max,
     #                                                     min_depth, max_depth)
 
-    tests_horizontal = {'hor_01': {'layer_n': 1, 'rho_values': [[1, 5], [2, 15]], 'layers_pos': np.array([-5])},
-                        'hor_02': {'layer_n': 1, 'rho_values': [[1, 5], [2, 50]], 'layers_pos': np.array([-5])},
-                        'hor_03': {'layer_n': 1, 'rho_values': [[1, 15], [2, 20]], 'layers_pos': np.array([-8])},
-                        'hor_04': {'layer_n': 1, 'rho_values': [[1, 5], [2, 10]], 'layers_pos': np.array([-3])},
-                        'hor_05': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-3])},
-                        'hor_06': {'layer_n': 1, 'rho_values': [[1, 2], [2, 10]], 'layers_pos': np.array([-4])},
-                        'hor_07': {'layer_n': 1, 'rho_values': [[1, 10], [2, 20]], 'layers_pos': np.array([-6])},
-                        'hor_08': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-3])},
-                        'hor_09': {'layer_n': 1, 'rho_values': [[1, 3], [2, 25]], 'layers_pos': np.array([-3])},
-                        'hor_10': {'layer_n': 1, 'rho_values': [[1, 5], [2, 25]], 'layers_pos': np.array([-7])},
-                        'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])},
-                        'hor_12': {'layer_n': 1, 'rho_values': [[1, 15], [2, 50]], 'layers_pos': np.array([-5])},
-                        'hor_13': {'layer_n': 2, 'rho_values': [[1, 3], [2, 5], [3, 15]],
-                                   'layers_pos': np.array([-3, -6])},
-                        'hor_14': {'layer_n': 2, 'rho_values': [[1, 2], [2, 4], [3, 8]],
-                                   'layers_pos': np.array([-4, -8])},
-                        'hor_15': {'layer_n': 1, 'rho_values': [[1, 4], [2, 15], [3, 25]],
-                                   'layers_pos': np.array([-4, -8])},
-                        'hor_16': {'layer_n': 1, 'rho_values': [[1, 5], [2, 20], [3, 50]],
-                                   'layers_pos': np.array([-4, -8])}
-                        }
+    tests_horizontal = test_definitions.test_definitions
+
 
     # tests_horizontal = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
 
@@ -85,7 +66,7 @@ else:
     for test_name in tests_horizontal.keys():
         test_result_curr, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
                                                                                      tests_horizontal[test_name],
-                                                                                     max_depth)
+                                                                                     abs(tests_horizontal[test_name]['layers_pos'].max()))
         test_results.update({test_name: test_result_curr})
         del test_result_curr
 

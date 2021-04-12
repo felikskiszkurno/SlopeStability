@@ -9,6 +9,7 @@ Created on 04.04.2021
 import numpy as np
 
 import settings
+import slopestabilitytools
 import slopestabilityML
 
 
@@ -21,6 +22,8 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
             class_in = test_results[test_name]['CLASSN']
         elif settings.settings['norm_class'] is False:
             class_in = test_results[test_name]['CLASS']
+        elif settings.settings['use_labels'] is True:
+            class_in = slopestabilitytools.label2numeric(class_in)
         else:
             print('I don\'t know which class to use! Exiting...')
             exit(0)
@@ -33,19 +36,18 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
         for test_name in sorted(ml_result_class[method_name].keys()):
             test_names_all_temp.append(test_name)
         test_names_all = set(test_names_all_temp)
-        #if sorted(test_names_all) == sorted(test_names_all_temp):
-        #    test_names_all = sorted(test_names_all_temp)
-        #else:
-        #    print("Mismatch in datasets!")
-        #    exit(0)
 
     # Combine results for each data set from each classifier into an array
     results_test = {}
     for test_name in test_names_all:
-        results = np.zeros([len(ml_result_class[list(ml_result_class.keys())[0]][test_name]), len( sorted(ml_result_class.keys()))])
+        results = np.zeros([len(ml_result_class[list(ml_result_class.keys())[0]][test_name]), len(sorted(ml_result_class.keys()))])
         method_id = 0
         for method_name in sorted(ml_result_class.keys()):
-            results[:, method_id] = ml_result_class[method_name][test_name].T.reshape([len(ml_result_class[method_name][test_name])])
+            if settings.settings['use_labels'] is True:
+                ml_result_numeric = slopestabilitytools.label2numeric(ml_result_class[method_name][test_name])
+            else:
+                ml_result_numeric = ml_result_class[method_name][test_name]
+            results[:, method_id] = np.array(ml_result_numeric).T.reshape([len(ml_result_class[method_name][test_name])])
             method_id = method_id + 1
         results_test[test_name] = results
 
@@ -55,7 +57,6 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
         test_result = results_test[test_name]
         shape_test = test_result.shape
         result_rows = shape_test[0]
-        result_cols = shape_test[1]
         result_voted = np.zeros([result_rows, 1])
         for row_id in range(result_rows):
             row_temp = test_result[row_id, :]
@@ -78,9 +79,9 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
 
     for test_group in sorted(tests_ordered.keys()):
         for test_name in tests_ordered[test_group]:
-            classes_correct = class_in.to_numpy()
-            classes_correct = classes_correct.reshape([len(results_voting[test_name]), 1])
-            score = len(np.argwhere(results_voting[test_name] == classes_correct)) / len(classes_correct)
+            classes_correct_temp = classes_correct[test_name].to_numpy()
+            classes_correct_temp = classes_correct_temp.reshape([len(results_voting[test_name]), 1])
+            score = len(np.argwhere(results_voting[test_name] == classes_correct_temp)) / len(classes_correct_temp)
             if test_group is 'train':
                 accuracy_score_training.append(score * 100)
                 accuracy_labels_training.append(test_name)

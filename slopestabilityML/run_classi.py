@@ -61,8 +61,9 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
     num_trans = StandardScaler()
 
-    if settings.settings['use_labels']  is True:
-        cat_feat = ['LABEL']
+    if settings.settings['use_labels'] is True:
+        cat_feat = ['LABELS']
+        cat_lab = ['Very Low', 'Low', 'Medium', 'High', 'Very High']
         cat_trans = OneHotEncoder(categories=[cat_lab])
         preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat),
                                                        ('cat', cat_trans, cat_feat)])
@@ -107,12 +108,14 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
             print('MATCH!')
         else:
             print('MISMATCH!')
-        print('score: '+str(score))
+        print('score: {score:.2f} %'.format(score=score*100))
 
         if settings.settings['norm_class'] is True:
             class_in = test_results[test_name_pred]['CLASSN']
         elif settings.settings['norm_class'] is False:
             class_in = test_results[test_name_pred]['CLASS']
+        elif settings.settings['use_labels'] is True:
+            class_in = test_results[test_name]['LABELS']
         else:
             print('I don\'t know which class to use! Exiting...')
             exit(0)

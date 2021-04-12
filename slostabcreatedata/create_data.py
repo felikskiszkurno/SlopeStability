@@ -68,7 +68,7 @@ def create_data(test_name, test_config, max_depth):
 
     # SIMULATE ERT MEASUREMENT - START ###
     data = ert.simulate(mesh, scheme=measurement_scheme, res=resistivity_map, noiseLevel=1, noiseAbs=1e-6, seed=1337)
-    data.remove(data['rhoa'] < 0)
+    data.remove(data['rhoa'] <= 0)
     # SIMULATE ERT MEASUREMENT - END ###
 
     ert_manager = ert.ERTManager(sr=False, useBert=True, verbose=True, debug=False)
@@ -164,6 +164,7 @@ def create_data(test_name, test_config, max_depth):
                                             'CLASS': classes,
                                             'CLASSN': classesn,
                                             'LABELS': labels})
+    experiment_results = experiment_results[(experiment_results.INMN > 0) & (experiment_results.RESN > 0)]
 
     experiment_results.to_csv(settings.settings['data_folder'] + '/' + test_name + '.csv')
 

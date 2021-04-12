@@ -23,6 +23,7 @@ from .save_plot import save_plot
 from .reassign_classes import reassign_classes
 from .grid_data import grid_data
 from .mov_avg import mov_avg
+from .classes_labels import numeric2label, label2numeric
 
 from .folder_structure.create_folder_structure import create_folder_structure
 from .folder_structure.create_folder_for_test import create_folder_for_test

@@ -12,6 +12,7 @@ from matplotlib import ticker
 
 import slopestabilitytools
 import test_definitions
+import settings
 
 
 def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, training=False):
@@ -22,9 +23,6 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     class_in = class_in.to_numpy()
     class_in = class_in.reshape(class_in.size)
 
-    class_diff = np.zeros_like(y_pred)
-    class_diff[np.where(class_in == y_pred)] = 1
-
     # Create plot
     fig, _ax = plt.subplots(nrows=4, ncols=2, figsize=(1.35*10, 10))
     ax = _ax.flatten()
@@ -32,6 +30,10 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
 
     fig.suptitle('Classification overview: ' + test_name + ', ' + clf_name)
     fig.subplots_adjust(hspace=0.8)
+
+    # Convert labels to numerical for plotting
+    if settings.settings['use_labels'] is True:
+        class_in = slopestabilitytools.label2numeric(class_in)
 
     # Plot input classes
     im0 = ax[0].scatter(x, y, c=class_in)
@@ -43,6 +45,10 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     tick_locator = ticker.MaxNLocator(nbins=4)
     cb[0].locator = tick_locator
     cb[0].update_ticks()
+
+    # Convert labels to numerical for plotting
+    if settings.settings['use_labels'] is True:
+        y_pred = slopestabilitytools.label2numeric(y_pred)
 
     # Plot prediction
     im1 = ax[1].scatter(x, y, c=y_pred)
@@ -65,6 +71,9 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     tick_locator = ticker.MaxNLocator(nbins=4)
     cb[2].locator = tick_locator
     cb[2].update_ticks()
+
+    class_diff = np.zeros_like(y_pred)
+    class_diff[np.where(class_in == y_pred)] = 1
 
     # Plot difference between correct and predicted classes
     im3 = ax[3].scatter(x, y, c=class_diff)

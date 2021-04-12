@@ -22,6 +22,8 @@ def preprocess_data(data_set):
 
     if settings.settings['norm_class'] is True:
         y_train = pd.DataFrame(data_set['CLASSN'])
+    elif settings.settings['use_labels'] is True:
+        y_train = pd.DataFrame(data_set['LABELS'])
     else:
         y_train = pd.DataFrame(data_set['CLASS'])
 
