@@ -9,14 +9,18 @@ Created on 19.01.2021
 import slopestabilitytools
 import random
 import math
+import settings
 
 
-def split_dataset(test_names, random_seed, *, proportion=0.25):
+def split_dataset(test_names, random_seed, *, proportion=False):
+
+    if proportion is False:
+        proportion = settings.settings['split_proportion']
 
     random.seed(random_seed)
 
     test_number = len(test_names)
-    test_prediction = random.choices(list(test_names),
+    test_prediction = random.sample(list(test_names),
                                      k=math.ceil(test_number * proportion))
 
     test_training = slopestabilitytools.set_diff(list(test_names), set(test_prediction))
