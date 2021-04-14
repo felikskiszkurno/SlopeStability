@@ -78,18 +78,15 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         print(test_name)
         x_train, y_train = slopestabilityML.preprocess_data(test_results[test_name])
         # Train classifier
-        clf_pipeline.fit(x_train, y_train)
-        y_pred = clf_pipeline.predict(x_train)
-        score_training1 = clf_pipeline.score(x_train, y_train)
-        score_training = accuracy_score(y_train, y_pred)
-        if score_training1 == score_training:
-            print('MATCH!')
-        else:
-            print('MISMATCH!')
-        accuracy_result_training.append(score_training * 100)
-        accuracy_labels_training.append(test_name)
+    clf_pipeline.fit(x_train, y_train)
+    y_pred = clf_pipeline.predict(x_train)
+    score_training1 = clf_pipeline.score(x_train, y_train)
+    score_training = accuracy_score(y_train, y_pred)
 
-        slopestabilityML.plot_class_overview(test_results[test_name], test_name, y_train, y_pred, clf_name, training=True)
+    accuracy_result_training.append(score_training * 100)
+    accuracy_labels_training.append(test_name)
+
+    slopestabilityML.plot_class_overview(test_results[test_name], test_name, y_train, y_pred, clf_name, training=True)
 
     result_class = {}
 
