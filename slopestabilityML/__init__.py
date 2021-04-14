@@ -10,7 +10,7 @@ from .combine_results import combine_results
 from .plot_results import plot_results
 from .run_every import run_all_tests
 from .split_dataset import split_dataset
-from .run_classi import run_classification
+from .run_classification import run_classification
 from .preprocess_data import preprocess_data
 from .plot_class_res import plot_class_res
 from .ask_committee import ask_committee
