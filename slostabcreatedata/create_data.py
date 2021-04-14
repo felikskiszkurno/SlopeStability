@@ -119,10 +119,8 @@ def create_data(test_name, test_config, max_depth):
 
     classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array))
 
-
     # Create sensitivity values
     jac = ert_manager.fop.jacobian()  #
-    # Normalization only for visualization!
 
     # Coverage = cumulative sensitivity = all measurements
     cov = ert_manager.coverage()
@@ -134,10 +132,6 @@ def create_data(test_name, test_config, max_depth):
     rho_arr = np.array(rho_arr)
     rho_max = np.max(rho_arr)
     rho_min = np.min(rho_arr)
-
-    # TODO: this assumes only two resistivities, extend it to consider more
-    # result_array[np.where(result_array < rho_min)] = rho_min
-    # result_array[np.where(result_array > rho_max)] = rho_max
 
     result_array_norm = np.log(result_array)
     # result_array_norm = slopestabilitytools.normalize(result_array)
@@ -154,7 +148,10 @@ def create_data(test_name, test_config, max_depth):
         for idx in id_new:
             labels[idx] = labels_translator[key]
 
-    experiment_results = pd.DataFrame(data={'X': ert_manager.paraDomain.cellCenters().array()[:, 0],
+    test_name_column = [test_name] * len(input_model2_array)
+
+    experiment_results = pd.DataFrame(data={'NAME': test_name_column,
+                                            'X': ert_manager.paraDomain.cellCenters().array()[:, 0],
                                             'Y': ert_manager.paraDomain.cellCenters().array()[:, 1],
                                             'Z': ert_manager.paraDomain.cellCenters().array()[:, 2],
                                             'INM': input_model2_array,

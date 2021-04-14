@@ -10,7 +10,7 @@ from sklearn import svm
 
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
-import slopestabilityML.run_classi
+import slopestabilityML.run_classification
 
 
 # TODO: for comparability with other ML methods, add option to define which test should be used for training externaly

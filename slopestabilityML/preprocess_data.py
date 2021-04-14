@@ -14,9 +14,9 @@ import numpy as np
 def preprocess_data(data_set):
 
     if settings.settings['norm'] is True:
-        x_train = data_set.drop(['X', 'Z', 'INM', 'INMN', 'RES', 'CLASS', 'CLASSN', 'LABELS'], axis='columns')
+        x_train = data_set.drop(['NAME', 'X', 'Z', 'INM', 'INMN', 'RES', 'CLASS', 'CLASSN', 'LABELS'], axis='columns')
     else:
-        x_train = data_set.drop(['X', 'Z', 'INM', 'INMN', 'RESN', 'CLASS', 'CLASSN', 'LABELS'], axis='columns')
+        x_train = data_set.drop(['NAME', 'X', 'Z', 'INM', 'INMN', 'RESN', 'CLASS', 'CLASSN', 'LABELS'], axis='columns')
 
     if settings.settings['sen'] is False:
         x_train = x_train.drop(['SEN'], axis='columns')

@@ -18,7 +18,7 @@ def init():
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids
     settings['norm_class_num'] = 5  # Number of classes for normalized data
-    settings['norm'] = False  # True to use normalized data, False to use raw data
+    settings['norm'] = True  # True to use normalized data, False to use raw data
     settings['use_labels'] = False  # True to use labels instead of classes
 
     # Include sensitivity

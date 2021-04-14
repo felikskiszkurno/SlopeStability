@@ -8,7 +8,7 @@ Created on 26.03.2021
 
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
-import slopestabilityML.run_classi
+import slopestabilityML.run_classification
 
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier

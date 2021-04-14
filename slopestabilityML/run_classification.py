@@ -7,7 +7,7 @@ Created on 19.01.2021
 """
 import settings
 import slopestabilityML
-import numpy as np
+import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import make_pipeline
@@ -38,26 +38,6 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     if settings.settings['depth'] is True:
         num_feat.append('Y')
 
-    # if settings.settings['norm'] is True and settings.settings['sen'] is True:
-    #     num_feat = ['RESN', 'SEN']
-    # elif settings.settings['norm'] is False and settings.settings['sen'] is True:
-    #     num_feat = ['RES', 'SEN']
-    # elif settings.settings['norm'] is False and settings.settings['sen'] is False:
-    #     num_feat = ['RES']
-    # elif settings.settings['norm'] is True and settings.settings['sen'] is False:
-    #     num_feat = ['RESN']
-
-    #cat_feat = ['CLASS']
-    #cat_lab = [0, 1]
-
-    if settings.settings['norm_class'] is True:
-        #cat_feat = ['CLASSN']
-        cat_lab = np.linspace(0, settings.settings['norm_class_num'] - 1, settings.settings['norm_class_num'])
-
-    elif settings.settings['norm_class'] is False:
-        #cat_feat = ['CLASS']
-        cat_lab = [0, 1]
-
     num_trans = StandardScaler()
 
     if settings.settings['use_labels'] is True:
@@ -72,27 +52,35 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
     clf_pipeline = make_pipeline(preprocessor, clf)
 
-    # This part is wrong
-    for test_name in test_training:
-        # Prepare data
-        print(test_name)
-        x_train, y_train = slopestabilityML.preprocess_data(test_results[test_name])
-        # Train classifier
+    test_results_combined = pd.DataFrame()
+    for name in test_training:
+        test_results_combined = test_results_combined.append(test_results[name])
+    test_results_combined = test_results_combined.reset_index()
+    test_results_combined = test_results_combined.drop(['index'], axis='columns')
+    x_train, y_train = slopestabilityML.preprocess_data(test_results_combined)
+
     clf_pipeline.fit(x_train, y_train)
-    y_pred = clf_pipeline.predict(x_train)
-    score_training1 = clf_pipeline.score(x_train, y_train)
-    score_training = accuracy_score(y_train, y_pred)
 
-    accuracy_result_training.append(score_training * 100)
-    accuracy_labels_training.append(test_name)
-
-    slopestabilityML.plot_class_overview(test_results[test_name], test_name, y_train, y_pred, clf_name, training=True)
+    for name in test_training:
+        print(name)
+        index = test_results_combined.index[test_results_combined['NAME'] == name]
+        if settings.settings['norm_class'] is True:
+            class_correct = test_results_combined['CLASSN'].loc[index]
+        else:
+            class_correct = test_results_combined['CLASS'].loc[index]
+        y_pred = clf_pipeline.predict(x_train.loc[index])
+        score_training = accuracy_score(class_correct, y_pred)
+        accuracy_result_training.append(score_training * 100)
+        accuracy_labels_training.append(name)
+        #print(y_train.loc[index])
+        slopestabilityML.plot_class_overview(test_results_combined.loc[index], name, y_train.loc[index], y_pred, clf_name, training=True)
 
     result_class = {}
 
     # Predict with classifier
     for test_name_pred in test_prediction:
         # Prepare data
+        print(test_name_pred)
         x_question, y_answer = slopestabilityML.preprocess_data(test_results[test_name_pred])
         y_pred = clf_pipeline.predict(x_question)
         result_class[test_name_pred] = y_pred

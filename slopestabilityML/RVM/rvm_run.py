@@ -10,7 +10,7 @@ from sklearn_rvm import  EMRVC
 
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
-import slopestabilityML.run_classi
+import slopestabilityML.run_classification
 
 
 def rvm_run(test_results, random_seed):

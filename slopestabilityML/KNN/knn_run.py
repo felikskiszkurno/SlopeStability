@@ -9,7 +9,7 @@ Created on 26.01.2021
 from sklearn.neighbors import KNeighborsClassifier
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
-import slopestabilityML.run_classi
+import slopestabilityML.run_classification
 
 def knn_run(test_results, random_seed):
 

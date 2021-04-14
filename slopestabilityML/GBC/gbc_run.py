@@ -9,7 +9,7 @@ Created on 19.01.2021
 from sklearn import ensemble
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
-import slopestabilityML.run_classi
+import slopestabilityML.run_classification
 
 # TODO: as in svm_run
 

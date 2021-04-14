@@ -10,7 +10,7 @@ from sklearn.linear_model import SGDClassifier
 
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
-import slopestabilityML.run_classi
+import slopestabilityML.run_classification
 
 
 def sgd_run(test_results, random_seed):
