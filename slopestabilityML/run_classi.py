@@ -6,6 +6,8 @@ Created on 19.01.2021
 @author: Feliks Kiszkurno
 """
 
+# LEGACY FILE DONT USE!!!!
+
 import settings
 import slopestabilityML
 import numpy as np
@@ -18,7 +20,7 @@ from matplotlib import ticker
 import slopestabilitytools
 
 
-def run_classification(test_training, test_prediction, test_results, clf, clf_name):
+def run_classification_legacy(test_training, test_prediction, test_results, clf, clf_name):
 
     accuracy_result = []
     accuracy_labels = []
@@ -73,6 +75,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
     clf_pipeline = make_pipeline(preprocessor, clf)
 
+    # This part is wrong
     for test_name in test_training:
         # Prepare data
         print(test_name)
