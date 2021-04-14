@@ -121,7 +121,7 @@ def model_params(n_of_tests, rho_spread, rho_max, layers_n_min, layers_n_max, de
                                                         'rho_values': rho_final,
                                                         'layers_pos': test_layers_pos[test_names[test_id]]}})
 
-    #tests_horizontal = {'names': test_names,
+    #tests_parameters = {'names': test_names,
          #               'layer_n': test_n_layers,
           #              'rho_values': test_rho,
             #            'layers_pos': test_layers_pos}

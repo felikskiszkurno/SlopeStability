@@ -139,7 +139,7 @@ for electrode in measurement_scheme.sensors():
         
 mesh = mt.createMesh(geometry, quality=34)#, area=2)#
   
-#print(tests_horizontal['rho_values'][test_name])
+#print(tests_parameters['rho_values'][test_name])
 resistivity_map = tests_horizontal['rho_values'][test_name]#[0]
 resistivity_map[0] = [1, 50.0]
 resistivity_map[1] = [2, 150.0]

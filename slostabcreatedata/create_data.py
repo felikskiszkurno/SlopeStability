@@ -30,8 +30,8 @@ def create_data(test_name, test_config, max_depth):
     # INPUT MODEL - SUBSURFACE START #
     world = mt.createWorld(start=world_boundary_v, end=world_boundary_h,
                            layers=test_config['layers_pos'])  # ,
-    # marker=np.linspace(1, tests_horizontal['layer_n']['hor_1'],
-    #                  tests_horizontal['layer_n']['hor_1']))
+    # marker=np.linspace(1, tests_parameters['layer_n']['hor_1'],
+    #                  tests_parameters['layer_n']['hor_1']))
 
     geometry = world  # +block
 

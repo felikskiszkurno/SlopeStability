@@ -11,12 +11,13 @@ import slopestabilitytools
 import slopestabilityML
 import slostabcreatedata
 import os.path
+import gc
 import numpy as np
 import settings
 import test_definitions
 
 settings.init()
-test_definitions.init()
+#test_definitions.init()
 # Config
 create_new_data = True  # set to True if you need to reassign the classes
 create_new_data_only = True  # set to False in order to run ML classifications
@@ -51,35 +52,39 @@ else:
     max_depth = 8
 
     # Generate parameters for tests
-    # tests_horizontal = slopestabilitytools.model_params(number_of_tests,
+    # tests_parameters = slopestabilitytools.model_params(number_of_tests,
     #                                                     rho_spread_factor, rho_max,
     #                                                     layers_min, layers_max,
     #                                                     min_depth, max_depth)
 
-    #tests_horizontal = test_definitions.test_definitions
-    tests_horizontal = slostabcreatedata.read_test_parameters(os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth.csv'))
+    #tests_parameters = test_definitions.test_definitions
+    tests_parameters = slostabcreatedata.read_test_parameters(os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth.csv'))
+    test_definitions.init(tests_parameters)
 
-
-    # tests_horizontal = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
+    # tests_parameters = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
 
     #  Create models and invert them
     test_results = {}
 
-    for test_name in tests_horizontal.keys():
+    for test_name in tests_parameters.keys():
         test_result_curr, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
-                                                                                     tests_horizontal[test_name],
-                                                                                     abs(tests_horizontal[test_name]['layers_pos'].max()))
+                                                                                     tests_parameters[test_name],
+                                                                                     abs(tests_parameters[test_name]['layers_pos'].max()))
         test_results.update({test_name: test_result_curr})
         del test_result_curr
 
         # Plot and save figures
         slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
                                           test_rho_min)
+        gc.collect()
 
 # Evaluate data with ML techniques
 if not create_new_data_only:
 
     print('Running ML stuff...')
+    tests_parameters = slostabcreatedata.read_test_parameters(
+        os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth.csv'))
+    test_definitions.init(tests_parameters)
     ml_results = slopestabilityML.run_all_tests(test_results)
 
 # Finish the script if ML classifiaction was not executed

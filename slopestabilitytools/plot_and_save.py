@@ -19,23 +19,32 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
 
     if settings.settings['norm'] is True:
         plot_title = plot_title + '_norm'
-        data = {'INM': test_result['INMN'],
-                'RES': test_result['RESN'],
-                'SEN': test_result['SEN']}
+        inm = test_result['INMN']
+        res = test_result['RESN']
+        sen = test_result['SEN']
     elif settings.settings['norm'] is False:
-        data = {'INM': test_result['INM'],
-                'RES': test_result['RES'],
-                'SEN': test_result['SEN']}
-
-    else:
-        print('I don\'t know which kind of data to use! Exiting...')
-        exit(0)
-
-    xi, yi, data_gridded = slopestabilitytools.grid_data(x, y, data)
-
-    inm_i = data_gridded['INM']
-    res_i = data_gridded['RES']
-    cov_i = data_gridded['SEN']
+        inm = test_result['INM']
+        res = test_result['RES']
+        sen = test_result['SEN']
+    # if settings.settings['norm'] is True:
+    #     plot_title = plot_title + '_norm'
+    #     data = {'INM': test_result['INMN'],
+    #             'RES': test_result['RESN'],
+    #             'SEN': test_result['SEN']}
+    # elif settings.settings['norm'] is False:
+    #     data = {'INM': test_result['INM'],
+    #             'RES': test_result['RES'],
+    #             'SEN': test_result['SEN']}
+    #
+    # else:
+    #     print('I don\'t know which kind of data to use! Exiting...')
+    #     exit(0)
+    #
+    # xi, yi, data_gridded = slopestabilitytools.grid_data(x, y, data)
+    #
+    # inm_i = data_gridded['INM']
+    # res_i = data_gridded['RES']
+    # cov_i = data_gridded['SEN']
 
     print('Plotting and saving overview figure... ')
 
@@ -49,7 +58,8 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     fig.suptitle(plot_title)
     fig.subplots_adjust(hspace=0.8)
 
-    im0 = ax[0].contourf(xi, yi, inm_i, vmax=rho_max, vmin=rho_min)
+    im0 = ax[0].scatter(x, y, c=inm)
+    #im0 = ax[0].contourf(xi, yi, inm_i, vmax=rho_max, vmin=rho_min)
     ax[0].set_title('Input model')
     ax[0] = slopestabilitytools.set_labels(ax[0])
     cb.append(plt.colorbar(im0, ax=ax[0], label='Resistivity [om]'))#, shrink=0.9)
@@ -57,7 +67,8 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     cb[0].locator = tick_locator
     cb[0].update_ticks()
 
-    im1 = ax[1].contourf(xi, yi, res_i, vmax=rho_max, vmin=rho_min)
+    im1 = ax[1].scatter(x, y, c=res)
+    #im1 = ax[1].contourf(xi, yi, res_i, vmax=rho_max, vmin=rho_min)
     ax[1].set_title('Result')
     ax[1] = slopestabilitytools.set_labels(ax[1])
     cb.append(plt.colorbar(im1, ax=ax[1], label='Resistivity [om]'))#, shrink=0.9)
@@ -65,7 +76,8 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     cb[1].locator = tick_locator
     cb[1].update_ticks()
 
-    im2 = ax[2].contourf(xi, yi, inm_i-res_i, cmap='RdBu')
+    im2 = ax[2].scatter(x, y, c=inm-res, cmap='RdBu')
+    #im2 = ax[2].contourf(xi, yi, inm_i-res_i, cmap='RdBu')
     ax[2].set_title('Difference')
     ax[2] = slopestabilitytools.set_labels(ax[2])
     cb.append(plt.colorbar(im2, ax=ax[2], label='Resistivity [om]'))#, shrink=0.9)
@@ -82,7 +94,8 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
 
     fig.suptitle(plot_title+' coverage')
 
-    im0 = ax_cov.contourf(xi, yi, cov_i)
+    im0 = ax_cov.scatter(x, y, c=sen)
+    #im0 = ax_cov.contourf(xi, yi, cov_i)
     ax_cov.set_title(plot_title+' coverage')
     ax_cov = slopestabilitytools.set_labels(ax_cov)
     cb_cov = plt.colorbar(im0, ax=ax_cov, label='Coverage')  # , shrink=0.9)

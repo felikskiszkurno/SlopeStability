@@ -11,7 +11,7 @@ import numpy as np
 
 def read_test_parameters(path_to_file):
 
-    params = pd.read_csv(path_to_file, header=1)
+    params = pd.read_csv(path_to_file)
 
     test_definitions = {}
     test_names = params['NAME'].unique()
@@ -24,9 +24,8 @@ def read_test_parameters(path_to_file):
         for i, row in params_temp.iterrows():
             rho_list.append([layer_id, row['RHO']])
             layer_id += 1
-            if row['POS'] is not 0:
+            if int(row['POS']) is not 0:
                 position.append(row['POS'])
-            print(row['RHO'])
         test_definitions[name] = {'layer_n': row['LAYER_N'], 'rho_values': rho_list, 'layers_pos': np.array(position)}
 
     return test_definitions
