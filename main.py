@@ -10,6 +10,7 @@ import slopestabilitytools.datamanagement
 import slopestabilitytools
 import slopestabilityML
 import slostabcreatedata
+import os.path
 import numpy as np
 import settings
 import test_definitions
@@ -17,8 +18,8 @@ import test_definitions
 settings.init()
 test_definitions.init()
 # Config
-create_new_data = False  # set to True if you need to reassign the classes
-create_new_data_only = False  # set to False in order to run ML classifications
+create_new_data = True  # set to True if you need to reassign the classes
+create_new_data_only = True  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
 
 # Load existing data instead of creating new one.
@@ -55,7 +56,8 @@ else:
     #                                                     layers_min, layers_max,
     #                                                     min_depth, max_depth)
 
-    tests_horizontal = test_definitions.test_definitions
+    #tests_horizontal = test_definitions.test_definitions
+    tests_horizontal = slostabcreatedata.read_test_parameters(os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth.csv'))
 
 
     # tests_horizontal = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
