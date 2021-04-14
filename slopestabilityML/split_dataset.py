@@ -22,7 +22,9 @@ def split_dataset(test_names, random_seed, *, proportion=False):
     test_number = len(test_names)
     test_prediction = random.sample(list(test_names),
                                      k=math.ceil(test_number * proportion))
+    print('Number of tests used for prediction: '+str(len(test_prediction)))
 
     test_training = slopestabilitytools.set_diff(list(test_names), set(test_prediction))
+    print('Number of tests used for training: ' + str(len(test_training)))
 
     return sorted(test_training), sorted(test_prediction)

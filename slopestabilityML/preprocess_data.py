@@ -8,6 +8,7 @@ Created on 19.01.2021
 
 import settings
 import pandas as pd
+import numpy as np
 
 
 def preprocess_data(data_set):
@@ -25,7 +26,7 @@ def preprocess_data(data_set):
     elif settings.settings['use_labels'] is True:
         y_train = pd.DataFrame(data_set['LABELS'])
     else:
-        y_train = pd.DataFrame(data_set['CLASS'])
+        y_train = pd.DataFrame(data_set['CLASS'].to_numpy().astype(int))
 
     if settings.settings['depth'] is False:
         x_train = x_train.drop(['Y'], axis='columns')

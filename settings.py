@@ -13,7 +13,7 @@ def init():
 
     settings = {}
 
-    settings['split_proportion'] = 0.75
+    settings['split_proportion'] = 0.25
 
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids

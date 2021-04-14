@@ -75,7 +75,7 @@ def create_data(test_name, test_config, max_depth):
 
     # RUN INVERSION #
     k0 = pg.physics.ert.createGeometricFactors(data)
-    model_inverted = ert_manager.invert(data=data, lam=100, paraDX=0.25, paraMaxCellSize=2, # paraDepth=2 * max_depth,
+    model_inverted = ert_manager.invert(data=data, lam=20, paraDX=0.25, paraMaxCellSize=2, # paraDepth=2 * max_depth,
                                         quality=34, zPower=0.4)
 
     result_full = ert_manager.inv.model
@@ -118,6 +118,7 @@ def create_data(test_name, test_config, max_depth):
         classes.append(res_index)
 
     classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array))
+
 
     # Create sensitivity values
     jac = ert_manager.fop.jacobian()  #
