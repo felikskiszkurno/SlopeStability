@@ -19,8 +19,8 @@ import test_definitions
 settings.init()
 #test_definitions.init()
 # Config
-create_new_data = True  # set to True if you need to reassign the classes
-create_new_data_only = True  # set to False in order to run ML classifications
+create_new_data = False  # set to True if you need to reassign the classes
+create_new_data_only = False  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
 
 # Load existing data instead of creating new one.
@@ -58,7 +58,7 @@ else:
     #                                                     min_depth, max_depth)
 
     #tests_parameters = test_definitions.test_definitions
-    tests_parameters = slostabcreatedata.read_test_parameters(os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth.csv'))
+    tests_parameters = slostabcreatedata.read_test_parameters(os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/big_list_overnight_part2.csv'))
     test_definitions.init(tests_parameters)
 
     # tests_parameters = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
@@ -83,7 +83,7 @@ if not create_new_data_only:
 
     print('Running ML stuff...')
     tests_parameters = slostabcreatedata.read_test_parameters(
-        os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth.csv'))
+        os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_constant_depth_varying_contrast.csv'))
     test_definitions.init(tests_parameters)
     ml_results = slopestabilityML.run_all_tests(test_results)
 

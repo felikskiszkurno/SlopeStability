@@ -13,7 +13,7 @@ def init():
 
     settings = {}
 
-    settings['split_proportion'] = 0.25
+    settings['split_proportion'] = 0.25  # Part of available profiles that will be used for prediction
 
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids

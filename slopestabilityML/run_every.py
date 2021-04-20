@@ -55,13 +55,13 @@ def run_all_tests(test_results):
     ml_results_class['knn'] = knn_result_class
     gc.collect()
 
-    print('Running ADABOOST...')
-    ada_result_class, ada_accuracy_score, ada_accuracy_labels, ada_accuracy_score_training, ada_accuracy_labels_training = \
-        slopestabilityML.ADABOOST.adaboost_run(test_results, random_seed)
-    ml_results['ADA'] = {'score': ada_accuracy_score, 'labels': ada_accuracy_labels,
-                         'score_training': ada_accuracy_score_training, 'labels_training': ada_accuracy_labels_training}
-    ml_results_class['ada'] = ada_result_class
-    gc.collect()
+    # print('Running ADABOOST...')
+    # ada_result_class, ada_accuracy_score, ada_accuracy_labels, ada_accuracy_score_training, ada_accuracy_labels_training = \
+    #     slopestabilityML.ADABOOST.adaboost_run(test_results, random_seed)
+    # ml_results['ADA'] = {'score': ada_accuracy_score, 'labels': ada_accuracy_labels,
+    #                      'score_training': ada_accuracy_score_training, 'labels_training': ada_accuracy_labels_training}
+    # ml_results_class['ada'] = ada_result_class
+    # gc.collect()
 
     # print('Running RVM...')
     # rvm_accuracy_score, rvm_accuracy_labels, rvm_accuracy_score_training, rvm_accuracy_labels_training = \

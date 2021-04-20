@@ -24,7 +24,8 @@ def plot_results(accuracy_labels, accuracy_score, clf_name):
     plt.ylabel('Correct points [%]')
     plt.title(clf_name_title+' accuracy score')
     print('plot script is executed')
-    fig.tight_layout()
+    plt.tick_params(axis='x', which='major', labelsize=4)
+    #fig.tight_layout()
     slopestabilitytools.save_plot(fig, clf_name, '_accuracy', subfolder='ML/')
 
     return

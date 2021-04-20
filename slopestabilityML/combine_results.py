@@ -68,5 +68,5 @@ def combine_results(ml_results):
     plt.ylabel('Correct points [%]')
     plt.legend(loc='lower right')
 
-    fig.tight_layout()
+    #fig.tight_layout()
     slopestabilitytools.save_plot(fig, '', 'ML_summary_training', skip_fileformat=True)
