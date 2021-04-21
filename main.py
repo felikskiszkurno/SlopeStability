@@ -22,7 +22,7 @@ settings.init()
 create_new_data = True  # set to True if you need to reassign the classes
 create_new_data_only = True  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
-param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth.csv')
+param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor_1layer_varying_depth_lambda_zweight.csv')
 test_definitions.init(path=param_path)
 
 test_definitions.init(path=param_path)
@@ -72,8 +72,8 @@ else:
         test_result_curr, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
                                                                                      test_definitions.test_parameters[test_name],
                                                                                      abs(test_definitions.test_parameters[test_name]['layers_pos'].max()),
-                                                                                     lambda_param=test_definitions.test_parameters[test_name]['lambda'],
-                                                                                     z_weight=test_definitions.test_parameters[test_name]['z_weight'])
+                                                                                     lambda_param=test_definitions.test_parameters[test_name]['lambda'][0],
+                                                                                     z_weight=test_definitions.test_parameters[test_name]['z_weight'][0])
         test_results.update({test_name: test_result_curr})
         del test_result_curr
 
