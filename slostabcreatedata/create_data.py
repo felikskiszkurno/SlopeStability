@@ -38,7 +38,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     fig_geometry, ax_geometry = plt.subplots(1)
     pg.show(geometry, ax=ax_geometry)
     ax_geometry = slopestabilitytools.set_labels(ax_geometry)
-    ax_geometry.set_title('1 Geometry of the model')
+    ax_geometry.set_title('1 Geometry of the model; lam:{}, zw:{}'.format(lambda_param, z_weight))
     fig_geometry.tight_layout()
     slopestabilitytools.save_plot(fig_geometry, test_name, '_1_geometry')
 
@@ -57,7 +57,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     fig_model, ax_model = plt.subplots(1)
     pg.show(mesh, data=resistivity_map, label=pg.unit('res'), showMesh=True, ax=ax_model)
     ax_model = slopestabilitytools.set_labels(ax_model)
-    ax_model.set_title('2 Mesh and resistivity distribution')
+    ax_model.set_title('2 Mesh and resistivity distribution; lam:{}, zw:{}'.format(lambda_param, z_weight))
     fig_model.tight_layout()
     plot_name = '_2_meshdist.png'
     slopestabilitytools.save_plot(fig_model, test_name, '_2_meshdist')
@@ -104,7 +104,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     fig_input, ax_input = plt.subplots(1)
     pg.show(ert_manager.paraDomain, input_model2, label=pg.unit('res'), showMesh=True, ax=ax_input)
     ax_input = slopestabilitytools.set_labels(ax_input)
-    ax_input.set_title('4 Model on inv mesh')
+    ax_input.set_title('4 Model on inv mesh; lam:{}, zw:{}'.format(lambda_param, z_weight))
     fig_input.tight_layout()
     slopestabilitytools.save_plot(fig_input, test_name, '_4_modelinv')
 
