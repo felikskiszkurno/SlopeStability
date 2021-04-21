@@ -27,6 +27,7 @@ test_definitions.init(path=param_path)
 
 test_definitions.init(path=param_path)
 # Load existing data instead of creating new one.
+print('start')
 if not create_new_data:
 
     test_results = slopestabilitytools.datamanagement.import_tests()

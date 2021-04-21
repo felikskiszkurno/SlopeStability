@@ -6,7 +6,7 @@ Created on 31.03.2021
 @author: Feliks Kiszkurno
 """
 
-from sklearn_rvm import  EMRVC
+from sklearn_rvm import EMRVC
 
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
@@ -14,7 +14,6 @@ import slopestabilityML.run_classification
 
 
 def rvm_run(test_results, random_seed):
-
     test_training, test_prediction = slopestabilityML.split_dataset(test_results.keys(), random_seed)
 
     accuracy_score = []
