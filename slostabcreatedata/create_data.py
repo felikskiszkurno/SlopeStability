@@ -19,9 +19,9 @@ import slostabcreatedata
 import settings
 
 
-def create_data(test_name, test_config, max_depth):
-    world_boundary_v = [-9 * max_depth, 0]  # [NW edge] relatively to the middle
-    world_boundary_h = [9 * max_depth, -9 * max_depth]  # [SE edge]
+def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=0.6):
+    world_boundary_v = [-200, 0]  # [NW edge] relatively to the middle
+    world_boundary_h = [200, -100]  # [SE edge]
     # world_boundary_v = [-500, 0]  # [right, left border] relatively to the middle
     # world_boundary_h = [500, -100]  # [top, bottom border]
 
@@ -43,14 +43,14 @@ def create_data(test_name, test_config, max_depth):
     slopestabilitytools.save_plot(fig_geometry, test_name, '_1_geometry')
 
     measurement_scheme = ert.createERTData(
-        elecs=np.linspace(start=-8 * max_depth, stop=8 * max_depth, num=8 * max_depth + 1),
+        elecs=np.linspace(start=-32, stop=32, num=44),
         schemeName='dd')
 
     for electrode in measurement_scheme.sensors():
         geometry.createNode(electrode)
         geometry.createNode(electrode - [0, 0.1])  # What does it do?
 
-    mesh = mt.createMesh(geometry, quality=34)  # , area=2)#
+    mesh = mt.createMesh(geometry, quality=34, area=2)#
 
     resistivity_map = test_config['rho_values']  # [0]
 
@@ -75,7 +75,9 @@ def create_data(test_name, test_config, max_depth):
 
     # RUN INVERSION #
     k0 = pg.physics.ert.createGeometricFactors(data)
-    model_inverted = ert_manager.invert(data=data, lam=20, paraDX=0.25, paraMaxCellSize=2, zWeight=0.9, # paraDepth=2 * max_depth,
+    #inversion_Domain = mt.createMesh(mt.createRectangle([-35, 0], [35, -25], quality=34, area=1))
+    #inversion_mesh = pg.meshtools.appendTriangleBoundary(inversion_Domain, marker=0, xbound=30, ybound=30)
+    model_inverted = ert_manager.invert(data=data, lam=lambda_param, paraDX=0.25, paraMaxCellSize=2, zWeight=z_weight, # paraDepth=2 * max_depth,
                                         quality=34, zPower=0.4)
 
     result_full = ert_manager.inv.model

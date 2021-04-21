@@ -6,15 +6,19 @@ Created on 08.04.2021
 @author: Feliks Kiszkurno
 """
 
-import numpy as np
 import slostabcreatedata
-import os.path
 
-def init(test_def):
 
-    global test_definitions
-    test_definitions = slostabcreatedata.read_test_parameters(os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/big_list_overnight_part2.csv'))
+def init(path):
 
+    global test_parameters
+
+    test_parameters = {}
+
+    if path is not '':
+        test_parameters = slostabcreatedata.read_test_parameters(path)
+    else:
+        print('temp')
     # test_definitions = {'hor1_01': {'layer_n': 1, 'rho_values': [[1, 5], [2, 15]], 'layers_pos': np.array([-5])},
     #                     'hor1_02': {'layer_n': 1, 'rho_values': [[1, 5], [2, 50]], 'layers_pos': np.array([-5])},
     #                     'hor1_03': {'layer_n': 1, 'rho_values': [[1, 15], [2, 20]], 'layers_pos': np.array([-8])},
