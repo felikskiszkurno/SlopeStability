@@ -8,22 +8,30 @@ Created on 19.01.2021
 import settings
 import slopestabilityML
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
-from matplotlib import ticker
+from sklearn.metrics import mean_absolute_error
 import slopestabilitytools
+import test_definitions
 
 
 def run_classification(test_training, test_prediction, test_results, clf, clf_name):
-
     accuracy_result = []
     accuracy_labels = []
 
     accuracy_result_training = []
     accuracy_labels_training = []
+
+    depth_estim = []
+    depth_estim_accuracy = []
+    depth_estim_labels = []
+
+    depth_estim_training = []
+    depth_estim_accuracy_training = []
+    depth_estim_labels_training = []
 
     num_feat = []
 
@@ -45,7 +53,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         cat_lab = ['Very Low', 'Low', 'Medium', 'High', 'Very High']
         cat_trans = OneHotEncoder(categories=[cat_lab])
         preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat)])
-                                                       #('cat', cat_trans, cat_feat)])
+        # ('cat', cat_trans, cat_feat)])
 
     else:
         preprocessor = ColumnTransformer(transformers=[('num', num_trans, num_feat)])
@@ -58,6 +66,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     test_results_combined = test_results_combined.reset_index()
     test_results_combined = test_results_combined.drop(['index'], axis='columns')
     x_train, y_train = slopestabilityML.preprocess_data(test_results_combined)
+    x_position = test_results_combined['X']
 
     clf_pipeline.fit(x_train, y_train)
 
@@ -68,12 +77,38 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
             class_correct = test_results_combined['CLASSN'].loc[index]
         else:
             class_correct = test_results_combined['CLASS'].loc[index]
-        y_pred = clf_pipeline.predict(x_train.loc[index])
+        x_train_temp = x_train.loc[index]
+        y_pred = clf_pipeline.predict(x_train_temp)
         score_training = accuracy_score(class_correct, y_pred)
         accuracy_result_training.append(score_training * 100)
         accuracy_labels_training.append(name)
-        #print(y_train.loc[index])
-        slopestabilityML.plot_class_overview(test_results_combined.loc[index], name, y_train.loc[index], y_pred, clf_name, training=True)
+
+        # Evaluate the accuracy of interface depth detection
+        x = x_position.loc[index].to_numpy()
+        y = x_train_temp['Y'].to_numpy()
+        xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
+        y_pred_grid = gridded_data['class']
+        depth_all = np.zeros(y_pred_grid.shape[0])
+        depth_all_correct = np.ones(y_pred_grid.shape[0]) * test_definitions.test_parameters[name]['layers_pos'][0]
+        for column_id in range(y_pred_grid.shape[0]):
+            # if len(np.unique(y_pred_grid[:,column_id])) is not 2:
+            depth_id = np.array(np.where(y_pred_grid[:, column_id] == 4))
+            if np.size(depth_id) is 0:
+                depth = yi[-1]
+            else:
+                depth_id = depth_id.min()
+                depth = yi[depth_id]
+            depth_all[column_id] = depth
+        depth_interface_estimate = np.mean(depth_all)
+        depth_interface_accuracy = (mean_absolute_error(depth_all_correct, depth_all) / abs(test_definitions.test_parameters[name]['layers_pos'][0]))*100
+        print(depth_interface_accuracy)
+        depth_estim_training.append(depth_interface_estimate)
+        depth_estim_accuracy_training.append(depth_interface_accuracy)
+        depth_estim_labels_training.append(name + '_' + str(test_definitions.test_parameters[name]['layers_pos'][0]))
+        # print(y_train.loc[index])
+        slopestabilityML.plot_class_overview(test_results_combined.loc[index], name, y_train.loc[index], y_pred,
+                                             clf_name, training=True, depth_estimate=depth_interface_estimate,
+                                             depth_accuracy=depth_interface_accuracy)
 
     result_class = {}
 
@@ -86,7 +121,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         result_class[test_name_pred] = y_pred
         # print(y_pred)
         score = accuracy_score(y_answer, y_pred)
-        print('score: {score:.2f} %'.format(score=score*100))
+        print('score: {score:.2f} %'.format(score=score * 100))
 
         if settings.settings['norm_class'] is True:
             class_in = test_results[test_name_pred]['CLASSN']
@@ -98,11 +133,38 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
             print('I don\'t know which class to use! Exiting...')
             exit(0)
 
-        slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name)
+        # Evaluate the accuracy of interface depth detection
+        x = x_position.loc[index].to_numpy()
+        y = x_train_temp['Y'].to_numpy()
+        xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
+        y_pred_grid = gridded_data['class']
+        depth_all = np.zeros(y_pred_grid.shape[0])
+        depth_all_correct = np.ones(y_pred_grid.shape[0]) * test_definitions.test_parameters[test_name_pred]['layers_pos'][0]
+        for column_id in range(y_pred_grid.shape[0]):
+            # if len(np.unique(y_pred_grid[:,column_id])) is not 2:
+            depth_id = np.array(np.where(y_pred_grid[:, column_id] == 4))
+            if np.size(depth_id) is 0:
+                depth = yi[-1]
+            else:
+                depth_id = depth_id.min()
+                depth = yi[depth_id]
+            depth_all[column_id] = depth
+        depth_interface_estimate = np.mean(depth_all)
+
+        depth_interface_accuracy = (mean_absolute_error(depth_all_correct, depth_all) / abs(test_definitions.test_parameters[name]['layers_pos'][0]))*100
+        print(depth_interface_accuracy)
+        depth_estim.append(depth_interface_estimate)
+        depth_estim_accuracy.append(depth_interface_accuracy)
+        depth_estim_labels.append(test_name_pred + '_' + str(test_definitions.test_parameters[test_name_pred]['layers_pos'][0]))
+
+        slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name, depth_estimate=depth_interface_estimate,
+                                             depth_accuracy=depth_interface_accuracy)
 
         # Evaluate result
-        #accuracy_.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
-        accuracy_result.append(score*100)
+        # accuracy_.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
+        accuracy_result.append(score * 100)
         accuracy_labels.append(test_name_pred)
 
-    return result_class, accuracy_labels, accuracy_result, accuracy_labels_training, accuracy_result_training
+        # Evaluate
+
+    return result_class, accuracy_labels, accuracy_result, accuracy_labels_training, accuracy_result_training, depth_estim, depth_estim_accuracy, depth_estim_labels, depth_estim_training, depth_estim_accuracy_training, depth_estim_labels_training

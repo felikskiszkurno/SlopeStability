@@ -43,6 +43,8 @@ def combine_results(ml_results):
 
     slopestabilitytools.save_plot(fig, '', 'ML_summary_prediction', skip_fileformat=True)
 
+    del fig
+
     # Training
     fig = plt.figure()
     ax = fig.subplots(1)
@@ -70,3 +72,75 @@ def combine_results(ml_results):
 
     #fig.tight_layout()
     slopestabilitytools.save_plot(fig, '', 'ML_summary_training', skip_fileformat=True)
+
+    del fig
+
+    ''' 
+    Plotting accuracy of the detection of the depth of the interface
+    '''
+
+    # Predictions
+    fig = plt.figure()
+    ax = fig.subplots(1)
+    fig.suptitle('Accuracy of different ML methods: predictions')
+
+    prediction_depth_estim_sum = 0
+    prediction_depth_estim_num = 0
+
+    for method_name in sorted(ml_results.keys()):
+        if method_name is 'com':
+            print('Skipping com')
+        else:
+            plt.plot(ml_results[method_name]['depth_labels'], ml_results[method_name]['depth_accuracy'], marker='x',
+                     label=method_name)
+            prediction_depth_estim_sum = prediction_depth_estim_sum + np.sum(np.array(ml_results[method_name]['depth_accuracy']))
+            prediction_depth_estim_num = prediction_depth_estim_num + len(ml_results[method_name]['depth_accuracy'])
+
+    prediction_depth_estim_avg = prediction_depth_estim_sum / prediction_depth_estim_num
+    print('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
+
+    x_limits = ax.get_xlim()
+    plt.gca().invert_yaxis()
+
+    ax.axhline(y=prediction_depth_estim_avg, xmin=x_limits[0], xmax=x_limits[1])
+    plt.xlabel('Test name')
+    plt.setp(ax.get_xticklabels(), rotation=45)
+    plt.ylabel('Accuracy of the interface detection [error%]')
+    plt.legend(loc='lower right')
+
+    slopestabilitytools.save_plot(fig, '', 'ML_summary_prediction_depth_estim', skip_fileformat=True)
+
+    del fig
+
+    # Training
+    fig = plt.figure()
+    ax = fig.subplots(1)
+    fig.suptitle('Accuracy of different ML methods - training')
+
+    training_depth_estim_sum = 0
+    training_depth_estim_num = 0
+
+    for method_name in sorted(ml_results.keys()):
+        if method_name is 'com':
+            print('Skipping com')
+        else:
+            plt.plot(ml_results[method_name]['depth_labels_training'], ml_results[method_name]['depth_accuracy_training'], marker='x',
+                     label=method_name)
+            training_depth_estim_sum = training_depth_estim_sum + np.sum(np.array(ml_results[method_name]['depth_accuracy_training']))
+            training_depth_estim_num = training_depth_estim_num + len(ml_results[method_name]['depth_accuracy_training'])
+
+    training_depth_estim_avg = training_depth_estim_sum / training_depth_estim_num
+    print('Training depth accuracy: {result:.2f}%'.format(result=training_depth_estim_avg))
+
+    x_limits = ax.get_xlim()
+    plt.gca().invert_yaxis()
+
+    plt.axhline(y=training_depth_estim_avg, xmin=x_limits[0], xmax=x_limits[1])
+
+    plt.xlabel('Test name')
+    plt.setp(ax.get_xticklabels(), rotation=90)
+    plt.ylabel('Accuracy of the interface detection [error%]')
+    plt.legend(loc='lower right')
+
+    # fig.tight_layout()
+    slopestabilitytools.save_plot(fig, '', 'ML_summary_training_depth_estim', skip_fileformat=True)
