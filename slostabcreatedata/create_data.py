@@ -98,7 +98,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
         array_max = np.max(input_model2_array)
         array_min = np.min(input_model2_array)
         result_array = slostabcreatedata.clip_data(result_array, array_max, array_min)
-    input_model2_array_norm = np.log(input_model2_array)
+    input_model2_array_norm = np.log10(input_model2_array)
     # input_model2_array_norm = slopestabilitytools.normalize(input_model2_array)
 
     fig_input, ax_input = plt.subplots(1)
@@ -135,7 +135,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     rho_max = np.max(rho_arr)
     rho_min = np.min(rho_arr)
 
-    result_array_norm = np.log(result_array)
+    result_array_norm = np.log10(result_array)
     # result_array_norm = slopestabilitytools.normalize(result_array)
 
     labels_translator = {0: 'Very Low',

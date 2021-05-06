@@ -27,6 +27,9 @@ def init():
     # Include depth
     settings['depth'] = True   # True - include depth, False - ignore depth
 
+    # Classifiers
+    settings['optimize_ml'] = True
+
     # Paths
     settings['results_folder'] = 'results'
     settings['data_folder'] = settings['results_folder'] + '/data/'

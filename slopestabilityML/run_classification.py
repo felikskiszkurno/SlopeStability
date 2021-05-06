@@ -90,6 +90,43 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         y_pred_grid = gridded_data['class']
         depth_all = np.zeros(y_pred_grid.shape[0])
         depth_all_correct = np.ones(y_pred_grid.shape[0]) * test_definitions.test_parameters[name]['layers_pos'][0]
+        result_grid_rolled = np.roll(y_pred_grid, -1, axis=0)
+        y_pred_grid_deri = y_pred_grid - result_grid_rolled
+        y_pred_grid_deri[-1, :] = 0
+        # interface_id = []
+        # interface_n = []
+        # interface_depth = []
+        # for column in y_pred_grid_deri.T:
+        #     indexes = list(np.where(column != 0))
+        #     if indexes[0].size == 1:  # Only one interface detected
+        #         print('a')
+        #         interface_n.append(len(indexes[0]))
+        #         interface_id.append(indexes)
+        #         interface_depth.append(yi[indexes])
+        #     else:  # Multiple potential interfaces detected
+        #         print('b')
+        #         indexes_temp = []
+        #         depths_temp = []
+        #         indexes_copy = indexes
+        #         all_too_thin_layers_removed = False
+        #         while all_too_thin_layers_removed is False:
+        #             all_too_thin_layers_removed = True
+        #             if isinstance(indexes_copy[0], int) is False:
+        #                 for index_id in range(indexes_copy[0].size-1):
+        #                     diff = yi[indexes[0][index_id+1]] - yi[indexes[0][index_id]]
+        #                     if abs(diff) <= 1:
+        #                         indexes_temp.append(int(round((indexes[0][index_id+1]+indexes[0][index_id])/2)))
+        #                         all_too_thin_layers_removed = False
+        #                     else:
+        #                         indexes_temp.append(indexes[0][index_id])
+        #                 if abs(yi[indexes[0][-1]] - yi[indexes[0][-2]]) >= 1:
+        #                     indexes_temp.append(indexes[0][-1])
+        #                 indexes_copy = indexes_temp
+        #                 indexes_temp = []
+        #         interface_n.append(len(indexes_copy))
+        #         interface_id.append(indexes_copy)
+        #         interface_depth.append(yi[indexes_copy])
+        # interface_number = np.bincount(interface_n).argmax()
         for column_id in range(y_pred_grid.shape[0]):
             # if len(np.unique(y_pred_grid[:,column_id])) is not 2:
             depth_id = np.array(np.where(y_pred_grid[:, column_id] == 4))

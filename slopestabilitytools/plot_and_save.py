@@ -52,7 +52,7 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     # TODO: Move plotting to a function for plotting a, b and a-b
     cb = []
 
-    fig, _ax = plt.subplots(nrows=3, ncols=1)
+    fig, _ax = plt.subplots(nrows=2, ncols=2)
     ax = _ax.flatten()
 
     fig.suptitle(plot_title)
@@ -85,25 +85,34 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     cb[2].locator = tick_locator
     cb[2].update_ticks()
 
-    fig.tight_layout()
-    slopestabilitytools.save_plot(fig, test_name, '_in_inv_diff')
-
-    # Plot coverage
-    cb_cov = []
-    fig_cov, ax_cov = plt.subplots(nrows=1, ncols=1)
-
-    fig.suptitle(plot_title+' coverage')
-
-    im0 = ax_cov.scatter(x, y, c=sen)
-    #im0 = ax_cov.contourf(xi, yi, cov_i)
-    ax_cov.set_title(plot_title+' coverage')
-    ax_cov = slopestabilitytools.set_labels(ax_cov)
-    cb_cov = plt.colorbar(im0, ax=ax_cov, label='Coverage')  # , shrink=0.9)
+    im3 = ax[3].scatter(x, y, c=sen)
+    # im0 = ax_cov.contourf(xi, yi, cov_i)
+    ax[3].set_title(plot_title + ' coverage')
+    ax[3] = slopestabilitytools.set_labels(ax[3])
+    cb_cov = plt.colorbar(im3, ax=ax[3], label='Coverage')  # , shrink=0.9)
     tick_locator = ticker.MaxNLocator(nbins=4)
     cb_cov.locator = tick_locator
     cb_cov.update_ticks()
 
-    fig_cov.tight_layout()
-    slopestabilitytools.save_plot(fig_cov, test_name, '_cov')
+    fig.tight_layout()
+    slopestabilitytools.save_plot(fig, test_name, '_in_inv_diff')
+
+    # Plot coverage
+    # cb_cov = []
+    # fig_cov, ax_cov = plt.subplots(nrows=1, ncols=1)
+    #
+    # fig.suptitle(plot_title+' coverage')
+    #
+    # im0 = ax_cov.scatter(x, y, c=sen)
+    # #im0 = ax_cov.contourf(xi, yi, cov_i)
+    # ax_cov.set_title(plot_title+' coverage')
+    # ax_cov = slopestabilitytools.set_labels(ax_cov)
+    # cb_cov = plt.colorbar(im0, ax=ax_cov, label='Coverage')  # , shrink=0.9)
+    # tick_locator = ticker.MaxNLocator(nbins=4)
+    # cb_cov.locator = tick_locator
+    # cb_cov.update_ticks()
+    #
+    # fig_cov.tight_layout()
+    # slopestabilitytools.save_plot(fig_cov, test_name, '_cov')
 
     return
