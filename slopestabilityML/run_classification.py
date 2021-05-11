@@ -9,11 +9,15 @@ import settings
 import slopestabilityML
 import pandas as pd
 import numpy as np
+from scipy import interpolate
+
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
+
 import slopestabilitytools
 import test_definitions
 
@@ -93,6 +97,16 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         result_grid_rolled = np.roll(y_pred_grid, -1, axis=0)
         y_pred_grid_deri = y_pred_grid - result_grid_rolled
         y_pred_grid_deri[-1, :] = 0
+        interfaces_detected = slopestabilitytools.detect_interface(xi, yi, y_pred_grid)
+        depth_interface_estimate = interfaces_detected[1]['depth']
+        y_estimate = interfaces_detected[1]['y']
+        x_estimate = interfaces_detected[1]['x']
+        #depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
+        y_actual = np.ones([y_estimate.size])*test_definitions.test_parameters[name]['layers_pos'][0]
+        depth_interface_accuracy = mean_squared_error(y_actual, y_estimate, squared=False)
+        interpolator = interpolate.interp1d(x_estimate, y_estimate, fill_value='extrapolate')
+        y_estimate_interp = interpolator(x)
+        '''
         # interface_id = []
         # interface_n = []
         # interface_depth = []
@@ -127,6 +141,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         #         interface_id.append(indexes_copy)
         #         interface_depth.append(yi[indexes_copy])
         # interface_number = np.bincount(interface_n).argmax()
+        '''
+        '''
         for column_id in range(y_pred_grid.shape[0]):
             # if len(np.unique(y_pred_grid[:,column_id])) is not 2:
             depth_id = np.array(np.where(y_pred_grid[:, column_id] == 4))
@@ -139,13 +155,21 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         depth_interface_estimate = np.mean(depth_all)
         depth_interface_accuracy = (mean_absolute_error(depth_all_correct, depth_all) / abs(test_definitions.test_parameters[name]['layers_pos'][0]))*100
         print(depth_interface_accuracy)
-        depth_estim_training.append(depth_interface_estimate)
-        depth_estim_accuracy_training.append(depth_interface_accuracy)
+        
         depth_estim_labels_training.append(name + '_' + str(test_definitions.test_parameters[name]['layers_pos'][0]))
         # print(y_train.loc[index])
+        '''
+
+        depth_estim_training.append(depth_interface_estimate)
+        depth_estim_accuracy_training.append(depth_interface_accuracy)
+
         slopestabilityML.plot_class_overview(test_results_combined.loc[index], name, y_train.loc[index], y_pred,
                                              clf_name, training=True, depth_estimate=depth_interface_estimate,
+                                             interface_y=y_estimate_interp, interface_x=x,
                                              depth_accuracy=depth_interface_accuracy)
+
+    del y_pred, y_pred_grid, y_pred_grid_deri, y, x, y_actual, xi, yi, y_estimate_interp, depth_interface_accuracy
+    del depth_interface_estimate
 
     result_class = {}
 
@@ -172,29 +196,52 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
         # Evaluate the accuracy of interface depth detection
         x = x_position.loc[index].to_numpy()
-        y = x_train_temp['Y'].to_numpy()
+        y = x_question['Y'].to_numpy()
         xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
         y_pred_grid = gridded_data['class']
-        depth_all = np.zeros(y_pred_grid.shape[0])
-        depth_all_correct = np.ones(y_pred_grid.shape[0]) * test_definitions.test_parameters[test_name_pred]['layers_pos'][0]
-        for column_id in range(y_pred_grid.shape[0]):
-            # if len(np.unique(y_pred_grid[:,column_id])) is not 2:
-            depth_id = np.array(np.where(y_pred_grid[:, column_id] == 4))
-            if np.size(depth_id) is 0:
-                depth = yi[-1]
-            else:
-                depth_id = depth_id.min()
-                depth = yi[depth_id]
-            depth_all[column_id] = depth
-        depth_interface_estimate = np.mean(depth_all)
+        '''
+        y_pred_grid = gridded_data['class']
+        # depth_all = np.zeros(y_pred_grid.shape[0])
+        # depth_all_correct = np.ones(y_pred_grid.shape[0]) * test_definitions.test_parameters[test_name_pred]['layers_pos'][0]
+        # for column_id in range(y_pred_grid.shape[0]):
+        #     # if len(np.unique(y_pred_grid[:,column_id])) is not 2:
+        #     depth_id = np.array(np.where(y_pred_grid[:, column_id] == 4))
+        #     if np.size(depth_id) is 0:
+        #         depth = yi[-1]
+        #     else:
+        #         depth_id = depth_id.min()
+        #         depth = yi[depth_id]
+        #     depth_all[column_id] = depth
+        # depth_interface_estimate = np.mean(depth_all)
+        # 
+        # depth_interface_accuracy = (mean_absolute_error(depth_all_correct, depth_all) / abs(test_definitions.test_parameters[name]['layers_pos'][0]))*100
+        # print(depth_interface_accuracy)
+        # depth_estim.append(depth_interface_estimate)
+        # depth_estim_accuracy.append(depth_interface_accuracy)
+        # depth_estim_labels.append(test_name_pred + '_' + str(test_definitions.test_parameters[test_name_pred]['layers_pos'][0]))
+        '''
+        result_grid_rolled = np.roll(y_pred_grid, -1, axis=0)
+        y_pred_grid_deri = y_pred_grid - result_grid_rolled
+        y_pred_grid_deri[-1, :] = 0
+        interfaces_detected = slopestabilitytools.detect_interface(xi, yi, y_pred_grid)
+        depth_interface_estimate = interfaces_detected[1]['depth']
+        y_estimate = interfaces_detected[1]['y']
+        x_estimate = interfaces_detected[1]['x']
+        # depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
+        y_actual = np.ones([y_estimate.size]) * test_definitions.test_parameters[name]['layers_pos'][0]
+        depth_interface_accuracy = mean_squared_error(y_actual, y_estimate, squared=False)
+        interpolator = interpolate.interp1d(x_estimate, y_estimate, fill_value='extrapolate')
+        y_estimate_interp = interpolator(x)
 
-        depth_interface_accuracy = (mean_absolute_error(depth_all_correct, depth_all) / abs(test_definitions.test_parameters[name]['layers_pos'][0]))*100
-        print(depth_interface_accuracy)
         depth_estim.append(depth_interface_estimate)
         depth_estim_accuracy.append(depth_interface_accuracy)
-        depth_estim_labels.append(test_name_pred + '_' + str(test_definitions.test_parameters[test_name_pred]['layers_pos'][0]))
 
         slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name, depth_estimate=depth_interface_estimate,
+                                             depth_accuracy=depth_interface_accuracy)
+
+        slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred,
+                                             clf_name, training=True, depth_estimate=depth_interface_estimate,
+                                             interface_y=y_estimate_interp, interface_x=x,
                                              depth_accuracy=depth_interface_accuracy)
 
         # Evaluate result

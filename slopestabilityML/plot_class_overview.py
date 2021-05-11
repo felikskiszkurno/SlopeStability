@@ -15,7 +15,7 @@ import test_definitions
 import settings
 
 
-def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, training=False, depth_estimate='x', depth_accuracy='x'):
+def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, training=False, depth_estimate='x', interface_y='x', interface_x='x', depth_accuracy='x'):
 
     x = test_results['X'].to_numpy()
     y = test_results['Y'].to_numpy()
@@ -30,7 +30,7 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
 
     #fig.suptitle('Classification overview: ' + test_name + ', ' + clf_name + ', depth estimate accuracy: ' + str(depth_accuracy) + '%, depth (est/true): ' + str(depth_estimate) + '/' + str(test_definitions.test_parameters[test_name]['layers_pos'][0]))
     depth_true = test_definitions.test_parameters[test_name]['layers_pos'][0]
-    fig.suptitle('Classification overview: {}, {}, depth estimate accuracy: {:.2f}%, depth (est/true): {:.2f}/{:.2f}'.format(test_name, clf_name, depth_accuracy, depth_estimate, depth_true))
+    fig.suptitle('Classification overview: {}, {}, depth estimate RMSE: {:.2f}%, depth (est/true): {:.2f}/{:.2f}'.format(test_name, clf_name, depth_accuracy, depth_estimate, depth_true))
     fig.subplots_adjust(hspace=0.8)
 
     # Convert labels to numerical for plotting
@@ -57,6 +57,7 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     for depth in test_definitions.test_parameters[test_name]['layers_pos']:
         ax[1].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     ax[1].hlines(y=depth_estimate, xmin=x.min(), xmax=x.max(), linestyle='-', color='g')
+    ax[1].plot(interface_x, interface_y)
     ax[1].set_title('Predicted classes')
     ax[1] = slopestabilitytools.set_labels(ax[1])
     cb.append(plt.colorbar(im1, ax=ax[1], label='Class'))  # , shrink=0.9)
@@ -68,6 +69,7 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     im2 = ax[2].scatter(x, y, c=test_results['INMN'].to_numpy())
     for depth in test_definitions.test_parameters[test_name]['layers_pos']:
         ax[2].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
+    ax[2].hlines(y=depth_estimate, xmin=x.min(), xmax=x.max(), linestyle='-', color='g')
     ax[2].set_title('Input model')
     ax[2] = slopestabilitytools.set_labels(ax[2])
     cb.append(plt.colorbar(im2, ax=ax[2], label='Resistivity log(ohm*m)'))  # , shrink=0.9)
