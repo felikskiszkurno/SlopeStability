@@ -98,14 +98,29 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         y_pred_grid_deri = y_pred_grid - result_grid_rolled
         y_pred_grid_deri[-1, :] = 0
         interfaces_detected = slopestabilitytools.detect_interface(xi, yi, y_pred_grid)
-        depth_interface_estimate = interfaces_detected[1]['depth']
-        y_estimate = interfaces_detected[1]['y']
-        x_estimate = interfaces_detected[1]['x']
+        depth_interface_estimate = {}
+        y_estimate_interp = {}
+        depth_interface_estimate_count = 0
+        depth_interface_accuracy_mean = 0
+        depth_interface_estimate_mean = 0
+
+        for interfaces_key in interfaces_detected.keys():
+            depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
+            depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[0]['depth_mean']
+            y_estimate = interfaces_detected[interfaces_key]['depths']
+            x_estimate = interfaces_detected[interfaces_key]['x']
         #depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
-        y_actual = np.ones([y_estimate.size])*test_definitions.test_parameters[name]['layers_pos'][0]
-        depth_interface_accuracy = mean_squared_error(y_actual, y_estimate, squared=False)
-        interpolator = interpolate.interp1d(x_estimate, y_estimate, fill_value='extrapolate')
-        y_estimate_interp = interpolator(x)
+            y_actual = np.ones([y_estimate[np.isfinite(y_estimate)].size]) * \
+                       test_definitions.test_parameters[name]['layers_pos'][0]
+            depth_interface_accuracy = mean_squared_error(y_actual,
+                                                        y_estimate[np.isfinite(y_estimate)],
+                                                        squared=False)
+            depth_interface_accuracy_mean += depth_interface_accuracy
+            depth_interface_estimate_count += 1
+            interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
+                                                y_estimate[np.isfinite(y_estimate)],
+                                                bounds_error=False)#, fill_value='extrapolate')
+            y_estimate_interp[interfaces_key] = interpolator(sorted(x))
         '''
         # interface_id = []
         # interface_n = []
@@ -160,8 +175,11 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         # print(y_train.loc[index])
         '''
 
-        depth_estim_training.append(depth_interface_estimate)
-        depth_estim_accuracy_training.append(depth_interface_accuracy)
+
+
+        depth_estim_training.append(depth_interface_estimate_mean/depth_interface_estimate_count)
+        depth_estim_accuracy_training.append(depth_interface_accuracy_mean/depth_interface_estimate_count)
+        depth_estim_labels_training.append(name + '_' + str(test_definitions.test_parameters[name]['layers_pos'][0]))
 
         slopestabilityML.plot_class_overview(test_results_combined.loc[index], name, y_train.loc[index], y_pred,
                                              clf_name, training=True, depth_estimate=depth_interface_estimate,
@@ -169,7 +187,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
                                              depth_accuracy=depth_interface_accuracy)
 
     del y_pred, y_pred_grid, y_pred_grid_deri, y, x, y_actual, xi, yi, y_estimate_interp, depth_interface_accuracy
-    del depth_interface_estimate
+    del depth_interface_estimate, depth_interface_accuracy_mean, depth_interface_estimate_count, depth_interface_estimate_mean
 
     result_class = {}
 
@@ -177,7 +195,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     for test_name_pred in test_prediction:
         # Prepare data
         print(test_name_pred)
-        x_question, y_answer = slopestabilityML.preprocess_data(test_results[test_name_pred])
+        x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results[test_name_pred], return_x=True)
         y_pred = clf_pipeline.predict(x_question)
         result_class[test_name_pred] = y_pred
         # print(y_pred)
@@ -195,7 +213,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
             exit(0)
 
         # Evaluate the accuracy of interface depth detection
-        x = x_position.loc[index].to_numpy()
+        x = x_position.to_numpy()
+        x = x.reshape([x.size])
         y = x_question['Y'].to_numpy()
         xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
         y_pred_grid = gridded_data['class']
@@ -224,24 +243,40 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         y_pred_grid_deri = y_pred_grid - result_grid_rolled
         y_pred_grid_deri[-1, :] = 0
         interfaces_detected = slopestabilitytools.detect_interface(xi, yi, y_pred_grid)
-        depth_interface_estimate = interfaces_detected[1]['depth']
-        y_estimate = interfaces_detected[1]['y']
-        x_estimate = interfaces_detected[1]['x']
+        depth_interface_estimate = {}
+        y_estimate_interp = {}
+        depth_interface_estimate_count = 0
+        depth_interface_accuracy_mean = 0
+        depth_interface_estimate_mean = 0
+        depth_interface_estimate_count = 0
+        for interfaces_key in interfaces_detected.keys():
+            depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
+            depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[0]['depth_mean']
+            depth_interface_estimate_count += 1
+            y_estimate = interfaces_detected[interfaces_key]['depths']
+            x_estimate = interfaces_detected[interfaces_key]['x']
         # depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
-        y_actual = np.ones([y_estimate.size]) * test_definitions.test_parameters[name]['layers_pos'][0]
-        depth_interface_accuracy = mean_squared_error(y_actual, y_estimate, squared=False)
-        interpolator = interpolate.interp1d(x_estimate, y_estimate, fill_value='extrapolate')
-        y_estimate_interp = interpolator(x)
+            y_actual = np.ones([y_estimate[np.isfinite(y_estimate)].size]) * \
+                       test_definitions.test_parameters[name]['layers_pos'][0]
+            depth_interface_accuracy = mean_squared_error(y_actual, y_estimate[np.isfinite(y_estimate)], squared=False)
+            depth_interface_accuracy_mean += depth_interface_accuracy
+            interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
+                                                y_estimate[np.isfinite(y_estimate)], #bounds_error=False,
+                                                fill_value='extrapolate')
 
-        depth_estim.append(depth_interface_estimate)
-        depth_estim_accuracy.append(depth_interface_accuracy)
+            y_estimate_interp[interfaces_key] = interpolator(sorted(x))
 
-        slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name, depth_estimate=depth_interface_estimate,
-                                             depth_accuracy=depth_interface_accuracy)
+        depth_estim.append(depth_interface_estimate_mean/depth_interface_estimate_count)
+        depth_estim_accuracy.append(depth_interface_accuracy_mean/depth_interface_estimate_count)
+        depth_estim_labels.append(
+            test_name_pred + '_' + str(test_definitions.test_parameters[test_name_pred]['layers_pos'][0]))
+
+        #slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name, depth_estimate=depth_interface_estimate,
+        #                                     depth_accuracy=depth_interface_accuracy)
 
         slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred,
                                              clf_name, training=True, depth_estimate=depth_interface_estimate,
-                                             interface_y=y_estimate_interp, interface_x=x,
+                                             interface_y=y_estimate_interp, interface_x=sorted(x),
                                              depth_accuracy=depth_interface_accuracy)
 
         # Evaluate result

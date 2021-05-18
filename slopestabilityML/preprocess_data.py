@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 
-def preprocess_data(data_set):
+def preprocess_data(data_set, *, return_x=False):
 
     if settings.settings['norm'] is True:
         x_train = data_set.drop(['NAME', 'X', 'Z', 'INM', 'INMN', 'RES', 'CLASS', 'CLASSN', 'LABELS'], axis='columns')
@@ -31,4 +31,8 @@ def preprocess_data(data_set):
     if settings.settings['depth'] is False:
         x_train = x_train.drop(['Y'], axis='columns')
 
-    return x_train, y_train
+    if return_x is True:
+        x_positions = pd.DataFrame(data_set['X'])
+        return x_train, y_train, x_positions
+    elif return_x is False:
+        return x_train, y_train
