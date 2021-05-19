@@ -16,6 +16,7 @@ def init():
     # Training and prediction split
     settings['split_proportion'] = 0.85  # Part of available profiles that will be used for prediction
     settings['data_split'] = 'predefined' # 'random'
+    settings['resample'] = True
 
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids

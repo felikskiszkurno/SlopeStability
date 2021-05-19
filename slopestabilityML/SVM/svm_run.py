@@ -19,10 +19,10 @@ def svm_run(test_results, random_seed):
     # https://stackabuse.com/implementing-svm-and-kernel-svm-with-pythons-scikit-learn/
 
     # Split the data set
-    if settings['data_split'] is 'random':
+    if settings.settings['data_split'] is 'random':
         test_training, test_prediction = slopestabilityML.split_dataset(test_results.keys(), random_seed)
         test_results_mixed = test_results
-    elif settings['data_split'] is 'predefined':
+    elif settings.settings['data_split'] is 'predefined':
         test_training = test_results['training'].keys()
         test_prediction = test_results['prediction'].keys()
         test_results_mixed = {}
