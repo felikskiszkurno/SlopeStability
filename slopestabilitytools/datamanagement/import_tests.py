@@ -14,7 +14,7 @@ import pandas as pd
 
 def import_tests(abs_path=''):
     test_results = {}
-    test_names = slopestabilitytools.datamanagement.test_list('.csv', abs_path=abs_path)
+    test_names = slopestabilitytools.datamanagement.test_list('.csv', abs_path=abs_path + settings.settings['data_folder'])
 
     for test_name in test_names:
         test_result_curr = pd.read_csv(abs_path + settings.settings['data_folder'] + test_name + '.csv', index_col=0)

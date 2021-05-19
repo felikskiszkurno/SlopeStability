@@ -28,8 +28,13 @@ test_definitions.init(path=param_path)
 # Load existing data instead of creating new one.
 print('start')
 if not create_new_data:
-
-    test_results = slopestabilitytools.datamanagement.import_tests()
+    if settings['data_split'] is 'random':
+        test_results = slopestabilitytools.datamanagement.import_tests()
+    elif settings['data_split'] is 'predifined':
+        test_results = slopestabilitytools.datamanagement.import_tests_predefined()
+    else:
+        print('Error: undefined tests')
+        exit(0)
 
     # if reassign_classes is True:
     #        test_results = slopestabilitytools.reassign_classes(test_results, class_type)

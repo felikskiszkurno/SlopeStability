@@ -76,7 +76,7 @@ def plot_and_save(test_name, test_result, plot_title, rho_max, rho_min):
     cb[1].locator = tick_locator
     cb[1].update_ticks()
 
-    im2 = ax[2].scatter(x, y, c=inm-res, cmap='RdBu')
+    im2 = ax[2].scatter(x, y, c=(inm-res)/max(inm), cmap='RdBu')
     #im2 = ax[2].contourf(xi, yi, inm_i-res_i, cmap='RdBu')
     ax[2].set_title('Difference')
     ax[2] = slopestabilitytools.set_labels(ax[2])

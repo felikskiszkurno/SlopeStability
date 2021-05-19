@@ -15,7 +15,7 @@ import settings
 
 def test_list(extension, *, abs_path=''):
 
-    path = abs_path + settings.settings['data_folder']
+    path = abs_path #+ settings.settings['data_folder']
     file_list = os.listdir(path)
 
     test_names = []

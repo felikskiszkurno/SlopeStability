@@ -11,16 +11,23 @@ from sklearn import svm
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
 import slopestabilityML.run_classification
-
-
-# TODO: for comparability with other ML methods, add option to define which test should be used for training externaly
+import settings
 
 
 def svm_run(test_results, random_seed):
 
     # https://stackabuse.com/implementing-svm-and-kernel-svm-with-pythons-scikit-learn/
 
-    test_training, test_prediction = slopestabilityML.split_dataset(test_results.keys(), random_seed)
+    # Split the data set
+    if settings['data_split'] is 'random':
+        test_training, test_prediction = slopestabilityML.split_dataset(test_results.keys(), random_seed)
+        test_results_mixed = test_results
+    elif settings['data_split'] is 'predefined':
+        test_training = test_results['training'].keys()
+        test_prediction = test_results['prediction'].keys()
+        test_results_mixed = {}
+        test_results_mixed.update(test_results['prediction'])
+        test_results_mixed.update(test_results['training'])
 
     accuracy_score = []
     accuracy_labels = []
@@ -30,7 +37,7 @@ def svm_run(test_results, random_seed):
 
     # Train classifier
     result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training, depth_estim, depth_estim_accuracy, depth_estim_labels, depth_estim_training, depth_estim_accuracy_training, depth_estim_labels_training = \
-        slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'SVM')
+        slopestabilityML.run_classification(test_training, test_prediction, test_results_mixed, clf, 'SVM')
 
 
     # Plot
