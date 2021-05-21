@@ -225,7 +225,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
                                                 'CLASSN': classesn_grd,
                                                 'LABELS': labels_grd})
 
-        experiment_results_grid = experiment_results_grid[(experiment_results.INMN > 0) & (experiment_results.RESN > 0)]
+        experiment_results_grid = experiment_results_grid[(experiment_results_grid.INMN > 0) & (experiment_results_grid.RESN > 0)]
 
         experiment_results_grid.to_csv(settings.settings['data_folder_grd'] + '/' + test_name + '_grd.csv')
 
