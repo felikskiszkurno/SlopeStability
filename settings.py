@@ -17,6 +17,9 @@ def init():
     settings['split_proportion'] = 0.85  # Part of available profiles that will be used for prediction
     settings['data_split'] = 'predefined' # 'random'
 
+    # Interpolate results to grid inside create_data script
+    settings['grd'] = True
+
     # Parameters for resampling
     settings['resample'] = True
     settings['resample_x_spacing'] = 1
@@ -40,7 +43,7 @@ def init():
     # Paths
     settings['results_folder'] = 'results'
     settings['data_folder'] = settings['results_folder'] + '/data/'
-    settings['data_folder_norm'] = settings['results_folder'] + '/data_norm/'
+    settings['data_folder_grd'] = settings['results_folder'] + '/data_grd/'
     settings['figures_folder'] = settings['results_folder'] + '/figures/'
 
     # Plots

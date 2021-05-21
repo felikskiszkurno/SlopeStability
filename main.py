@@ -19,8 +19,8 @@ import test_definitions
 settings.init()
 
 # Config
-create_new_data = False  # set to True if you need to reassign the classes
-create_new_data_only = False  # set to False in order to run ML classifications
+create_new_data = True  # set to True if you need to reassign the classes
+create_new_data_only = True  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
 param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/high_contrast_lambda_zweight.csv')
 test_definitions.init(path=param_path)
@@ -72,19 +72,26 @@ else:
 
     #  Create models and invert them
     test_results = {}
+    test_results_grd = {}
     print(test_definitions.test_parameters)
     for test_name in test_definitions.test_parameters.keys():
-        test_result_curr, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
+        test_result_curr, test_result_curr_grd, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
                                                                                      test_definitions.test_parameters[test_name],
                                                                                      abs(test_definitions.test_parameters[test_name]['layers_pos'].max()),
                                                                                      lambda_param=test_definitions.test_parameters[test_name]['lambda'][0],
                                                                                      z_weight=test_definitions.test_parameters[test_name]['z_weight'][0])
+
         test_results.update({test_name: test_result_curr})
-        del test_result_curr
+        test_results_grd.update({test_name: test_result_curr_grd})
+        del test_result_curr, test_result_curr_grd
 
         # Plot and save figures
         slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
                                           test_rho_min)
+
+        slopestabilitytools.plot_and_save(test_name, test_results_grd[test_name], 'Test: ' + test_name + '_grd', test_rho_max,
+                                          test_rho_min)
+
         gc.collect()
 
 # Evaluate data with ML techniques

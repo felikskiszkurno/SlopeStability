@@ -6,6 +6,7 @@ Created on 12.04.2021
 @author: Feliks Kiszkurno
 """
 
+
 def numeric2label(input_numeric):
 
     labels_translator = {0: 'Very Low',

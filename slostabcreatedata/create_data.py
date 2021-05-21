@@ -120,7 +120,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
         res_index = np.argmin(res_diff)
         classes.append(res_index)
     '''
-    classes = slopestabilitytools.assign_class01(input_model, resistivity_map)
+    classes = slopestabilitytools.assign_class01(input_model2, resistivity_map)
 
     classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array))
 
@@ -141,6 +141,8 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     result_array_norm = np.log10(result_array)
     # result_array_norm = slopestabilitytools.normalize(result_array)
 
+    labels = slopestabilitytools.classes_labels.numeric2label(classesn)
+    '''
     labels_translator = {0: 'Very Low',
                          1: 'Low',
                          2: 'Medium',
@@ -152,9 +154,11 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
         id_new = find_all(key, classesn)
         for idx in id_new:
             labels[idx] = labels_translator[key]
+    '''
 
     test_name_column = [test_name] * len(input_model2_array)
 
+    # Results on unstructured grid
     experiment_results = pd.DataFrame(data={'NAME': test_name_column,
                                             'X': ert_manager.paraDomain.cellCenters().array()[:, 0],
                                             'Y': ert_manager.paraDomain.cellCenters().array()[:, 1],
@@ -171,4 +175,58 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
 
     experiment_results.to_csv(settings.settings['data_folder'] + '/' + test_name + '.csv')
 
-    return experiment_results, rho_max, rho_min
+    if settings.settings['grd'] is True:
+        # Results on structured grid
+        x_min = np.ceil(np.min(ert_manager.paraDomain.cellCenters().array()[:, 0]))
+        x_max = np.floor(np.max(ert_manager.paraDomain.cellCenters().array()[:, 0]))
+        x_values = np.arange(x_min, x_max, settings.settings['resample_x_spacing'])
+
+        y_min = np.ceil(np.min(ert_manager.paraDomain.cellCenters().array()[:, 1]))
+        y_max = np.ceil(np.max(ert_manager.paraDomain.cellCenters().array()[:, 1]))
+        y_values = np.arange(y_min, y_max, settings.settings['resample_y_spacing'])
+
+        z_values = np.zeros([len(y_values)])
+        # x_grid, y_grid = slopestabilitytools.generate_xy_pairs(x_values, y_values)
+
+        grid = pg.createGrid(x=x_values, y=y_values)
+
+        input_model2_grd = pg.interpolate(srcMesh=ert_manager.paraDomain, inVec=input_model2, destPos=grid.cellCenters())
+
+        input_model2_grd_array = input_model2_grd.array()
+
+        test_name_column_grd = [test_name] * len(input_model2_grd_array)
+
+        input_model2_grd_array_norm = np.log10(input_model2_grd)
+
+        result_grd = pg.interpolate(srcMesh=ert_manager.paraDomain, inVec=result_full, destPos=grid.cellCenters())
+
+        result_grd_array = result_grd.array()
+
+        result_grd_array_norm = np.log10(result_grd_array)
+
+        cov_grd = pg.interpolate(srcMesh=ert_manager.paraDomain, inVec=cov, destPos=grid.cellCenters())
+
+        classes_grd = slopestabilitytools.assign_class01(input_model2_grd, resistivity_map)
+
+        classesn_grd = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_grd_array))
+
+        labels_grd = slopestabilitytools.classes_labels.numeric2label(classesn_grd)
+
+        experiment_results_grid = pd.DataFrame(data={'NAME': test_name_column_grd,
+                                                'X': grid.cellCenters().array()[:, 0],
+                                                'Y': grid.cellCenters().array()[:, 1],
+                                                'Z': grid.cellCenters().array()[:, 2],
+                                                'INM': input_model2_grd_array,
+                                                'INMN': input_model2_grd_array_norm,
+                                                'RES': result_grd_array,
+                                                'RESN': result_grd_array_norm,
+                                                'SEN': cov_grd,
+                                                'CLASS': classes_grd,
+                                                'CLASSN': classesn_grd,
+                                                'LABELS': labels_grd})
+
+        experiment_results_grid = experiment_results_grid[(experiment_results.INMN > 0) & (experiment_results.RESN > 0)]
+
+        experiment_results_grid.to_csv(settings.settings['data_folder_grd'] + '/' + test_name + '_grd.csv')
+
+    return experiment_results, experiment_results_grid, rho_max, rho_min

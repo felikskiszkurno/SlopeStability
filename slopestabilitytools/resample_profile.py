@@ -25,12 +25,15 @@ def resample_profile(profile_data):
                       np.ceil(np.max(profile_data['Y'])),
                       settings.settings['resample_y_spacing'])
 
+    x_new, y_new = slopestabilitytools.generate_xy_pairs(x_values, y_values)
+    '''
     x_new = []
     y_new = []
 
     for x in x_values:
         x_new.extend(x*np.ones([y_values.size]))
         y_new.extend(y_values)
+    '''
 
     profile_data_resampled = pd.DataFrame()
 
