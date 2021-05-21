@@ -89,7 +89,7 @@ else:
         slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
                                           test_rho_min)
 
-        slopestabilitytools.plot_and_save(test_name, test_results_grd[test_name], 'Test: ' + test_name + '_grd', test_rho_max,
+        slopestabilitytools.plot_and_save(test_name + '_grd', test_results_grd[test_name], 'Test: ' + test_name + '_grd', test_rho_max,
                                           test_rho_min)
 
         gc.collect()
