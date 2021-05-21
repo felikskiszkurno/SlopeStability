@@ -36,4 +36,7 @@ def create_folder_structure():
     folder_path = Path(os.getcwd() + '/' + settings.settings['data_folder'])
     is_success = check_create_folder(folder_path)
 
+    folder_path = Path(os.getcwd() + '/' + settings.settings['data_folder_norm'])
+    is_success = check_create_folder(folder_path)
+
     return is_success

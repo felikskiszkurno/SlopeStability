@@ -66,9 +66,10 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
     test_results_combined = pd.DataFrame()
     for name in test_training:
-        if settings.settings['resample_profile'] is False:
+        print('Training on: '+name)
+        if settings.settings['resample'] is False:
             test_results_combined = test_results_combined.append(test_results[name])
-        elif settings.settings['resample_profile'] is True:
+        elif settings.settings['resample'] is True:
             test_result_resampled = slopestabilitytools.resample_profile(test_results[name])
             test_results_combined = test_results_combined.append(test_result_resampled)
     test_results_combined = test_results_combined.reset_index()

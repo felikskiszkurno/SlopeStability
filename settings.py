@@ -16,7 +16,11 @@ def init():
     # Training and prediction split
     settings['split_proportion'] = 0.85  # Part of available profiles that will be used for prediction
     settings['data_split'] = 'predefined' # 'random'
+
+    # Parameters for resampling
     settings['resample'] = True
+    settings['resample_x_spacing'] = 1
+    settings['resample_y_spacing'] = 1
 
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids
@@ -36,6 +40,7 @@ def init():
     # Paths
     settings['results_folder'] = 'results'
     settings['data_folder'] = settings['results_folder'] + '/data/'
+    settings['data_folder_norm'] = settings['results_folder'] + '/data_norm/'
     settings['figures_folder'] = settings['results_folder'] + '/figures/'
 
     # Plots

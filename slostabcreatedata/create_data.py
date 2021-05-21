@@ -109,6 +109,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     slopestabilitytools.save_plot(fig_input, test_name, '_4_modelinv')
 
     # Create classes labels
+    '''
     classes = []
     resistivity_values = []
     for pair in resistivity_map:
@@ -118,6 +119,8 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
         res_diff = np.abs(value * np.ones_like(resistivity_values) - resistivity_values)
         res_index = np.argmin(res_diff)
         classes.append(res_index)
+    '''
+    classes = slopestabilitytools.assign_class01(input_model, resistivity_map)
 
     classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array))
 
