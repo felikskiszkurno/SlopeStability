@@ -7,6 +7,7 @@ Created on 23.05.2021
 """
 
 from sklearn.model_selection import GridSearchCV
+from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import HalvingGridSearchCV
 
 import settings

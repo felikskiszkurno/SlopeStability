@@ -43,7 +43,7 @@ def svm_run(test_results, random_seed):
 
     # Train classifier
     result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training, depth_estim, depth_estim_accuracy, depth_estim_labels, depth_estim_training, depth_estim_accuracy_training, depth_estim_labels_training = \
-        slopestabilityML.run_classification(test_training, test_prediction, test_results_mixed, clf, 'SVM')
+        slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'SVM')
 
 
     # Plot

@@ -15,13 +15,13 @@ def init():
 
     # Training and prediction split
     settings['split_proportion'] = 0.85  # Part of available profiles that will be used for prediction
-    settings['data_split'] = 'predefined' # 'random'
+    settings['data_split'] = 'random' # 'random' or 'pre_defined'
 
     # Interpolate results to grid inside create_data script
     settings['grd'] = True
 
     # Parameters for resampling
-    settings['resample'] = True
+    settings['resample'] = False
     settings['resample_x_spacing'] = 1
     settings['resample_y_spacing'] = 1
 
@@ -38,7 +38,7 @@ def init():
     settings['depth'] = True   # True - include depth, False - ignore depth
 
     # Classifiers
-    settings['optimize_ml'] = True  # True - performs hyperparameter search
+    settings['optimize_ml'] = False  # True - performs hyperparameter search
     settings['optimize_ml_type'] = 'exhaustive'  # Type of grid search exhaustive or halved
 
     # Paths
