@@ -31,10 +31,12 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     accuracy_labels_training = []
 
     depth_estim = []
+    depth_true = []
     depth_estim_accuracy = []
     depth_estim_labels = []
 
     depth_estim_training = []
+    depth_true_training = []
     depth_estim_accuracy_training = []
     depth_estim_labels_training = []
 
@@ -109,15 +111,22 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         depth_interface_estimate_count = 0
         depth_interface_accuracy_mean = 0
         depth_interface_estimate_mean = 0
-
+        depth_interface_true = test_definitions.test_parameters[name]['layers_pos']
+        depth_detected_train = []
+        depth_detected_true_train = []
         for interfaces_key in interfaces_detected.keys():
+            diff = abs(np.ones([len(depth_interface_true)])*interfaces_detected[interfaces_key]['depth_mean']-depth_interface_true)
+            best_match_id = np.argwhere(diff == np.min(diff))
+            best_match_depth = depth_interface_true[best_match_id]
             depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
+            depth_detected_train.append(interfaces_detected[interfaces_key]['depth_mean'])
+            depth_detected_true_train.append(best_match_depth)
             depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[0]['depth_mean']
             y_estimate = interfaces_detected[interfaces_key]['depths']
             x_estimate = interfaces_detected[interfaces_key]['x']
         #depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
             y_actual = np.ones([y_estimate[np.isfinite(y_estimate)].size]) * \
-                       test_definitions.test_parameters[name]['layers_pos'][0]
+                       best_match_depth
             depth_interface_accuracy = mean_squared_error(y_actual,
                                                         y_estimate[np.isfinite(y_estimate)],
                                                         squared=False)
@@ -183,7 +192,9 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
 
 
-        depth_estim_training.append(depth_interface_estimate_mean/depth_interface_estimate_count)
+        #depth_estim_training.append(depth_interface_estimate_mean/depth_interface_estimate_count)
+        depth_estim_training.append(depth_detected_train)
+        depth_true_training.append(depth_detected_true_train)
         depth_estim_accuracy_training.append(depth_interface_accuracy_mean/depth_interface_estimate_count)
         depth_estim_labels_training.append(name + '_' + str(test_definitions.test_parameters[name]['layers_pos'][0]))
 
@@ -255,15 +266,23 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
         depth_interface_accuracy_mean = 0
         depth_interface_estimate_mean = 0
         depth_interface_estimate_count = 0
+        depth_interface_true = test_definitions.test_parameters[name]['layers_pos']
+        depth_detected = []
+        depth_detected_true = []
         for interfaces_key in interfaces_detected.keys():
+            diff = abs(np.ones([len(depth_interface_true)])*interfaces_detected[interfaces_key]['depth_mean']-depth_interface_true)
+            best_match_id = np.argwhere(diff == np.min(diff))
+            best_match_depth = depth_interface_true[best_match_id]
             depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
-            depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[0]['depth_mean']
-            depth_interface_estimate_count += 1
+            depth_detected.append(interfaces_detected[interfaces_key]['depth_mean'])
+            depth_detected_true.append(best_match_depth)
+            #depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[interfaces_key]['depth_mean']
+            #depth_interface_estimate_count += 1
             y_estimate = interfaces_detected[interfaces_key]['depths']
             x_estimate = interfaces_detected[interfaces_key]['x']
-        # depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
+            # depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
             y_actual = np.ones([y_estimate[np.isfinite(y_estimate)].size]) * \
-                       test_definitions.test_parameters[name]['layers_pos'][0]
+                       best_match_depth
             depth_interface_accuracy = mean_squared_error(y_actual, y_estimate[np.isfinite(y_estimate)], squared=False)
             depth_interface_accuracy_mean += depth_interface_accuracy
             interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
@@ -272,7 +291,9 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
             y_estimate_interp[interfaces_key] = interpolator(sorted(x))
 
-        depth_estim.append(depth_interface_estimate_mean/depth_interface_estimate_count)
+        #depth_estim.append(depth_interface_estimate_mean/depth_interface_estimate_count)
+        depth_estim.append(depth_detected)
+        depth_true.append(depth_detected_true)
         depth_estim_accuracy.append(depth_interface_accuracy_mean/depth_interface_estimate_count)
         depth_estim_labels.append(
             test_name_pred + '_' + str(test_definitions.test_parameters[test_name_pred]['layers_pos'][0]))
@@ -292,4 +313,6 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
         # Evaluate
 
-    return result_class, accuracy_labels, accuracy_result, accuracy_labels_training, accuracy_result_training, depth_estim, depth_estim_accuracy, depth_estim_labels, depth_estim_training, depth_estim_accuracy_training, depth_estim_labels_training
+    return result_class, accuracy_labels, accuracy_result, accuracy_labels_training, accuracy_result_training,\
+           depth_estim, depth_true, depth_estim_accuracy, depth_estim_labels, depth_estim_training,\
+           depth_true_training, depth_estim_accuracy_training, depth_estim_labels_training
