@@ -38,7 +38,8 @@ def init():
     settings['depth'] = True   # True - include depth, False - ignore depth
 
     # Classifiers
-    settings['optimize_ml'] = True
+    settings['optimize_ml'] = True  # True - performs hyperparameter search
+    settings['optimize_ml_type'] = 'exhaustive'  # Type of grid search exhaustive or halved
 
     # Paths
     settings['results_folder'] = 'results'

@@ -22,7 +22,8 @@ import slopestabilitytools
 import test_definitions
 
 
-def run_classification(test_training, test_prediction, test_results, clf, clf_name):
+def run_classification(test_training, test_prediction, test_results, clf, clf_name, *, hyperparameters=False):
+
     accuracy_result = []
     accuracy_labels = []
 

@@ -7,27 +7,34 @@ Created on 19.01.2021
 """
 
 from sklearn import ensemble
+
+import numpy as np
+
 import slopestabilityML.plot_results
 import slopestabilityML.split_dataset
 import slopestabilityML.run_classification
+
 import settings
 
 
 def gbc_run(test_results, random_seed):
 
     # Split the data set
-    if settings.settings['data_split'] is 'random':
-        test_training, test_prediction = slopestabilityML.split_dataset(test_results.keys(), random_seed)
-        test_results_mixed = test_results
-    elif settings.settings['data_split'] is 'predefined':
-        test_training = test_results['training'].keys()
-        test_prediction = test_results['prediction'].keys()
-        test_results_mixed = {}
-        test_results_mixed.update(test_results['prediction'])
-        test_results_mixed.update(test_results['training'])
+    test_results, test_training, test_prediction = slopestabilityML.select_split_type(test_results, random_seed)
 
-    # Create classifier
-    clf = ensemble.GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
+    if settings.settings['optimize_ml'] is True:
+        
+        hyperparameters = {'loss': ['deviance', 'exponential'],
+                           'learning_rate': list(np.arange(0.2, 1.5, 0.1)),
+                           'n_estimators': list(np.arange(70, 160, 10))}
+
+        clf_base = ensemble.GradientBoostingClassifier()
+
+        clf = slopestabilityML.select_search_type(clf_base, hyperparameters)
+
+    else:
+        # Create classifier
+        clf = ensemble.GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
 
     # Train classifier
     result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training, depth_estim, depth_estim_accuracy, depth_estim_labels, depth_estim_training, depth_estim_accuracy_training, depth_estim_labels_training = \
