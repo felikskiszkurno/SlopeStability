@@ -16,6 +16,10 @@ import slopestabilityML
 def ask_committee(ml_result_class, test_results, *, random_seed=False):
 
     classes_correct = {}
+    if any(key in test_results.keys() for key in ('training', 'prediction')):
+        test_results_orig = test_results.copy()
+        test_results = test_results['prediction']
+
     for test_name in sorted(test_results.keys()):
         if settings.settings['norm_class'] is True:
             class_in = test_results[test_name]['CLASSN']

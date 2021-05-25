@@ -17,6 +17,8 @@ from .ask_committee import ask_committee
 from .plot_class_overview import plot_class_overview
 from .select_search_type import select_search_types
 from .select_split_type import select_split_type
+from .check_name import check_name
+from .plot_depth_true_estim import plot_depth_true_estim
 
 
 from .SVM.svm_run import svm_run

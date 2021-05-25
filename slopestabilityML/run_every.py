@@ -42,12 +42,13 @@ def run_all_tests(test_results):
                          'depth_labels_training': svm_depth_estim_labels_training
                          }
 
+    ml_results_class['svm'] = svm_result_class
+
     del svm_result_class, svm_accuracy_score, svm_accuracy_labels, svm_accuracy_score_training,\
         svm_accuracy_labels_training,\
         svm_depth_estim, svm_depth_true, svm_depth_estim_accuracy, svm_depth_estim_labels, svm_depth_estim_training,\
         svm_depth_estim_accuracy_training, svm_depth_estim_labels_training
 
-    ml_results_class['svm'] = svm_result_class
     gc.collect()
 
     print('Running GBC...')
@@ -159,6 +160,8 @@ def run_all_tests(test_results):
     #                      'score_training': mgc_accuracy_score_training, 'labels_training': mgc_accuracy_labels_training}
     # ml_results_class['mgc'] = mgc_result_class
 
+    # Here should be called function, that will plot true vs predicted depth plot
+
     print('Asking committee for verdict')
     committee_accuracy_score, committee_accuracy_labels, committee_accuracy_score_training, committee_accuracy_labels_training \
         = slopestabilityML.ask_committee(ml_results_class, test_results, random_seed=random_seed)
@@ -168,6 +171,7 @@ def run_all_tests(test_results):
     gc.collect()
 
     slopestabilityML.combine_results(ml_results)
+    slopestabilityML.plot_depth_true_estim(ml_results)
     gc.collect()
     print('ML classification finished')
 

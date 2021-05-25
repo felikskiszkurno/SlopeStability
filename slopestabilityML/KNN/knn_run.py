@@ -36,11 +36,15 @@ def knn_run(test_results, random_seed):
         clf = KNeighborsClassifier(n_neighbors=2, n_jobs=-1)
 
     # Train classifier
-    result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training, depth_estim, depth_estim_accuracy, depth_estim_labels, depth_estim_training, depth_estim_accuracy_training, depth_estim_labels_training = \
+    result_class, accuracy_labels, accuracy_score, accuracy_labels_training, accuracy_score_training,\
+    depth_estim, depth_true, depth_estim_accuracy, depth_estim_labels, depth_estim_training,\
+    depth_true_training, depth_estim_accuracy_training, depth_estim_labels_training = \
         slopestabilityML.run_classification(test_training, test_prediction, test_results, clf, 'KNN')
 
     # Plot
     # slopestabilityML.plot_results(accuracy_labels, accuracy_score, 'KNN_prediction')
     # slopestabilityML.plot_results(accuracy_labels_training, accuracy_score_training, 'KNN_training')
 
-    return result_class, accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training, depth_estim, depth_estim_accuracy, depth_estim_labels, depth_estim_training, depth_estim_accuracy_training, depth_estim_labels_training
+    return result_class, accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training,\
+           depth_estim, depth_true, depth_estim_accuracy, depth_estim_labels, depth_estim_training,\
+           depth_true_training, depth_estim_accuracy_training, depth_estim_labels_training

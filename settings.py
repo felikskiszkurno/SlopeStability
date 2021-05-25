@@ -15,7 +15,7 @@ def init():
 
     # Training and prediction split
     settings['split_proportion'] = 0.85  # Part of available profiles that will be used for prediction
-    settings['data_split'] = 'random' # 'random' or 'pre_defined'
+    settings['data_split'] = 'predefined' # 'random' or 'predefined'
 
     # Interpolate results to grid inside create_data script
     settings['grd'] = True
