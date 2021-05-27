@@ -76,6 +76,20 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
             test_result_resampled = slopestabilitytools.resample_profile(test_results[name])
             test_results_combined = test_results_combined.append(test_result_resampled)
     test_results_combined = test_results_combined.reset_index()
+
+    if settings.settings['sim_bh'] is True:
+        test_results_combined_orig = test_results_combined.copy()
+        test_results_combined = pd.DataFrame(columns=test_results_combined_orig.columns.values.tolist())
+        for borehole_id in settings.settings['bh_pos'].keys():
+            bh_pos = settings.settings['bh_pos'][borehole_id]
+            df_temp = test_results_combined_orig.loc[(test_results_combined_orig['X'] > bh_pos['x_start']) &
+                                                        (test_results_combined_orig['X'] < bh_pos['x_end']) &
+                                                        (test_results_combined_orig['Y'] > bh_pos['y_start']) &
+                                                        (test_results_combined_orig['Y'] < bh_pos['y_end'])]
+            test_results_combined = test_results_combined.append(df_temp)
+            #test_results_combined.append(test_results_combined_orig[index_bh])
+            #del index_bh
+
     test_results_combined = test_results_combined.drop(['index'], axis='columns')
     x_train, y_train = slopestabilityML.preprocess_data(test_results_combined)
     x_position = test_results_combined['X']
@@ -84,6 +98,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
     for name in test_training:
         print(name)
+        name_orig = name
         name, name_orig = slopestabilityML.check_name(name)
         index = test_results_combined.index[test_results_combined['NAME'] == name]
         if settings.settings['norm_class'] is True:
@@ -214,6 +229,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     for test_name_pred in test_prediction:
         # Prepare data
         print(test_name_pred)
+        #test_name_pred_orig = test_name_pred
         test_name_pred, test_name_pred_orig = slopestabilityML.check_name(test_name_pred)
         x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results[test_name_pred], return_x=True)
         y_pred = clf_pipeline.predict(x_question)

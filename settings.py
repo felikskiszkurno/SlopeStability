@@ -14,8 +14,8 @@ def init():
     settings = {}
 
     # Training and prediction split
-    settings['split_proportion'] = 0.85  # Part of available profiles that will be used for prediction
-    settings['data_split'] = 'predefined' # 'random' or 'predefined'
+    settings['split_proportion'] = 0.75  # Part of available profiles that will be used for prediction
+    settings['data_split'] = 'random' # 'random' or 'predefined'
 
     # Interpolate results to grid inside create_data script
     settings['grd'] = True
@@ -36,6 +36,11 @@ def init():
 
     # Include depth
     settings['depth'] = True   # True - include depth, False - ignore depth
+
+    # Borehole simulation
+    settings['sim_bh'] = True
+    settings['bh_pos'] = {1: {'x_start': -20, 'x_end': -15, 'y_start': -18, 'y_end': 0},
+                          2: {'x_start': 15, 'x_end': 20, 'y_start': -18, 'y_end': 0}}
 
     # Classifiers
     settings['optimize_ml'] = False  # True - performs hyperparameter search

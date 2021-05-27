@@ -63,7 +63,6 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
         ax[1].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
     for interface_key in depth_estimate.keys():
         ax[1].hlines(y=depth_estimate[interface_key], xmin=x.min(), xmax=x.max(), linestyle='-')#, color='g')
-    del interface_key
     for interface_key in interface_y.keys():
         ax[1].plot(interface_x, interface_y[interface_key], 'x')
     ax[1].set_title('Predicted classes')

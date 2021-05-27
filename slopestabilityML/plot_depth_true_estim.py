@@ -24,13 +24,31 @@ def plot_depth_true_estim(ml_results):
             depth_estim = []
             depth_true = []
 
-            for value in ml_results[classifier]['depth_estim']:
-                depth_estim.append(value[0])
+            for depth_estim_value in ml_results[classifier]['depth_estim']:
+
+                if isinstance(depth_estim_value, list):
+
+                    for value in depth_estim_value:
+
+                        depth_estim.append(value)
+
+                else:
+
+                    depth_estim.append(value[0])
 
             del value
 
-            for value in ml_results[classifier]['depth_true']:
-                depth_true.append(value[0])
+            for depth_true_value in ml_results[classifier]['depth_true']:
+
+                if isinstance(depth_true_value, list):
+
+                    for value in depth_true_value:
+
+                        depth_true.append(value)
+
+                else:
+
+                    depth_true.append(value[0])
 
             ax.plot(depth_estim, depth_true, marker='o', color=colors[colors_count], label=classifier, linestyle='None')
             colors_count += 1
