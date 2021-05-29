@@ -32,6 +32,7 @@ if not create_new_data:
         test_results = slopestabilitytools.datamanagement.import_tests()
     elif settings.settings['data_split'] is 'predefined':
         test_results = slopestabilitytools.datamanagement.import_tests_predefined()
+
     else:
         print('Error: undefined tests')
         exit(0)

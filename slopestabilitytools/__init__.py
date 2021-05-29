@@ -36,3 +36,5 @@ from .folder_structure.check_create_folder import check_create_folder
 from .datamanagement.import_tests import import_tests
 from .datamanagement.read_to_pandas import read_to_pandas
 from .datamanagement.test_list import test_list
+from .datamanagement.recognize_batches import recognize_batches
+from .datamanagement.find_objects import find_objects

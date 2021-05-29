@@ -6,6 +6,8 @@ Created on 26.03.2021
 @author: Feliks Kiszkurno
 """
 
+import os
+
 
 def init():
 
@@ -15,7 +17,11 @@ def init():
 
     # Training and prediction split
     settings['split_proportion'] = 0.75  # Part of available profiles that will be used for prediction
-    settings['data_split'] = 'random' # 'random' or 'predefined'
+    settings['data_split'] = 'predefined' # 'random' or 'predefined'
+    settings['use_batches'] = True  # True or False
+    if settings['use_batches'] is True:
+        settings['data_split'] = 'predefined'
+    settings['reuse_classifier'] = False
 
     # Interpolate results to grid inside create_data script
     settings['grd'] = True
@@ -48,9 +54,10 @@ def init():
 
     # Paths
     settings['results_folder'] = 'results'
-    settings['data_folder'] = settings['results_folder'] + '/data/'
-    settings['data_folder_grd'] = settings['results_folder'] + '/data_grd/'
-    settings['figures_folder'] = settings['results_folder'] + '/figures/'
+    settings['data_folder'] = os.path.join(settings['results_folder'], 'data')
+    settings['data_folder_grd'] = os.path.join(settings['results_folder'], 'data_grd')
+    settings['figures_folder'] = os.path.join(settings['results_folder'], 'figures')
+    settings['clf_folder'] = os.path.join(settings['results_folder'], 'classifiers')
 
     # Plots
     settings['plot_formats'] = ['png']  # list of formats to save plots as, supported formats: eps, jpeg, jpg, pdf, pgf, png, ps, raw, rgba, svg, svgz, tif, tiff
