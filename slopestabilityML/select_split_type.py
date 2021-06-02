@@ -21,9 +21,22 @@ def select_split_type(test_results, random_seed):
     elif settings.settings['data_split'] is 'predefined':
 
         test_training = test_results['training'].keys()
-        test_prediction = test_results['prediction'].keys()
         test_results_mixed = {}
-        test_results_mixed.update(test_results['prediction'])
+
+        if settings.settings['use_batches'] is True:
+
+            test_prediction = {}
+
+            for batch_name in test_results['prediction'].keys():
+
+                test_prediction[batch_name] = test_results['prediction'][batch_name].keys()
+                test_results_mixed.update(test_results['prediction'][batch_name])
+
+        else:
+
+            test_prediction = test_results['prediction'].keys()
+            test_results_mixed.update(test_results['prediction'])
+
         test_results_mixed.update(test_results['training'])
 
     return test_results_mixed, test_training, test_prediction

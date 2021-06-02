@@ -15,7 +15,8 @@ import test_definitions
 import settings
 
 
-def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, training=False, depth_estimate='x', interface_y='x', interface_x='x', depth_accuracy='x'):
+def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, training=False, depth_estimate='x', \
+                        interface_y='x', interface_x='x', depth_accuracy='x', batch_name=''):
 
     x = test_results['X'].to_numpy()
     y = test_results['Y'].to_numpy()
@@ -135,10 +136,10 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
 
     if training is True:
         slopestabilitytools.save_plot(fig, clf_name, '_ML_{}_class_overview_training'.format(test_name),
-                                      subfolder='ML/training')
+                                      subfolder='ML/training', batch_name=batch_name)
 
     else:
         slopestabilitytools.save_plot(fig, clf_name, '_ML_{}_class_overview_prediction'.format(test_name),
-                                      subfolder='ML/prediction')
+                                      subfolder='ML/prediction', batch_name=batch_name)
 
     return

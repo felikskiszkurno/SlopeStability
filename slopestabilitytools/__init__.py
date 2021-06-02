@@ -28,6 +28,7 @@ from .detect_interface import detect_interface
 from .resample_profile import resample_profile
 from .assign_class01 import assign_class01
 from .generate_xy_pairs import generate_xy_pairs
+from .find_clf import find_clf
 
 from .folder_structure.create_folder_structure import create_folder_structure
 from .folder_structure.create_folder_for_test import create_folder_for_test

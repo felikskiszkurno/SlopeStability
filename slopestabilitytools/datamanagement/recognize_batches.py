@@ -13,7 +13,7 @@ import slopestabilitytools
 
 def recognize_batches():
 
-    path = settings.settings['data_folder'] + 'prediction/'
+    path = os.path.join(settings.settings['data_folder'], 'prediction')
 
     batch_list = []
 

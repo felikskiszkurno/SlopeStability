@@ -7,6 +7,7 @@ Created on 26.03.2021
 """
 
 import os
+import slopestabilitytools
 
 
 def init():
@@ -15,14 +16,27 @@ def init():
 
     settings = {}
 
+    # Paths
+    settings['base_folder'] = os.getcwd()
+    settings['results_folder'] = os.path.join(settings['base_folder'], 'results')
+    settings['data_folder'] = os.path.join(settings['results_folder'], 'data')
+    settings['data_folder_grd'] = os.path.join(settings['results_folder'], 'data_grd')
+    settings['figures_folder'] = os.path.join(settings['results_folder'], 'figures')
+    settings['clf_folder'] = os.path.join(settings['results_folder'], 'classifiers')
+
     # Training and prediction split
     settings['split_proportion'] = 0.75  # Part of available profiles that will be used for prediction
     settings['data_split'] = 'predefined' # 'random' or 'predefined'
     settings['use_batches'] = True  # True or False
     if settings['use_batches'] is True:
         settings['data_split'] = 'predefined'
-    settings['reuse_classifier'] = False
 
+    settings['retrain_clf'] = False  # True trains classifiers for each batch separately
+    settings['reuse_clf'] = True  # Load classifiers if they exist in classifiers folder
+    if settings['reuse_clf'] is True:
+        settings['clf_trained'] = slopestabilitytools.find_clf()  # List of trained classifiers, they won't be retrained unless retrain_clf is set to True
+    else:
+        settings['clf_trained'] = []
     # Interpolate results to grid inside create_data script
     settings['grd'] = True
 
@@ -51,13 +65,6 @@ def init():
     # Classifiers
     settings['optimize_ml'] = False  # True - performs hyperparameter search
     settings['optimize_ml_type'] = 'exhaustive'  # Type of grid search exhaustive or halved
-
-    # Paths
-    settings['results_folder'] = 'results'
-    settings['data_folder'] = os.path.join(settings['results_folder'], 'data')
-    settings['data_folder_grd'] = os.path.join(settings['results_folder'], 'data_grd')
-    settings['figures_folder'] = os.path.join(settings['results_folder'], 'figures')
-    settings['clf_folder'] = os.path.join(settings['results_folder'], 'classifiers')
 
     # Plots
     settings['plot_formats'] = ['png']  # list of formats to save plots as, supported formats: eps, jpeg, jpg, pdf, pgf, png, ps, raw, rgba, svg, svgz, tif, tiff

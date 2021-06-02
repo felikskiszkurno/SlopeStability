@@ -11,7 +11,7 @@ import numpy as np
 import slopestabilitytools
 
 
-def plot_depth_true_estim(ml_results):
+def plot_depth_true_estim(ml_results, *, batch_name=''):
 
     fig, ax = plt.subplots()
 
@@ -24,7 +24,7 @@ def plot_depth_true_estim(ml_results):
             depth_estim = []
             depth_true = []
 
-            for depth_estim_value in ml_results[classifier]['depth_estim']:
+            for depth_estim_value in ml_results[classifier]['prediction'][batch_name]['depth_estim']:
 
                 if isinstance(depth_estim_value, list):
 
@@ -38,7 +38,7 @@ def plot_depth_true_estim(ml_results):
 
             del value
 
-            for depth_true_value in ml_results[classifier]['depth_true']:
+            for depth_true_value in ml_results[classifier]['prediction'][batch_name]['depth_true']:
 
                 if isinstance(depth_true_value, list):
 
@@ -80,4 +80,4 @@ def plot_depth_true_estim(ml_results):
     ax.legend()
     plt.title('Predicted vs True interface depth')
 
-    slopestabilitytools.save_plot(fig, 'All', '_true_vs_pred', subfolder='ML/')
+    slopestabilitytools.save_plot(fig, 'All', '_true_vs_pred', subfolder='ML/', batch_name=batch_name)

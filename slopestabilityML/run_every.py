@@ -13,123 +13,47 @@ import slopestabilityML.SGD.sgd_run
 import slopestabilityML.KNN.knn_run
 import slopestabilityML.ADABOOST.adaboost_run
 import slopestabilityML
+import settings
 
 import gc
 
 
 def run_all_tests(test_results):
+
     random_seed = 999
 
     ml_results = {}
     ml_results_class = {}
 
     print('Running SVM...')
-    svm_result_class, svm_accuracy_score, svm_accuracy_labels, svm_accuracy_score_training, svm_accuracy_labels_training,\
-    svm_depth_estim, svm_depth_true, svm_depth_estim_accuracy, svm_depth_estim_labels, svm_depth_estim_training,\
-    svm_depth_true_training, svm_depth_estim_accuracy_training, svm_depth_estim_labels_training = \
-        slopestabilityML.SVM.svm_run(test_results, random_seed)
-    ml_results['svm'] = {'score': svm_accuracy_score,
-                         'labels': svm_accuracy_labels,
-                         'score_training': svm_accuracy_score_training,
-                         'labels_training': svm_accuracy_labels_training,
-                         'depth_estim': svm_depth_estim,
-                         'depth_true': svm_depth_true,
-                         'depth_accuracy': svm_depth_estim_accuracy,
-                         'depth_labels': svm_depth_estim_labels,
-                         'depth_estim_training': svm_depth_estim_training,
-                         'depth_true_training': svm_depth_true_training,
-                         'depth_accuracy_training': svm_depth_estim_accuracy_training,
-                         'depth_labels_training': svm_depth_estim_labels_training
-                         }
+    svm_results, svm_result_class = slopestabilityML.SVM.svm_run(test_results, random_seed)
+    ml_results['svm'] = svm_results
 
     ml_results_class['svm'] = svm_result_class
-
-    del svm_result_class, svm_accuracy_score, svm_accuracy_labels, svm_accuracy_score_training,\
-        svm_accuracy_labels_training,\
-        svm_depth_estim, svm_depth_true, svm_depth_estim_accuracy, svm_depth_estim_labels, svm_depth_estim_training,\
-        svm_depth_estim_accuracy_training, svm_depth_estim_labels_training
 
     gc.collect()
 
     print('Running GBC...')
-    gbc_result_class, gbc_accuracy_score, gbc_accuracy_labels, gbc_accuracy_score_training,\
-    gbc_accuracy_labels_training, gbc_depth_estim, gbc_depth_true, gbc_depth_estim_accuracy, gbc_depth_estim_labels,\
-    gbc_depth_estim_training, gbc_depth_true_training, gbc_depth_estim_accuracy_training, gbc_depth_estim_labels_training = \
-        slopestabilityML.GBC.gbc_run(test_results, random_seed)
-    ml_results['gbc'] = {'score': gbc_accuracy_score,
-                         'labels': gbc_accuracy_labels,
-                         'score_training': gbc_accuracy_score_training,
-                         'labels_training': gbc_accuracy_labels_training,
-                         'depth_estim': gbc_depth_estim,
-                         'depth_true': gbc_depth_true,
-                         'depth_accuracy': gbc_depth_estim_accuracy,
-                         'depth_labels': gbc_depth_estim_labels,
-                         'depth_estim_training': gbc_depth_estim_training,
-                         'depth_true_training': gbc_depth_true_training,
-                         'depth_accuracy_training': gbc_depth_estim_accuracy_training,
-                         'depth_labels_training': gbc_depth_estim_labels_training
-                         }
+    gbc_results, gbc_result_class = slopestabilityML.GBC.gbc_run(test_results, random_seed)
+    ml_results['gbc'] = gbc_results
 
     ml_results_class['gbc'] = gbc_result_class
-
-    del gbc_result_class, gbc_accuracy_score, gbc_accuracy_labels, gbc_accuracy_score_training,\
-        gbc_accuracy_labels_training, gbc_depth_estim, gbc_depth_true, gbc_depth_estim_accuracy, gbc_depth_estim_labels,\
-        gbc_depth_estim_training, gbc_depth_estim_accuracy_training, gbc_depth_estim_labels_training
 
     gc.collect()
 
     print('Running SGD...')
-    sgd_result_class, sgd_accuracy_score, sgd_accuracy_labels, sgd_accuracy_score_training,\
-    sgd_accuracy_labels_training, sgd_depth_estim, sgd_depth_true, sgd_depth_estim_accuracy,\
-    sgd_depth_estim_labels, sgd_depth_estim_training, sgd_depth_true_training, sgd_depth_estim_accuracy_training,\
-    sgd_depth_estim_labels_training = \
-        slopestabilityML.SGD.sgd_run(test_results, random_seed)
-    ml_results['sgd'] = {'score': sgd_accuracy_score,
-                         'labels': sgd_accuracy_labels,
-                         'score_training': sgd_accuracy_score_training,
-                         'labels_training': sgd_accuracy_labels_training,
-                         'depth_estim': sgd_depth_estim,
-                         'depth_true': sgd_depth_true,
-                         'depth_accuracy': sgd_depth_estim_accuracy,
-                         'depth_labels': sgd_depth_estim_labels,
-                         'depth_estim_training': sgd_depth_estim_training,
-                         'depth_true_training': sgd_depth_true_training,
-                         'depth_accuracy_training': sgd_depth_estim_accuracy_training,
-                         'depth_labels_training': sgd_depth_estim_labels_training
-                         }
+    sgd_results, sgd_result_class = slopestabilityML.SGD.sgd_run(test_results, random_seed)
+    ml_results['sgd'] = sgd_results
 
     ml_results_class['sgd'] = sgd_result_class
-    del sgd_result_class, sgd_accuracy_score, sgd_accuracy_labels, sgd_accuracy_score_training,\
-        sgd_accuracy_labels_training, sgd_depth_estim, sgd_depth_true, sgd_depth_estim_accuracy,\
-        sgd_depth_estim_labels, sgd_depth_estim_training, sgd_depth_estim_accuracy_training,\
-        sgd_depth_estim_labels_training
+
     gc.collect()
 
     print('Running KNN...')
-    knn_result_class, knn_accuracy_score, knn_accuracy_labels, knn_accuracy_score_training,\
-    knn_accuracy_labels_training, knn_depth_estim, knn_depth_true, knn_depth_estim_accuracy, knn_depth_estim_labels,\
-    knn_depth_estim_training, knn_depth_true_training, knn_depth_estim_accuracy_training,\
-    knn_depth_estim_labels_training = \
-        slopestabilityML.KNN.knn_run(test_results, random_seed)
-    ml_results['KNN'] = {'score': knn_accuracy_score,
-                         'labels': knn_accuracy_labels,
-                         'score_training': knn_accuracy_score_training,
-                         'labels_training': knn_accuracy_labels_training,
-                         'depth_estim': knn_depth_estim,
-                         'depth_true': knn_depth_true,
-                         'depth_accuracy': knn_depth_estim_accuracy,
-                         'depth_labels': knn_depth_estim_labels,
-                         'depth_estim_training': knn_depth_estim_training,
-                         'depth_true_training': knn_depth_true_training,
-                         'depth_accuracy_training': knn_depth_estim_accuracy_training,
-                         'depth_labels_training': knn_depth_estim_labels_training
-                         }
+    knn_results, knn_result_class = slopestabilityML.KNN.knn_run(test_results, random_seed)
+    ml_results['KNN'] = knn_results
 
     ml_results_class['knn'] = knn_result_class
-
-    del knn_result_class, knn_accuracy_score, knn_accuracy_labels, knn_accuracy_score_training,\
-        knn_accuracy_labels_training, knn_depth_estim, knn_depth_true, knn_depth_estim_accuracy, knn_depth_estim_labels,\
-        knn_depth_estim_training, knn_depth_estim_accuracy_training, knn_depth_estim_labels_training
 
     gc.collect()
 
@@ -163,15 +87,46 @@ def run_all_tests(test_results):
     # Here should be called function, that will plot true vs predicted depth plot
 
     print('Asking committee for verdict')
-    committee_accuracy_score, committee_accuracy_labels, committee_accuracy_score_training, committee_accuracy_labels_training \
-        = slopestabilityML.ask_committee(ml_results_class, test_results, random_seed=random_seed)
-    ml_results['com'] = {'score': committee_accuracy_score, 'labels': committee_accuracy_labels,
-                         'score_training': committee_accuracy_score_training,
-                         'labels_training': committee_accuracy_labels_training}
-    gc.collect()
 
-    slopestabilityML.combine_results(ml_results)
-    slopestabilityML.plot_depth_true_estim(ml_results)
+    if settings.settings['use_batches'] is False:
+
+        results_com \
+            = slopestabilityML.ask_committee(ml_results_class, test_results, random_seed=random_seed)
+        #ml_results['com'] = {'score': committee_accuracy_score, 'labels': committee_accuracy_labels,
+        #                     'score_training': committee_accuracy_score_training,
+        #                     'labels_training': committee_accuracy_labels_training}
+        ml_results['com'] = results_com
+
+        del results_com
+
+        slopestabilityML.combine_results(ml_results)
+        slopestabilityML.plot_depth_true_estim(ml_results)
+
+    elif settings.settings['use_batches'] is True:
+
+        ml_results['com'] = {}
+        ml_results['com']['training'] = {}
+        ml_results['com']['prediction'] = {}
+        ml_result_com_batches = {}
+
+        for batch_name in test_results['prediction'].keys():
+
+            test_results_temp = {}
+            test_results_temp['training'] = test_results['training']
+            test_results_temp['prediction'] = test_results['prediction'][batch_name]
+
+            results_com \
+                = slopestabilityML.ask_committee(ml_results_class, test_results_temp, random_seed=random_seed)
+            # ml_results['com'] = {'score': committee_accuracy_score, 'labels': committee_accuracy_labels,
+            #                     'score_training': committee_accuracy_score_training,
+            #                     'labels_training': committee_accuracy_labels_training}
+            ml_results['com']['training'][batch_name] = results_com['training']
+            ml_results['com']['prediction'][batch_name] = results_com['prediction']
+            slopestabilityML.combine_results(ml_results, batch_name=batch_name)
+            slopestabilityML.plot_depth_true_estim(ml_results, batch_name=batch_name)
+            #ml_results.pop('com')
+            #ml_results['com'][batch_name] = resu
+
     gc.collect()
     print('ML classification finished')
 

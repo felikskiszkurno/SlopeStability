@@ -10,6 +10,8 @@ import settings
 import slopestabilityML
 import pandas as pd
 import numpy as np
+import os
+import joblib
 from scipy import interpolate
 
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -23,8 +25,23 @@ import slopestabilitytools
 import test_definitions
 
 
-def classification_predict():
+def classification_predict(test_prediction, test_results, clf_name, *, batch_name=''):
+
     result_class = {}
+
+    accuracy_result = []
+    accuracy_labels = []
+
+    depth_estim = []
+    depth_true = []
+    depth_estim_accuracy = []
+    depth_estim_labels = []
+
+    if settings.settings['reuse_clf'] is True:
+
+        if clf_name in settings.settings['clf_trained']:
+            clf_name_ext = clf_name + '.sav'
+            clf_pipeline = joblib.load(os.path.join(settings.settings['clf_folder'], clf_name_ext))
 
     # Predict with classifier
     for test_name_pred in test_prediction:
@@ -55,27 +72,7 @@ def classification_predict():
         y = x_question['Y'].to_numpy()
         xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
         y_pred_grid = gridded_data['class']
-        '''
-        y_pred_grid = gridded_data['class']
-        # depth_all = np.zeros(y_pred_grid.shape[0])
-        # depth_all_correct = np.ones(y_pred_grid.shape[0]) * test_definitions.test_parameters[test_name_pred]['layers_pos'][0]
-        # for column_id in range(y_pred_grid.shape[0]):
-        #     # if len(np.unique(y_pred_grid[:,column_id])) is not 2:
-        #     depth_id = np.array(np.where(y_pred_grid[:, column_id] == 4))
-        #     if np.size(depth_id) is 0:
-        #         depth = yi[-1]
-        #     else:
-        #         depth_id = depth_id.min()
-        #         depth = yi[depth_id]
-        #     depth_all[column_id] = depth
-        # depth_interface_estimate = np.mean(depth_all)
-        # 
-        # depth_interface_accuracy = (mean_absolute_error(depth_all_correct, depth_all) / abs(test_definitions.test_parameters[name]['layers_pos'][0]))*100
-        # print(depth_interface_accuracy)
-        # depth_estim.append(depth_interface_estimate)
-        # depth_estim_accuracy.append(depth_interface_accuracy)
-        # depth_estim_labels.append(test_name_pred + '_' + str(test_definitions.test_parameters[test_name_pred]['layers_pos'][0]))
-        '''
+
         result_grid_rolled = np.roll(y_pred_grid, -1, axis=0)
         y_pred_grid_deri = y_pred_grid - result_grid_rolled
         y_pred_grid_deri[-1, :] = 0
@@ -125,9 +122,9 @@ def classification_predict():
         #                                     depth_accuracy=depth_interface_accuracy)
 
         slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred_orig, class_in, y_pred,
-                                             clf_name, training=True, depth_estimate=depth_interface_estimate,
+                                             clf_name, training=False, depth_estimate=depth_interface_estimate,
                                              interface_y=y_estimate_interp, interface_x=sorted(x),
-                                             depth_accuracy=depth_interface_accuracy)
+                                             depth_accuracy=depth_interface_accuracy, batch_name=batch_name)
 
         # Evaluate result
         # accuracy_.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)
@@ -136,4 +133,5 @@ def classification_predict():
 
         # Evaluate
 
-    return
+    return result_class, accuracy_labels, accuracy_result, depth_estim, depth_true, \
+        depth_estim_accuracy, depth_estim_labels,

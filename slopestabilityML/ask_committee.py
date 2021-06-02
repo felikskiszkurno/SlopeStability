@@ -14,7 +14,6 @@ import slopestabilityML
 
 
 def ask_committee(ml_result_class, test_results, *, random_seed=False):
-
     classes_correct = {}
     if any(key in test_results.keys() for key in ('training', 'prediction')):
         test_results_orig = test_results.copy()
@@ -32,7 +31,7 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
             print('I don\'t know which class to use! Exiting...')
             exit(0)
         classes_correct[test_name] = class_in
-        
+
     # First create list of datasets and verify if all classifiers has been run over the same sets
     test_names_all = []
     for method_name in sorted(ml_result_class.keys()):
@@ -44,14 +43,16 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
     # Combine results for each data set from each classifier into an array
     results_test = {}
     for test_name in test_names_all:
-        results = np.zeros([len(ml_result_class[list(ml_result_class.keys())[0]][test_name]), len(sorted(ml_result_class.keys()))])
+        results = np.zeros(
+            [len(ml_result_class[list(ml_result_class.keys())[0]][test_name]), len(sorted(ml_result_class.keys()))])
         method_id = 0
         for method_name in sorted(ml_result_class.keys()):
             if settings.settings['use_labels'] is True:
                 ml_result_numeric = slopestabilitytools.label2numeric(ml_result_class[method_name][test_name])
             else:
                 ml_result_numeric = ml_result_class[method_name][test_name]
-            results[:, method_id] = np.array(ml_result_numeric).T.reshape([len(ml_result_class[method_name][test_name])])
+            results[:, method_id] = np.array(ml_result_numeric).T.reshape(
+                [len(ml_result_class[method_name][test_name])])
             method_id = method_id + 1
         results_test[test_name] = results
 
@@ -93,4 +94,9 @@ def ask_committee(ml_result_class, test_results, *, random_seed=False):
                 accuracy_score.append(score * 100)
                 accuracy_labels.append(test_name)
 
-    return accuracy_score, accuracy_labels, accuracy_score_training, accuracy_labels_training
+    result_com = {'prediction': {'accuracy_score': accuracy_score,
+                                 'accuracy_labels': accuracy_labels},
+                  'training': {'accuracy_score': accuracy_score_training,
+                               'accuracy_labels': accuracy_labels_training}}
+
+    return result_com

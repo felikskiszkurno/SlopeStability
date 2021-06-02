@@ -7,24 +7,24 @@ Created on 25.03.2021
 """
 
 import os
-from pathlib import Path
-
 import settings
 
 
-def save_plot(figure_handler, test_name, figure_name, *, subfolder=False, skip_fileformat=False):  # keep in mind, that subfolder has to exist, it wont be created here
+def save_plot(figure_handler, test_name, figure_name, *, subfolder='', skip_fileformat=False, batch_name=''):  # keep in mind, that subfolder has to exist, it wont be created here
 
-    if isinstance(subfolder, str) is True:
+    '''if isinstance(subfolder, str) is True:
         subfolder = '/' + subfolder + '/'
     else:
-        subfolder = ''
+        subfolder = '''''
 
     for file_format in settings.settings['plot_formats']:
-        if skip_fileformat is True:
-            figure_handler.savefig(Path(os.getcwd() + '/' + settings.settings[
-                'figures_folder'] + subfolder + '/' + test_name + figure_name + '.' + file_format),
+        if skip_fileformat is True:  # What is this about?
+            fig_name_ext = test_name + figure_name + '.' + file_format
+            figure_handler.savefig(os.path.join(settings.settings['figures_folder'], batch_name,
+                                                subfolder, fig_name_ext),
                                    bbox_inches="tight")
         else:
-            figure_handler.savefig(Path(os.getcwd() + '/' + settings.settings[
-                'figures_folder'] + subfolder + file_format + '/' + test_name + figure_name + '.' + file_format),
+            fig_name_ext = test_name + figure_name + '.' + file_format
+            figure_handler.savefig(os.path.join(settings.settings['figures_folder'], batch_name,
+                                                subfolder, file_format, fig_name_ext),
                                    bbox_inches="tight")

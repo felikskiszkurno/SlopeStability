@@ -41,7 +41,13 @@ if not create_new_data:
     #        test_results = slopestabilitytools.reassign_classes(test_results, class_type)
 
     # Check if folder structure for figures exists and create it if not
-    is_success = slopestabilitytools.folder_structure.create_folder_structure()
+    if settings.settings['use_batches'] is True:
+
+        is_success = slopestabilitytools.folder_structure.create_folder_structure(batch_names=test_results['prediction'].keys())
+
+    elif  settings.settings['use_batches'] is False:
+
+        is_success = slopestabilitytools.folder_structure.create_folder_structure()
 
 # Create new data
 else:

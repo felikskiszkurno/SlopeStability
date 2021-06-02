@@ -27,8 +27,15 @@ import test_definitions
 
 def classification_train(test_training, test_results, clf, clf_name):
 
+    result_class_training = {}
+
     accuracy_result_training = []
     accuracy_labels_training = []
+
+    depth_estim_training = []
+    depth_true_training = []
+    depth_estim_accuracy_training = []
+    depth_estim_labels_training = []
 
     num_feat = []
 
@@ -86,8 +93,10 @@ def classification_train(test_training, test_results, clf, clf_name):
 
     clf_pipeline.fit(x_train, y_train)
 
-    clf_file_name = os.path.join(settings.settings['clf_folder'], clf_name, '.sav')
+    clf_name_ext = clf_name + '.sav'
+    clf_file_name = os.path.join(settings.settings['clf_folder'], clf_name_ext)
     joblib.dump(clf_pipeline, clf_file_name)
+    settings.settings['clf_trained'] = slopestabilitytools.find_clf()
 
     for name in test_training:
         print(name)
@@ -100,6 +109,7 @@ def classification_train(test_training, test_results, clf, clf_name):
             class_correct = test_results_combined['CLASS'].loc[index]
         x_train_temp = x_train.loc[index]
         y_pred = clf_pipeline.predict(x_train_temp)
+        result_class_training[name] = y_pred
         score_training = accuracy_score(class_correct, y_pred)
         accuracy_result_training.append(score_training * 100)
         accuracy_labels_training.append(name)
@@ -162,5 +172,5 @@ def classification_train(test_training, test_results, clf, clf_name):
     del y_pred, y_pred_grid, y_pred_grid_deri, y, x, y_actual, xi, yi, y_estimate_interp, depth_interface_accuracy
     del depth_interface_estimate, depth_interface_accuracy_mean, depth_interface_estimate_count, depth_interface_estimate_mean
 
-    return depth_estim_training, depth_true_training, depth_estim_accuracy_training,\
-        depth_estim_labels_training
+    return result_class_training, depth_estim_training, depth_true_training, depth_estim_accuracy_training,\
+        depth_estim_labels_training, accuracy_result_training, accuracy_labels_training
