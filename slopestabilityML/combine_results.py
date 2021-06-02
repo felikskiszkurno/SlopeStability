@@ -9,6 +9,8 @@ Created on 19.01.2021
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+import os
+import settings
 
 import slopestabilitytools
 
@@ -79,8 +81,13 @@ def combine_results(ml_results, *, batch_name=''):
                 training_score_sum = training_score_sum + np.sum(np.array(ml_results[method_name]['training']['accuracy_score']))
                 training_score_num = training_score_num + len(ml_results[method_name]['training']['accuracy_score'])
 
+
+
     training_score_avg = training_score_sum / training_score_num
     print('Training accuracy: {result:.2f}%'.format(result=training_score_avg))
+    log_file = open(os.path.join(settings.settings['figures_folder'], batch_name), 'a')
+    log_file.write('Training accuracy: {result:.2f}%'.format(result=training_score_avg))
+    log_file.close()
 
     x_limits = ax.get_xlim()
     plt.axhline(y=training_score_avg, xmin=x_limits[0], xmax=x_limits[1])
@@ -128,6 +135,9 @@ def combine_results(ml_results, *, batch_name=''):
 
     prediction_depth_estim_avg = prediction_depth_estim_sum / prediction_depth_estim_num
     print('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
+    log_file = open(os.path.join(settings.settings['figures_folder'], batch_name), 'a')
+    log_file.write('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
+    log_file.close()
 
     x_limits = ax.get_xlim()
     plt.gca().invert_yaxis()

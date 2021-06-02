@@ -54,7 +54,14 @@ def classification_predict(test_prediction, test_results, clf_name, *, batch_nam
         result_class[test_name_pred] = y_pred
         # print(y_pred)
         score = accuracy_score(y_answer, y_pred)
-        print('score: {score:.2f} %'.format(score=score * 100))
+        print('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
+        log_file = open(os.path.join(settings.settings['figures_folder'], batch_name), 'a')
+        log_file.write('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
+        log_file.write('{bn}, {tn} feature list: {fl}'.format(bn=batch_name, tn=test_name_pred,
+                                                              fl=x_question.columns.values.tolist()))
+        log_file.write('{bn}, {tn}  feature importance: {fi}'.format(bn=batch_name, tn=test_name_pred,
+                                                                     fi=clf_pipeline.feature_importances_))
+        log_file.close()
 
         if settings.settings['norm_class'] is True:
             class_in = test_results[test_name_pred]['CLASSN']
@@ -84,6 +91,7 @@ def classification_predict(test_prediction, test_results, clf_name, *, batch_nam
         depth_interface_estimate_mean = 0
         depth_interface_estimate_count = 0
         depth_interface_true = test_definitions.test_parameters[test_name_pred]['layers_pos']
+        depth_interface_accuracy = 0
         depth_detected = []
         depth_detected_true = []
         for interfaces_key in interfaces_detected.keys():
