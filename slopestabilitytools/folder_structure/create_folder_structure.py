@@ -37,6 +37,10 @@ def create_folder_structure(batch_names=''):
     folder_path = os.path.join(settings.settings['data_folder'])
     is_success = check_create_folder(folder_path)
 
+    # Folder for classifiers
+    folder_path = os.path.join(settings.settings['clf_folder'])
+    is_success = check_create_folder(folder_path)
+
     folder_path = os.path.join(settings.settings['data_folder_grd'])
     is_success = check_create_folder(folder_path)
 
