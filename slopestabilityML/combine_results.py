@@ -85,7 +85,8 @@ def combine_results(ml_results, *, batch_name=''):
 
     training_score_avg = training_score_sum / training_score_num
     print('Training accuracy: {result:.2f}%'.format(result=training_score_avg))
-    log_file = open(os.path.join(settings.settings['figures_folder'], batch_name), 'a')
+    log_file_name = batch_name + '_log.txt'
+    log_file = open(os.path.join(settings.settings['figures_folder'], log_file_name), 'a')
     log_file.write('Training accuracy: {result:.2f}%'.format(result=training_score_avg))
     log_file.close()
 
