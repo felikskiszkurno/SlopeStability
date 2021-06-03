@@ -55,7 +55,8 @@ def classification_predict(test_prediction, test_results, clf_name, *, batch_nam
         # print(y_pred)
         score = accuracy_score(y_answer, y_pred)
         print('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
-        log_file = open(os.path.join(settings.settings['figures_folder'], batch_name), 'a')
+        log_file_name = batch_name + '_log.txt'
+        log_file = open(os.path.join(settings.settings['figures_folder'], log_file), 'a')
         log_file.write('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
         log_file.write('{bn}, {tn} feature list: {fl}'.format(bn=batch_name, tn=test_name_pred,
                                                               fl=x_question.columns.values.tolist()))

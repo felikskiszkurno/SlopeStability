@@ -135,7 +135,8 @@ def combine_results(ml_results, *, batch_name=''):
 
     prediction_depth_estim_avg = prediction_depth_estim_sum / prediction_depth_estim_num
     print('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
-    log_file = open(os.path.join(settings.settings['figures_folder'], batch_name), 'a')
+    log_file_name = batch_name + '_log.txt'
+    log_file = open(os.path.join(settings.settings['figures_folder'], log_file_name), 'a')
     log_file.write('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
     log_file.close()
 
