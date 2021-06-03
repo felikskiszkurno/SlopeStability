@@ -56,8 +56,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
             slopestabilitytools.folder_structure.create_folder_structure(batch_names=[batch])
 
-            file_name = batch_name + '_log.txt'
-            log_file = open(os.path.join(settings.settings['figures_folder'], file_name), 'w')
+            log_file_name = batch_name + '_log.txt'
+            log_file = open(os.path.join(settings.settings['figures_folder'], log_file_name), 'w')
             log_file.write('Starting log file for: ' + batch_name)
             log_file.close()
 
