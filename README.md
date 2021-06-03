@@ -5,6 +5,9 @@
 ## Description:
 Scripts and tools developed for the purpose of my Master Thesis
 
+## Running
+Before starting the main script, folder results/classifiers has to be manually create or emptied, if classifiers are not supposed to be resused
+
 ## Structure
 ### Main script
 This is where most of the work happens.

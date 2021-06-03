@@ -16,6 +16,8 @@ import numpy as np
 import settings
 import test_definitions
 
+from datetime import datetime
+
 settings.init()
 
 # Config
@@ -104,8 +106,19 @@ else:
 # Evaluate data with ML techniques
 if not create_new_data_only:
 
+    log_file_name = settings.settings['log_file_name']
+    log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'w')
+    log_file.write('Starting log file...')
+    log_file.write('Started at: ' + datetime.now().strftime("%d_%m_%Y_%H_%M_%S"))
+    log_file.close()
+
     print('Running ML stuff...')
     ml_results = slopestabilityML.run_all_tests(test_results)
+
+    log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+    log_file.write('Finishing log file...')
+    log_file.write('Finished at: ' + datetime.now().strftime("%d_%m_%Y_%H_%M_%S"))
+    log_file.close()
 
 # Finish the script if ML classifiaction was not executed
 elif create_new_data_only:

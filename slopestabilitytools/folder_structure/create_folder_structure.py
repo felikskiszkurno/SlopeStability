@@ -30,11 +30,19 @@ def create_folder_structure(batch_names=''):
             folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'prediction', file_format)
             is_success = check_create_folder(folder_path)
 
+            folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'feature_importance',
+                                       file_format)
+            is_success = check_create_folder(folder_path)
+
     del file_format
 
     # There has to be a training folder in figures, that doesn't contain batch name
     for file_format in settings.settings['plot_formats']:
+
         folder_path = os.path.join(settings.settings['figures_folder'], 'ML', 'training', file_format)
+        is_success = check_create_folder(folder_path)
+
+        folder_path = os.path.join(settings.settings['figures_folder'], 'ML', 'feature_importance', file_format)
         is_success = check_create_folder(folder_path)
 
     # Folder for results

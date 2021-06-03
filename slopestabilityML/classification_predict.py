@@ -20,6 +20,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
+from sklearn.inspection import permutation_importance
 
 import slopestabilitytools
 import test_definitions
@@ -55,13 +56,19 @@ def classification_predict(test_prediction, test_results, clf_name, *, batch_nam
         # print(y_pred)
         score = accuracy_score(y_answer, y_pred)
         print('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
-        log_file_name = batch_name + '_log.txt'
-        log_file = open(os.path.join(settings.settings['figures_folder'], log_file_name), 'a')
+
+        importance = permutation_importance(clf_pipeline, x_question, y_pred)
+
+        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_question, test_name_pred, batch_name=batch_name)
+
+        log_file_name = settings.settings['log_file_name']
+        log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+        log_file.write('\n')
         log_file.write('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
         log_file.write('{bn}, {tn} feature list: {fl}'.format(bn=batch_name, tn=test_name_pred,
                                                               fl=x_question.columns.values.tolist()))
         log_file.write('{bn}, {tn}  feature importance: {fi}'.format(bn=batch_name, tn=test_name_pred,
-                                                                     fi=clf_pipeline.feature_importances_))
+                                                                     fi=importance.importances_mean))
         log_file.close()
 
         if settings.settings['norm_class'] is True:

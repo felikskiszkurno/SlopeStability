@@ -81,12 +81,13 @@ def combine_results(ml_results, *, batch_name=''):
                 training_score_sum = training_score_sum + np.sum(np.array(ml_results[method_name]['training']['accuracy_score']))
                 training_score_num = training_score_num + len(ml_results[method_name]['training']['accuracy_score'])
 
-
-
     training_score_avg = training_score_sum / training_score_num
     print('Training accuracy: {result:.2f}%'.format(result=training_score_avg))
-    log_file_name = batch_name + '_log.txt'
-    log_file = open(os.path.join(settings.settings['figures_folder'], log_file_name), 'a')
+
+    log_file_name = settings.settings['log_file_name']
+    log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+    log_file.write('\n')
+    log_file.write('Combine results...')
     log_file.write('Training accuracy: {result:.2f}%'.format(result=training_score_avg))
     log_file.close()
 
@@ -135,9 +136,11 @@ def combine_results(ml_results, *, batch_name=''):
                 prediction_depth_estim_num = prediction_depth_estim_num + len(ml_results[method_name]['prediction']['depth_estim_accuracy'])
 
     prediction_depth_estim_avg = prediction_depth_estim_sum / prediction_depth_estim_num
+
     print('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
-    log_file_name = batch_name + '_log.txt'
-    log_file = open(os.path.join(settings.settings['figures_folder'], log_file_name), 'a')
+
+    log_file_name = settings.settings['log_file_name']
+    log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
     log_file.write('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
     log_file.close()
 

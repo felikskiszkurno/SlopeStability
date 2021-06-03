@@ -56,11 +56,6 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
             slopestabilitytools.folder_structure.create_folder_structure(batch_names=[batch])
 
-            log_file_name = batch_name + '_log.txt'
-            log_file = open(os.path.join(settings.settings['figures_folder'], log_file_name), 'w')
-            log_file.write('Starting log file for: ' + batch_name)
-            log_file.close()
-
             result_class, accuracy_labels, accuracy_result, depth_estim, depth_true, \
             depth_estim_accuracy, depth_estim_labels = \
                 slopestabilityML.classification_predict(test_prediction[batch], test_results, clf_name, batch_name=batch)

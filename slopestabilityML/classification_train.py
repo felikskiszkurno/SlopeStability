@@ -20,6 +20,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
+from sklearn.inspection import permutation_importance
 
 import slopestabilitytools
 import test_definitions
@@ -114,6 +115,22 @@ def classification_train(test_training, test_results, clf, clf_name):
         accuracy_result_training.append(score_training * 100)
         accuracy_labels_training.append(name)
 
+        importance = permutation_importance(clf_pipeline, x_train_temp, y_pred)
+        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_train_temp, name)
+
+        log_file_name = settings.settings['log_file_name']
+        log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+        log_file.write('\n')
+        log_file.write('Starting training on profile: {tn}'.format(tn=name))
+        log_file.write('{tn} score: {score:.2f} %'.format(tn=name, score=score_training * 100))
+        log_file.write('{tn} feature list: {fl}'.format(tn=name,
+                                                              fl=x_train_temp.columns.values.tolist()))
+        log_file.write('{tn}  feature importance: {fi}'.format(tn=name,
+                                                                     fi=importance.importances_mean))
+        log_file.close()
+
+        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_train_temp, name)
+
         # Evaluate the accuracy of interface depth detection
         x = x_position.loc[index].to_numpy()
         y = x_train_temp['Y'].to_numpy()
@@ -130,6 +147,7 @@ def classification_train(test_training, test_results, clf, clf_name):
         depth_interface_estimate_count = 0
         depth_interface_accuracy_mean = 0
         depth_interface_estimate_mean = 0
+        depth_interface_accuracy = 0
         depth_interface_true = test_definitions.test_parameters[name]['layers_pos']
         depth_detected_train = []
         depth_detected_true_train = []

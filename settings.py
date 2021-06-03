@@ -8,6 +8,7 @@ Created on 26.03.2021
 
 import os
 import slopestabilitytools
+from datetime import datetime
 
 
 def init():
@@ -23,6 +24,9 @@ def init():
     settings['data_folder_grd'] = os.path.join(settings['results_folder'], 'data_grd')
     settings['figures_folder'] = os.path.join(settings['results_folder'], 'figures')
     settings['clf_folder'] = os.path.join(settings['results_folder'], 'classifiers')
+
+    # Log file
+    settings['log_file_name'] = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
 
     # Training and prediction split
     settings['split_proportion'] = 0.75  # Part of available profiles that will be used for prediction
