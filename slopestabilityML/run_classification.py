@@ -23,7 +23,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
     if clf_name not in settings.settings['clf_trained']:
         result_class_training, depth_estim_training, depth_true_training, depth_estim_accuracy_training, \
-        depth_estim_labels_training, accuracy_score_training, accuracy_labels_training = \
+        depth_estim_labels_training, accuracy_score_training, accuracy_labels_training, num_feat = \
             slopestabilityML.classification_train(test_training, test_results, clf, clf_name)
 
         result_training = {'result_class': result_class_training,
@@ -58,7 +58,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
 
             result_class, accuracy_labels, accuracy_result, depth_estim, depth_true, \
             depth_estim_accuracy, depth_estim_labels = \
-                slopestabilityML.classification_predict(test_prediction[batch], test_results, clf_name, batch_name=batch)
+                slopestabilityML.classification_predict(test_prediction[batch], test_results, clf_name, num_feat,
+                                                                                                       batch_name=batch)
 
             result_prediction[batch] = {'result_class': result_class,
                                         'accuracy_score': accuracy_result,

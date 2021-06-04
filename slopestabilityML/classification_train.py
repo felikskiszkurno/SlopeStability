@@ -92,6 +92,7 @@ def classification_train(test_training, test_results, clf, clf_name):
     x_train, y_train = slopestabilityML.preprocess_data(test_results_combined)
     x_position = test_results_combined['X']
 
+    x_train = x_train[num_feat]
     clf_pipeline.fit(x_train, y_train)
 
     clf_name_ext = clf_name + '.sav'
@@ -205,4 +206,4 @@ def classification_train(test_training, test_results, clf, clf_name):
     del depth_interface_estimate, depth_interface_accuracy_mean, depth_interface_estimate_count, depth_interface_estimate_mean
 
     return result_class_training, depth_estim_training, depth_true_training, depth_estim_accuracy_training,\
-        depth_estim_labels_training, accuracy_result_training, accuracy_labels_training
+        depth_estim_labels_training, accuracy_result_training, accuracy_labels_training, num_feat
