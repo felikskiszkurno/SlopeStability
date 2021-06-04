@@ -39,4 +39,4 @@ def select_split_type(test_results, random_seed):
 
         test_results_mixed.update(test_results['training'])
 
-    return test_results_mixed, test_training, test_prediction, num_feat
+    return test_results_mixed, test_training, test_prediction
