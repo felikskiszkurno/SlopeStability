@@ -65,10 +65,13 @@ def classification_predict(test_prediction, test_results, clf_name, *, batch_nam
         log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
         log_file.write('\n')
         log_file.write('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
+        log_file.write('\n')
         log_file.write('{bn}, {tn} feature list: {fl}'.format(bn=batch_name, tn=test_name_pred,
                                                               fl=x_question.columns.values.tolist()))
+        log_file.write('\n')
         log_file.write('{bn}, {tn}  feature importance: {fi}'.format(bn=batch_name, tn=test_name_pred,
                                                                      fi=importance.importances_mean))
+        log_file.write('\n')
         log_file.close()
 
         if settings.settings['norm_class'] is True:

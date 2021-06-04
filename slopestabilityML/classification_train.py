@@ -122,11 +122,15 @@ def classification_train(test_training, test_results, clf, clf_name):
         log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
         log_file.write('\n')
         log_file.write('Starting training on profile: {tn}'.format(tn=name))
+        log_file.write('\n')
         log_file.write('{tn} score: {score:.2f} %'.format(tn=name, score=score_training * 100))
+        log_file.write('\n')
         log_file.write('{tn} feature list: {fl}'.format(tn=name,
                                                               fl=x_train_temp.columns.values.tolist()))
+        log_file.write('\n')
         log_file.write('{tn}  feature importance: {fi}'.format(tn=name,
                                                                      fi=importance.importances_mean))
+        log_file.write('\n')
         log_file.close()
 
         slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_train_temp, name)
@@ -152,30 +156,40 @@ def classification_train(test_training, test_results, clf, clf_name):
         depth_detected_train = []
         depth_detected_true_train = []
         for interfaces_key in interfaces_detected.keys():
-            diff = abs(np.ones([len(depth_interface_true)]) * interfaces_detected[interfaces_key][
-                'depth_mean'] - depth_interface_true)
-            best_match_id = np.argwhere(diff == np.min(diff))
-            best_match_depth = depth_interface_true[best_match_id][0]
-            depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
-            depth_detected_train.append(interfaces_detected[interfaces_key]['depth_mean'])
-            depth_detected_true_train.append(best_match_depth[0])
-            depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[0]['depth_mean']
-            y_estimate = interfaces_detected[interfaces_key]['depths']
-            x_estimate = interfaces_detected[interfaces_key]['x']
-            # depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
-            y_actual = np.ones([y_estimate.size]) * \
-                       best_match_depth
-            y_actual = y_actual.reshape([y_actual.shape[0]])
-            depth_interface_accuracy = mean_squared_error(y_actual[np.isfinite(y_estimate)],
-                                                          y_estimate[np.isfinite(y_estimate)],
-                                                          squared=False)
-            depth_interface_accuracy_mean += depth_interface_accuracy
-            depth_interface_estimate_count += 1
-            interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
-                                                y_estimate[np.isfinite(y_estimate)],
-                                                bounds_error=False)  # , fill_value='extrapolate')
-            y_estimate_interp[interfaces_key] = interpolator(sorted(x))
-
+            try:
+                diff = abs(np.ones([len(depth_interface_true)]) * interfaces_detected[interfaces_key][
+                    'depth_mean'] - depth_interface_true)
+                best_match_id = np.argwhere(diff == np.min(diff))
+                best_match_depth = depth_interface_true[best_match_id][0]
+                depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
+                depth_detected_train.append(interfaces_detected[interfaces_key]['depth_mean'])
+                depth_detected_true_train.append(best_match_depth[0])
+                depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[0]['depth_mean']
+                y_estimate = interfaces_detected[interfaces_key]['depths']
+                x_estimate = interfaces_detected[interfaces_key]['x']
+                # depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
+                y_actual = np.ones([y_estimate.size]) * \
+                           best_match_depth
+                y_actual = y_actual.reshape([y_actual.shape[0]])
+                depth_interface_accuracy = mean_squared_error(y_actual[np.isfinite(y_estimate)],
+                                                              y_estimate[np.isfinite(y_estimate)],
+                                                              squared=False)
+                depth_interface_accuracy_mean += depth_interface_accuracy
+                depth_interface_estimate_count += 1
+                interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
+                                                    y_estimate[np.isfinite(y_estimate)],
+                                                    bounds_error=False)  # , fill_value='extrapolate')
+                y_estimate_interp[interfaces_key] = interpolator(sorted(x))
+            except (IndexError, ValueError, ZeroDivisionError, Exception):
+                log_file_name = settings.settings['log_file_name']
+                log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+                log_file.write('\n')
+                log_file.write('While training {cn} with {tn}, an exception occured, test will be skipped...'.format(
+                    cn=clf_name, tn=name))
+                log_file.write('\n')
+                log_file.close()
+            else:
+                continue
         # depth_estim_training.append(depth_interface_estimate_mean/depth_interface_estimate_count)
         depth_estim_training.append(depth_detected_train)
         depth_true_training.append(depth_detected_true_train)
