@@ -18,23 +18,37 @@ def create_folder_structure(batch_names=''):
     is_success = True
 
     # Folder for figures
-    for batch_name in batch_names:
+    if batch_names is not '':
+        for batch_name in batch_names:
+            for file_format in settings.settings['plot_formats']:
+
+                folder_path = os.path.join(settings.settings['figures_folder'], batch_name, file_format)
+                is_success = check_create_folder(folder_path)
+
+                folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', file_format)
+                is_success = check_create_folder(folder_path)
+
+                folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'prediction', file_format)
+                is_success = check_create_folder(folder_path)
+
+                folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'feature_importance',
+                                           file_format)
+                is_success = check_create_folder(folder_path)
+    else:
         for file_format in settings.settings['plot_formats']:
-
-            folder_path = os.path.join(settings.settings['figures_folder'], batch_name, file_format)
+            folder_path = os.path.join(settings.settings['figures_folder'], file_format)
             is_success = check_create_folder(folder_path)
 
-            folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', file_format)
+            folder_path = os.path.join(settings.settings['figures_folder'], 'ML', file_format)
             is_success = check_create_folder(folder_path)
 
-            folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'prediction', file_format)
+            folder_path = os.path.join(settings.settings['figures_folder'], 'ML', 'prediction', file_format)
             is_success = check_create_folder(folder_path)
 
-            folder_path = os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'feature_importance',
+            folder_path = os.path.join(settings.settings['figures_folder'], 'ML', 'feature_importance',
                                        file_format)
             is_success = check_create_folder(folder_path)
 
-    del file_format
 
     # There has to be a training folder in figures, that doesn't contain batch name
     for file_format in settings.settings['plot_formats']:
