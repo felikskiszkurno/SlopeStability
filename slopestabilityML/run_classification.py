@@ -32,7 +32,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
                            'depth_estim': depth_estim_training,
                            'depth_true': depth_true_training,
                            'depth_estim_accuracy': depth_estim_accuracy_training,
-                           'depth_estim_labels': depth_estim_labels_training}
+                           'depth_estim_labels': depth_estim_labels_training,
+                           'num_feat': num_feat}
 
         settings.settings['clf_trained'].append(clf_name)
 

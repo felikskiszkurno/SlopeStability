@@ -107,9 +107,14 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         depth_detected = []
         depth_detected_true = []
         for interfaces_key in interfaces_detected.keys():
+
             diff = abs(np.ones([len(depth_interface_true)]) * interfaces_detected[interfaces_key][
                 'depth_mean'] - depth_interface_true)
+            print(depth_interface_true)
+            print(interfaces_detected[interfaces_key])
+            print(diff)
             best_match_id = np.argwhere(diff == np.min(diff))
+            print(best_match_id)
             best_match_depth = depth_interface_true[best_match_id[0]]
             depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
             depth_detected.append(interfaces_detected[interfaces_key]['depth_mean'])
@@ -130,6 +135,8 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
                                                 fill_value='extrapolate')
 
             y_estimate_interp[interfaces_key] = interpolator(sorted(x))
+
+
 
         # depth_estim.append(depth_interface_estimate_mean/depth_interface_estimate_count)
         depth_estim.append(depth_detected)
