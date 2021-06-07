@@ -127,7 +127,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             error_file.write('\n')
             print(best_match_id)
             best_match_depth = depth_interface_true[best_match_id[0]]
-            error_file.write(best_match_depth)
+            error_file.write(np.array2string(best_match_depth))
             error_file.write('\n')
             error_file.close()
             depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
