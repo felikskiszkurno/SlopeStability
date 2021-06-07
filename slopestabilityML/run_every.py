@@ -20,6 +20,8 @@ import gc
 
 def run_all_tests(test_results):
 
+    error_file = open('error_file.txt', 'w')
+
     random_seed = 999
 
     ml_results = {}
