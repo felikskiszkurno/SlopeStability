@@ -113,7 +113,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             error_file = open(os.path.join(settings.settings['results_folder'], 'error_file.txt'), 'a')
             error_file.write(test_name_pred)
             error_file.write('\n')
-            print(depth_interface_true.array_str())
+            print(depth_interface_true.array2string())
             error_file.write(depth_interface_true)
             error_file.write('\n')
             print(interfaces_detected[interfaces_key])
