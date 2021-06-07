@@ -117,7 +117,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             error_file.write(np.array2string(depth_interface_true))
             error_file.write('\n')
             print(interfaces_detected[interfaces_key])
-            error_file.write(interfaces_detected[interfaces_key])
+            error_file.write(str(interfaces_detected[interfaces_key]))
             error_file.write('\n')
             print(np.array2string(diff))
             error_file.write(np.array2string(diff))
