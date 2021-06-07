@@ -21,7 +21,7 @@ import gc
 
 def run_all_tests(test_results):
 
-    error_file = os.path.join(settings.settings['results_folder'], 'error_file.txt', 'w')
+    error_file = open(os.path.join(settings.settings['results_folder'], 'error_file.txt'), 'w')
 
     random_seed = 999
 
