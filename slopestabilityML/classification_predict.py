@@ -110,7 +110,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
 
             diff = abs(np.ones([len(depth_interface_true)]) * interfaces_detected[interfaces_key][
                 'depth_mean'] - depth_interface_true)
-            error_file = open('error_file.txt', 'a')
+            error_file = os.path.join(settings.settings['results_folder'], 'error_file.txt', 'a')
             error_file.write(test_name_pred)
             error_file.write('\n')
             print(depth_interface_true)

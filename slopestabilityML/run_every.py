@@ -13,6 +13,7 @@ import slopestabilityML.SGD.sgd_run
 import slopestabilityML.KNN.knn_run
 import slopestabilityML.ADABOOST.adaboost_run
 import slopestabilityML
+import os
 import settings
 
 import gc
@@ -20,7 +21,7 @@ import gc
 
 def run_all_tests(test_results):
 
-    error_file = open('error_file.txt', 'w')
+    error_file = os.path.join(settings.settings['results_folder'], 'error_file.txt', 'w')
 
     random_seed = 999
 
