@@ -123,7 +123,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             error_file.write(np.array2string(diff))
             error_file.write('\n')
             best_match_id = np.argwhere(diff == np.min(diff))
-            error_file.write(best_match_id)
+            error_file.write(np.array2string(best_match_id))
             error_file.write('\n')
             print(best_match_id)
             best_match_depth = depth_interface_true[best_match_id[0]]
