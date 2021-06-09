@@ -191,8 +191,8 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
                 (interface_potential_data[inter_a]['depths'], interface_potential_data[inter_b]['depths']))
             ids_new = np.concatenate(
                 (interface_potential_data[inter_a]['ids'], interface_potential_data[inter_b]['ids']))
-            param_a_new = [interface_potential_data[inter_a]['param_a'], interface_potential_data[inter_b]['param_a']]
-            param_b_new = [interface_potential_data[inter_a]['param_b'], interface_potential_data[inter_b]['param_b']]
+            param_a_new = (interface_potential_data[inter_a]['param_a'] + interface_potential_data[inter_b]['param_a'])/2
+            param_b_new = (interface_potential_data[inter_a]['param_b'] + interface_potential_data[inter_b]['param_b'])/2
             x_new = np.concatenate((interface_potential_data[inter_a]['x'], interface_potential_data[inter_b]['x']))
             depths_new_orig = depths_new.copy()
             depths_new = depths_new[np.isfinite(depths_new)].reshape([depths_new[np.isfinite(depths_new)].size])
@@ -200,7 +200,8 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
             # function_depth = interpolate.interp1d(x_new, depths_new, bounds_error=False, fill_value='extrapolate')
             # depths_new_interp = function_depth(x)
             function_depth = lambda a, b, x_d: a * x_d + b
-            depths_new_interp = function_depth(param_a_new[-1], param_b_new[-1], x_new)
+
+            depths_new_interp = function_depth(param_a_new, param_b_new, x_new)
 
             interfaces_new[inter_id] = {
                 'pot_value': pot_value,
