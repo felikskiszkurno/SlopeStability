@@ -11,7 +11,6 @@ from scipy import interpolate
 
 
 def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_threshold=1.5):
-
     depths = y
 
     y_pred_col_num = y_pred_grid.shape[1]
@@ -48,7 +47,7 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
                 ids_temp = int(np.mean(ids_temp))
             elif ids_temp[0].size == 0:
                 continue
-            #print(ids_temp)
+            # print(ids_temp)
             # No idea why np.where returns array and sometimes integer
             if isinstance(ids_temp, int) is True:
                 interface_ids[inter_id, col_id] = ids_temp
@@ -67,7 +66,7 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
         par = np.polyfit(x_temp, y_temp, 1, full=True)
         interface_params_a[inter_id] = par[0][0]
         interface_params_b[inter_id] = par[0][1]
-
+    '''
     # del inter_id
     #
     # # Combine the data in a dictonary
@@ -130,6 +129,7 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
     #                 x_temp = x[~np.isnan(inter_temp)].reshape([x[~np.isnan(inter_temp)].size])
     #                 y_temp = inter_temp[~np.isnan(inter_temp)].reshape([inter_temp[~np.isnan(inter_temp)].size])
     #                 interfaces_final[interfaces_final_number] = {'x': x_temp, 'y': y_temp, 'depth': np.nanmean(y_temp)}
+    '''
 
     # Combine the data in a dictonary
     interface_potential_data = {}
@@ -145,25 +145,25 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
             # 'x': xi[~np.isnan(interface_depths[inter_id, 0:-1])].reshape([xi[~np.isnan(interface_depths[inter_id, 0:-1])].size])
         }
 
-    #threshold = 1.5
+    # threshold = 1.5
     modified = True
 
     while modified is True:
         modified = False
         pairs_to_combine = []
-        #print('a')
+        # print('a')
         # Find all pairs that are closer to each other than the threshold distance
         for interf_a_id in interface_potential_data.keys():
-            #print('b')
+            # print('b')
             for interf_b_id in interface_potential_data.keys():
-                #print('c')
+                # print('c')
                 if interf_a_id != interf_b_id:
-                    #print('d')
+                    # print('d')
                     diff = abs(
                         interface_potential_data[interf_a_id]['depth_mean'] - interface_potential_data[interf_b_id][
                             'depth_mean'])
                     if diff <= separation_threshold:
-                        #print('e')
+                        # print('e')
                         modified = True
                         pairs_to_combine.append([interf_a_id, interf_b_id])
 
@@ -194,19 +194,22 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
             param_a_new = [interface_potential_data[inter_a]['param_a'], interface_potential_data[inter_b]['param_a']]
             param_b_new = [interface_potential_data[inter_a]['param_b'], interface_potential_data[inter_b]['param_b']]
             x_new = np.concatenate((interface_potential_data[inter_a]['x'], interface_potential_data[inter_b]['x']))
-            x_new = x_new[~np.isnan(depths_new)].reshape([x_new[~np.isnan(depths_new)].size])
-            depths_new = depths_new[~np.isnan(depths_new)].reshape([depths_new[~np.isnan(depths_new)].size])
-            function_depth = interpolate.interp1d(x_new, depths_new, bounds_error=False, fill_value='extrapolate')
-            depths_new_interp = function_depth(x)
+            depths_new_orig = depths_new.copy()
+            depths_new = depths_new[np.isfinite(depths_new)].reshape([depths_new[np.isfinite(depths_new)].size])
+            x_new = x_new[np.isfinite(depths_new_orig)].reshape([x_new[np.isfinite(depths_new_orig)].size])
+            # function_depth = interpolate.interp1d(x_new, depths_new, bounds_error=False, fill_value='extrapolate')
+            # depths_new_interp = function_depth(x)
+            function_depth = lambda a, b, x_d: a * x_d + b
+            depths_new_interp = function_depth(param_a_new[-1], param_b_new[-1], x_new)
 
             interfaces_new[inter_id] = {
                 'pot_value': pot_value,
-                'depths': depths_new_interp,
-                'depth_mean': np.nanmean(depths_new),
+                'depths': depths_new,
+                'depth_mean': np.nanmean(depths_new_interp),
                 'ids': ids_new,
                 'param_a': param_a_new,
                 'param_b': param_b_new,
-                'x': x
+                'x': x_new
             }
 
             del pot_value, depths_new, ids_new, param_b_new, param_a_new, x_new, function_depth, depths_new_interp

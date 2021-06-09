@@ -51,6 +51,7 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     #     clf = joblib.load(clf_file_name)
 
     result_prediction = {}
+    result_class_summary = {}
 
     if settings.settings['use_batches'] is True:
         for batch in test_prediction:
@@ -71,6 +72,8 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
                                         'depth_estim_labels': depth_estim_labels,
                                         }
 
+            result_class_summary[batch] = result_class
+
     else:
         result_class, accuracy_labels, accuracy_result, depth_estim, depth_true, \
         depth_estim_accuracy, depth_estim_labels = \
@@ -88,4 +91,4 @@ def run_classification(test_training, test_prediction, test_results, clf, clf_na
     results = {'training': result_training,
                'prediction': result_prediction}
 
-    return results, result_class
+    return results, result_class_summary
