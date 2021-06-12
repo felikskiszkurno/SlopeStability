@@ -24,7 +24,7 @@ settings.init()
 create_new_data = False  # set to True if you need to reassign the classes
 create_new_data_only = False  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
-param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/train4case_predmulti.csv')
+param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/multilayers_1_2_3_4.csv')
 test_definitions.init(path=param_path)
 
 # Load existing data instead of creating new one.
@@ -95,8 +95,8 @@ else:
         del test_result_curr, test_result_curr_grd
 
         # Plot and save figures
-        slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
-                                          test_rho_min)
+        #slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
+        #                                  test_rho_min)
 
         slopestabilitytools.plot_and_save(test_name + '_grd', test_results_grd[test_name], 'Test: ' + test_name + '_grd', test_rho_max,
                                           test_rho_min)

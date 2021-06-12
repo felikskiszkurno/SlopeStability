@@ -175,6 +175,10 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
 
     experiment_results.to_csv(settings.settings['data_folder'] + '/' + test_name + '.csv')
 
+    plot_title = '_in_inv_diff'
+    slopestabilitytools.plot_and_save_pg(test_name, plot_title, ert_manager,
+                                         input_model2, result_full)
+
     if settings.settings['grd'] is True:
         # Results on structured grid
         x_min = np.ceil(np.min(ert_manager.paraDomain.cellCenters().array()[:, 0]))

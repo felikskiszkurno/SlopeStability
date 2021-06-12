@@ -50,6 +50,9 @@ def classification_train(test_training, test_results, clf, clf_name):
 
     if settings.settings['depth'] is True:
         num_feat.append('Y')
+        
+    if settings.settings['weight'] is True:
+        num_feat.remove('SEN')
 
     num_trans = StandardScaler()
 
@@ -93,7 +96,14 @@ def classification_train(test_training, test_results, clf, clf_name):
     x_position = test_results_combined['X']
 
     x_train = x_train[num_feat]
-    clf_pipeline.fit(x_train, y_train)
+
+    if settings.settings['weight'] is True:
+        weights = test_results_combined['SEN']
+        #weights = x_train['SEN']
+        #x_train.pop('SEN')
+        clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
+    else:
+        clf_pipeline.fit(x_train, y_train)
 
     clf_name_ext = clf_name + '.sav'
     clf_file_name = os.path.join(settings.settings['clf_folder'], clf_name_ext)
@@ -197,8 +207,8 @@ def classification_train(test_training, test_results, clf, clf_name):
                                              interface_y=y_estimate_interp, interface_x=x,
                                              depth_accuracy=depth_interface_accuracy)
 
-    del y_pred, y_pred_grid, y_pred_grid_deri, y, x, y_actual, xi, yi, y_estimate_interp, depth_interface_accuracy
-    del depth_interface_estimate, depth_interface_accuracy_mean, depth_interface_estimate_count, depth_interface_estimate_mean
+    #del y_pred, y_pred_grid, y_pred_grid_deri, y, x, y_actual, xi, yi, y_estimate_interp, depth_interface_accuracy
+    #del depth_interface_estimate, depth_interface_accuracy_mean, depth_interface_estimate_count, depth_interface_estimate_mean
 
     return result_class_training, depth_estim_training, depth_true_training, depth_estim_accuracy_training,\
         depth_estim_labels_training, accuracy_result_training, accuracy_labels_training, num_feat

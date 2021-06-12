@@ -66,7 +66,7 @@ def combine_results(ml_results, *, batch_name=''):
     training_score_num = 0
 
     for method_name in sorted(ml_results.keys()):
-        print(method_name)
+
         if method_name == 'com':
             continue
         else:

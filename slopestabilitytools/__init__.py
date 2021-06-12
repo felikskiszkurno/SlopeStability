@@ -14,6 +14,7 @@ directory_structure: create directory structure to contain figures and other fil
 
 from .model_params import model_params
 from .plot_and_save import plot_and_save
+from .plot_and_save_pg import plot_and_save_pg
 from .set_labels import set_labels
 from .set_diff import set_diff
 from .normalize import normalize
