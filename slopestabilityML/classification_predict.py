@@ -55,7 +55,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
 
         if settings.settings['weight'] is True:
             weights = x_question['SEN']
-            x_question = x_question.pop('SEN')
+            x_question = x_question[num_feat]
             try:
                 y_pred = clf_pipeline.predict(x_question, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
             except TypeError:
