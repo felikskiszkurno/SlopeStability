@@ -59,8 +59,10 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             try:
                 y_pred = clf_pipeline.predict(x_question, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
             except TypeError:
+                x_question = x_question[num_feat]
                 y_pred = clf_pipeline.predict(x_question)
         else:
+            x_question = x_question[num_feat]
             y_pred = clf_pipeline.predict(x_question)
         result_class[test_name_pred] = y_pred
         # print(y_pred)
