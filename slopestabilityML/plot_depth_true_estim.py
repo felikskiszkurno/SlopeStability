@@ -36,8 +36,6 @@ def plot_depth_true_estim(ml_results, *, batch_name=''):
 
                     depth_estim.append(value[0])
 
-            del value
-
             for depth_true_value in ml_results[classifier]['prediction'][batch_name]['depth_true']:
 
                 if isinstance(depth_true_value, list):
