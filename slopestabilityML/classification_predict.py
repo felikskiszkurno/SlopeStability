@@ -52,7 +52,16 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         test_name_pred, test_name_pred_orig = slopestabilityML.check_name(test_name_pred)
         x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results[test_name_pred], return_x=True)
         x_question = x_question[num_feat]
-        y_pred = clf_pipeline.predict(x_question)
+
+        if settings.settings['weight'] is True:
+            weights = x_question['SEN']
+            x_question = x_question.pop('SEN')
+            try:
+                y_pred = clf_pipeline.predict(x_question, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
+            except TypeError:
+                y_pred = clf_pipeline.predict(x_question)
+        else:
+            y_pred = clf_pipeline.predict(x_question)
         result_class[test_name_pred] = y_pred
         # print(y_pred)
         score = accuracy_score(y_answer, y_pred)

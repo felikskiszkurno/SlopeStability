@@ -101,7 +101,11 @@ def classification_train(test_training, test_results, clf, clf_name):
         weights = test_results_combined['SEN']
         #weights = x_train['SEN']
         #x_train.pop('SEN')
-        clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
+        try:
+            clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
+        except TypeError:
+            clf_pipeline.fit(x_train, y_train)
+
     else:
         clf_pipeline.fit(x_train, y_train)
 
