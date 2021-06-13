@@ -51,7 +51,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         # test_name_pred_orig = test_name_pred
         test_name_pred, test_name_pred_orig = slopestabilityML.check_name(test_name_pred)
         x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results[test_name_pred], return_x=True)
-        x_question = x_question[num_feat]
+        #x_question = x_question[num_feat]
 
         if settings.settings['weight'] is True:
             weights = x_question['SEN']
