@@ -43,7 +43,7 @@ def init():
         settings['clf_trained'] = []
     # Interpolate results to grid inside create_data script
     settings['grd'] = True
-    settings['weight'] = False
+    settings['weight'] = True
 
     # Parameters for resampling
     settings['resample'] = False

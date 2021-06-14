@@ -96,9 +96,14 @@ def classification_train(test_training, test_results, clf, clf_name):
     x_position = test_results_combined['X']
 
     x_train = x_train[num_feat]
+    #x_train = x_train.reset_index()
+    #x_train = x_train.drop(['index'], axis='columns')
 
     if settings.settings['weight'] is True:
-        weights = test_results_combined['SEN']
+        weights_np = test_results_combined['SEN'].to_numpy()
+        weights = (weights_np+abs(weights_np.min()))/(weights_np.max()+abs(weights_np.min()))
+        #x_train = x_train.drop(['SEN'], axis='columns')
+        #weights = pd.DataFrame(weights_norm)
         #weights = x_train['SEN']
         #x_train.pop('SEN')
         try:
