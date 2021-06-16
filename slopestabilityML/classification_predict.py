@@ -99,7 +99,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         # Evaluate the accuracy of interface depth detection
         x = x_position.to_numpy()
         x = x.reshape([x.size])
-        y = x_question['Y'].to_numpy()
+        y = test_results[test_name_pred]['Y'].to_numpy()
         xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
         y_pred_grid = gridded_data['class']
 
