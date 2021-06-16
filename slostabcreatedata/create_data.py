@@ -71,7 +71,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     data.remove(data['rhoa'] <= 0)
     # SIMULATE ERT MEASUREMENT - END ###
 
-    ert_manager = ert.ERTManager(sr=False, useBert=True, verbose=True, debug=False)
+    ert_manager = ert.ERTManager(sr=False, useBert=True)# , verbose=True, debug=False)
 
     # RUN INVERSION #
     k0 = pg.physics.ert.createGeometricFactors(data)

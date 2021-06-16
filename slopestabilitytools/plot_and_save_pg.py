@@ -24,10 +24,10 @@ def plot_and_save_pg(test_name, plot_title, ert_manager, input_model, result_ful
     fig, _ax = plt.subplots(nrows=2, ncols=2)
     ax = _ax.flatten()
 
-    fig.suptitle(plot_title)
+    fig.suptitle(test_name + plot_title)
     fig.subplots_adjust(hspace=0.8)
 
-    im0 = pg.show(ert_manager.paraDomain, input_model, showMesh=True, ax=ax[0], label='Resistivity')
+    im0 = pg.show(ert_manager.paraDomain, input_model, showMesh=True, ax=ax[0], label='Resistivity \u03A9 *m')
     #im0 = ax[0].contourf(xi, yi, inm_i, vmax=rho_max, vmin=rho_min)
     ax[0].set_title('Input model')
     ax[0] = slopestabilitytools.set_labels(ax[0])
@@ -36,7 +36,11 @@ def plot_and_save_pg(test_name, plot_title, ert_manager, input_model, result_ful
     #cb[0].locator = tick_locator
     #cb[0].update_ticks()
 
-    im1 = pg.show(ert_manager.paraDomain, pg.utils.interperc(ert_manager.inv.model, trimval=1.0), showMesh=True, ax=ax[1])
+    limits = pg.utils.interperc(ert_manager.inv.model, trimval=5.0)
+    print(limits)
+
+    im1 = pg.show(ert_manager.paraDomain, ert_manager.inv.model, c_min=limits[0], c_max=limits[1], showMesh=True, ax=ax[1],
+                  label='Resistivity \u03A9 *m')
     #im1 = ax[1].contourf(xi, yi, res_i, vmax=rho_max, vmin=rho_min)
     ax[1].set_title('Result')
     ax[1] = slopestabilitytools.set_labels(ax[1])
@@ -46,7 +50,7 @@ def plot_and_save_pg(test_name, plot_title, ert_manager, input_model, result_ful
     #cb[1].update_ticks()
 
     im2 = pg.show(ert_manager.paraDomain,
-                  input_model-result_full, ax=ax[2])
+                  input_model-result_full, ax=ax[2], label='Resistivity \u03A9 *m')
     #im2 = ax[2].contourf(xi, yi, inm_i-res_i, cmap='RdBu')
     ax[2].set_title('Difference')
     ax[2] = slopestabilitytools.set_labels(ax[2])
