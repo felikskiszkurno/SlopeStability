@@ -171,7 +171,7 @@ def classification_train(test_training, test_results, clf, clf_name):
 
         # Evaluate the accuracy of interface depth detection
         x = x_position.loc[index].to_numpy()
-        y = x_train_temp['Y'].to_numpy()
+        y = test_results_combined['Y'].loc[index]
         xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
         y_pred_grid = gridded_data['class']
         depth_all = np.zeros(y_pred_grid.shape[0])

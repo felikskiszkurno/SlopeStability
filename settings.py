@@ -65,7 +65,7 @@ def init():
     settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
 
     # Include depth
-    settings['depth'] = True   # True - include depth, False - ignore depth
+    settings['depth'] = False   # True - include depth, False - ignore depth
 
     # Borehole simulation
     settings['sim_bh'] = True
