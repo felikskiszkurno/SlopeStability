@@ -32,7 +32,7 @@ def detect_interface(x, y, y_pred_grid, *, continuity_threshold=30, separation_t
     y_pred_grid_deri[-1, :] = 0
     potential_interfaces_values = []
     for value in np.unique(y_pred_grid_deri):
-        print(str(value) + ': ' + str((np.count_nonzero(y_pred_grid_deri == value) / y_pred_col_num) * 100))
+        # print(str(value) + ': ' + str((np.count_nonzero(y_pred_grid_deri == value) / y_pred_col_num) * 100))
         if (np.count_nonzero(y_pred_grid_deri == value) / y_pred_col_num) * 100 > continuity_threshold:
             if value != 0:
                 potential_interfaces_values.append(value)

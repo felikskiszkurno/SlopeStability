@@ -67,7 +67,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         result_class[test_name_pred] = y_pred
         # print(y_pred)
         score = accuracy_score(y_answer, y_pred)
-        print('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
+        # print('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
 
         importance = permutation_importance(clf_pipeline, x_question, y_pred)
 
@@ -124,19 +124,19 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             error_file = open(os.path.join(settings.settings['results_folder'], 'error_file.txt'), 'a')
             error_file.write(test_name_pred)
             error_file.write('\n')
-            print(np.array2string(depth_interface_true))
+            # print(np.array2string(depth_interface_true))
             error_file.write(np.array2string(depth_interface_true))
             error_file.write('\n')
-            print(interfaces_detected[interfaces_key])
+            # print(interfaces_detected[interfaces_key])
             error_file.write(str(interfaces_detected[interfaces_key]))
             error_file.write('\n')
-            print(np.array2string(diff))
+            # print(np.array2string(diff))
             error_file.write(np.array2string(diff))
             error_file.write('\n')
             best_match_id = np.argwhere(diff == np.min(diff))
             error_file.write(np.array2string(best_match_id))
             error_file.write('\n')
-            print(best_match_id)
+            # print(best_match_id)
             best_match_depth = depth_interface_true[best_match_id[0]]
             error_file.write(np.array2string(best_match_depth))
             error_file.write('\n')

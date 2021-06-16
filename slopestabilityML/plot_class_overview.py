@@ -121,7 +121,10 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[5].update_ticks()
 
     # Plot histogramm of input model
-    ax[6].hist(test_results['INMN'].to_numpy())
+    if settings.settings['norm_class'] is True:
+        ax[6].hist(test_results['CLASSN'].to_numpy())
+    else:
+        ax[6].hist(test_results['CLASS'].to_numpy())
     ax[6].set_title('Input histogramm')
     ax[6].set_xlabel('Value (Bin)')
     ax[6].set_ylabel('Count')

@@ -22,6 +22,7 @@ def init():
     settings['results_folder'] = os.path.join(settings['base_folder'], 'results')
     settings['data_folder'] = os.path.join(settings['results_folder'], 'data')
     settings['data_folder_grd'] = os.path.join(settings['results_folder'], 'data_grd')
+    settings['data_measurement'] = os.path.join(settings['results_folder'], 'data_measurement')
     settings['figures_folder'] = os.path.join(settings['results_folder'], 'figures')
     settings['clf_folder'] = os.path.join(settings['results_folder'], 'classifiers')
 
@@ -50,6 +51,10 @@ def init():
     settings['resample_x_spacing'] = 1
     settings['resample_y_spacing'] = 1
 
+    # Reduce sample population
+    settings['reduce_samples'] = True
+    settings['reduce_samples_factor'] = 0.5
+
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids
     settings['norm_class_num'] = 5  # Number of classes for normalized data
@@ -64,8 +69,8 @@ def init():
 
     # Borehole simulation
     settings['sim_bh'] = True
-    settings['bh_pos'] = {1: {'x_start': -20, 'x_end': -15, 'y_start': -18, 'y_end': 0},
-                          2: {'x_start': 15, 'x_end': 20, 'y_start': -18, 'y_end': 0}}
+    settings['bh_pos'] = {1: {'x_start': -17, 'x_end': -15, 'y_start': -18, 'y_end': 0},
+                          2: {'x_start': 0, 'x_end': 2, 'y_start': -18, 'y_end': 0}}
 
     # Classifiers
     settings['optimize_ml'] = False  # True - performs hyperparameter search

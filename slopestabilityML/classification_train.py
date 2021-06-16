@@ -78,6 +78,7 @@ def classification_train(test_training, test_results, clf, clf_name):
             test_results_combined = test_results_combined.append(test_result_resampled)
     test_results_combined = test_results_combined.reset_index()
 
+    # Apply bh simulation
     if settings.settings['sim_bh'] is True:
         test_results_combined_orig = test_results_combined.copy()
         test_results_combined = pd.DataFrame(columns=test_results_combined_orig.columns.values.tolist())
@@ -91,6 +92,17 @@ def classification_train(test_training, test_results, clf, clf_name):
             # test_results_combined.append(test_results_combined_orig[index_bh])
             # del index_bh
 
+    # Sample to reduce amount of data
+    if settings.settings['reduce_samples'] is True:
+        test_resampled = pd.DataFrame(columns=test_results_combined.columns.values.tolist())
+        temp_df = pd.DataFrame(pd.DataFrame(columns=test_results_combined.columns.values.tolist()))
+        for test_name in test_training:
+            temp_df = test_results_combined.loc[test_results_combined['NAME'] == test_name]
+            temp_df_resampled = temp_df.sample(frac=settings.settings['reduce_samples_factor'])
+            test_resampled = test_resampled.append(temp_df_resampled)
+        test_results_combined_bh = test_results_combined.copy()
+        test_results_combined = test_resampled.copy()
+
     test_results_combined = test_results_combined.drop(['index'], axis='columns')
     x_train, y_train = slopestabilityML.preprocess_data(test_results_combined)
     x_position = test_results_combined['X']
@@ -98,6 +110,8 @@ def classification_train(test_training, test_results, clf, clf_name):
     x_train = x_train[num_feat]
     #x_train = x_train.reset_index()
     #x_train = x_train.drop(['index'], axis='columns')
+
+    print('Training ' + clf_name)
 
     if settings.settings['weight'] is True:
         weights_np = test_results_combined['SEN'].to_numpy()
@@ -179,11 +193,11 @@ def classification_train(test_training, test_results, clf, clf_name):
 
             diff = abs(np.ones([len(depth_interface_true)]) * interfaces_detected[interfaces_key][
                 'depth_mean'] - depth_interface_true)
-            print(depth_interface_true)
-            print(interfaces_detected[interfaces_key])
-            print(diff)
+            # print(depth_interface_true)
+            # print(interfaces_detected[interfaces_key])
+            # print(diff)
             best_match_id = np.argwhere(diff == np.min(diff))
-            print(best_match_id)
+            # print(best_match_id)
             best_match_depth = depth_interface_true[best_match_id][0]
             depth_interface_estimate[interfaces_key] = interfaces_detected[interfaces_key]['depth_mean']
             depth_detected_train.append(interfaces_detected[interfaces_key]['depth_mean'])

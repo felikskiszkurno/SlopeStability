@@ -28,7 +28,7 @@ def plot_feature_importance(clf, importance, x_train, test_name, *, batch_name='
     plt.subplots_adjust(left=.3)
 
     for file_format in settings.settings['plot_formats']:
-        figure_name = test_name + '.' + file_format
+        figure_name = clf.steps[1][0] + '_' + test_name + '.' + file_format
 
 
         fig.figure.savefig(os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'feature_importance',

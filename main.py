@@ -22,6 +22,7 @@ settings.init()
 
 # Config
 create_new_data = False  # set to True if you need to reassign the classes
+invert_existing_data = False  # invert existing measurements
 create_new_data_only = False  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
 param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/multilayers_1_2_3_4.csv')
@@ -54,56 +55,65 @@ if not create_new_data:
 # Create new data
 else:
 
-    # Prepare folder structure for output
-    is_success = slopestabilitytools.folder_structure.create_folder_structure()
+    if invert_existing_data is False:
+        # Prepare folder structure for output
+        is_success = slopestabilitytools.folder_structure.create_folder_structure()
 
-    # TODO Put this part into a function
+        # TODO Put this part into a function
 
-    # Settings
-    number_of_tests = 5
-    rho_spread_factor = 1.5
-    rho_max = 20
-    layers_min = 1
-    layers_max = 2
-    min_depth = 4
-    max_depth = 8
+        # Settings
+        number_of_tests = 5
+        rho_spread_factor = 1.5
+        rho_max = 20
+        layers_min = 1
+        layers_max = 2
+        min_depth = 4
+        max_depth = 8
 
-    # Generate parameters for tests
-    # tests_parameters = slopestabilitytools.model_params(number_of_tests,
-    #                                                     rho_spread_factor, rho_max,
-    #                                                     layers_min, layers_max,
-    #                                                     min_depth, max_depth)
+        # Generate parameters for tests
+        # tests_parameters = slopestabilitytools.model_params(number_of_tests,
+        #                                                     rho_spread_factor, rho_max,
+        #                                                     layers_min, layers_max,
+        #                                                     min_depth, max_depth)
 
-    #tests_parameters = test_definitions.test_definitions
+        #tests_parameters = test_definitions.test_definitions
 
 
-    # tests_parameters = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
+        # tests_parameters = {'hor_11': {'layer_n': 1, 'rho_values': [[1, 10], [2, 12]], 'layers_pos': np.array([-4])}}
 
-    #  Create models and invert them
-    test_results = {}
-    test_results_grd = {}
-    print(test_definitions.test_parameters)
-    for test_name in test_definitions.test_parameters.keys():
-        test_result_curr, test_result_curr_grd, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
-                                                                                     test_definitions.test_parameters[test_name],
-                                                                                     abs(test_definitions.test_parameters[test_name]['layers_pos'].max()),
-                                                                                     lambda_param=test_definitions.test_parameters[test_name]['lambda'][0],
-                                                                                     z_weight=test_definitions.test_parameters[test_name]['z_weight'][0])
+        #  Create models and invert them
+        test_results = {}
+        test_results_grd = {}
+        print(test_definitions.test_parameters)
+        for test_name in test_definitions.test_parameters.keys():
+            test_result_curr, test_result_curr_grd, test_rho_max, test_rho_min = slostabcreatedata.create_data(test_name,
+                                                                                         test_definitions.test_parameters[test_name],
+                                                                                         abs(test_definitions.test_parameters[test_name]['layers_pos'].max()),
+                                                                                         lambda_param=test_definitions.test_parameters[test_name]['lambda'][0],
+                                                                                         z_weight=test_definitions.test_parameters[test_name]['z_weight'][0])
 
-        test_results.update({test_name: test_result_curr})
-        test_results_grd.update({test_name: test_result_curr_grd})
-        del test_result_curr, test_result_curr_grd
+            test_results.update({test_name: test_result_curr})
+            test_results_grd.update({test_name: test_result_curr_grd})
+            del test_result_curr, test_result_curr_grd
 
-        # Plot and save figures
-        #slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
-        #                                  test_rho_min)
+            # Plot and save figures
+            #slopestabilitytools.plot_and_save(test_name, test_results[test_name], 'Test: ' + test_name, test_rho_max,
+            #                                  test_rho_min)
 
-        slopestabilitytools.plot_and_save(test_name + '_grd', test_results_grd[test_name], 'Test: ' + test_name + '_grd', test_rho_max,
-                                          test_rho_min)
+            slopestabilitytools.plot_and_save(test_name + '_grd', test_results_grd[test_name], 'Test: ' + test_name + '_grd', test_rho_max,
+                                              test_rho_min)
 
-        gc.collect()
+            gc.collect()
 
-# Evaluate data with ML techniques
+    elif invert_existing_data is True:
+
+        profile_names = slopestabilitytools.datamanagement.test_list('.ohm',
+                                                                 abs_path=settings.settings['data_measurement'])
+
+        for profile_name in profile_names:
+            slostabcreatedata.invert_data(profile_name)
+
+        # Evaluate data with ML techniques
 if not create_new_data_only:
 
     log_file_name = settings.settings['log_file_name']

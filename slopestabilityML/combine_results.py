@@ -53,6 +53,8 @@ def combine_results(ml_results, *, batch_name=''):
     plt.ylabel('Correct points [%]')
     plt.legend(loc='lower right')
 
+    fig.subplots_adjust(bottom=0.2)
+
     slopestabilitytools.save_plot(fig, '', 'ML_summary_prediction', skip_fileformat=True, batch_name=batch_name)
 
     del fig
@@ -99,6 +101,8 @@ def combine_results(ml_results, *, batch_name=''):
     plt.setp(ax.get_xticklabels(), rotation=90)
     plt.ylabel('Correct points [%]')
     plt.legend(loc='lower right')
+
+    fig.subplots_adjust(bottom=0.2)
 
     #fig.tight_layout()
     slopestabilitytools.save_plot(fig, '', 'ML_summary_training', skip_fileformat=True, batch_name=batch_name)
@@ -155,6 +159,8 @@ def combine_results(ml_results, *, batch_name=''):
     plt.ylabel('Accuracy of the interface detection [error%]')
     plt.legend(loc='lower right')
 
+    fig.subplots_adjust(bottom=0.2)
+
     slopestabilitytools.save_plot(fig, '', 'ML_summary_prediction_depth_estim', skip_fileformat=True, batch_name=batch_name)
 
     del fig
@@ -203,6 +209,8 @@ def combine_results(ml_results, *, batch_name=''):
     plt.setp(ax.get_xticklabels(), rotation=90)
     plt.ylabel('Accuracy of the interface detection [error%]')
     plt.legend(loc='lower right')
+
+    fig.subplots_adjust(bottom=0.2)
 
     # fig.tight_layout()
     slopestabilitytools.save_plot(fig, '', 'ML_summary_training_depth_estim', skip_fileformat=True, batch_name=batch_name)
