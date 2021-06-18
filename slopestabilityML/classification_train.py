@@ -113,9 +113,10 @@ def classification_train(test_training, test_results, clf, clf_name):
 
     print('Training ' + clf_name)
 
+    weights_np = test_results_combined['SEN'].to_numpy()
+    weights = (weights_np + abs(weights_np.min())) / (weights_np.max() + abs(weights_np.min()))
+
     if settings.settings['weight'] is True:
-        weights_np = test_results_combined['SEN'].to_numpy()
-        weights = (weights_np+abs(weights_np.min()))/(weights_np.max()+abs(weights_np.min()))
         #x_train = x_train.drop(['SEN'], axis='columns')
         #weights = pd.DataFrame(weights_norm)
         #weights = x_train['SEN']
@@ -144,6 +145,8 @@ def classification_train(test_training, test_results, clf, clf_name):
             class_correct = test_results_combined['CLASS'].loc[index]
         x_train_temp = x_train.loc[index]
         y_pred = clf_pipeline.predict(x_train_temp)
+        slopestabilityML.plot_sen_corr(y_pred, class_correct, weights_np, clf_name, test_name,
+                                       'training', training=True)
         result_class_training[name] = y_pred
         score_training = accuracy_score(class_correct, y_pred)
         accuracy_result_training.append(score_training * 100)

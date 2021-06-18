@@ -50,11 +50,22 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         print(test_name_pred)
         # test_name_pred_orig = test_name_pred
         test_name_pred, test_name_pred_orig = slopestabilityML.check_name(test_name_pred)
-        x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results[test_name_pred], return_x=True)
-        #x_question = x_question[num_feat]
+
+        if settings.settings['min_sen_pred'] is True:
+            test_results_temp = test_results[test_name_pred]
+            test_results_temp = test_results_temp[test_results_temp > settings.settings['min_sen_pred_val']]
+            x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results_temp,
+                                                                                return_x=True)
+        else:
+            x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results[test_name_pred],
+                                                                                return_x=True)
+            #x_question = x_question[num_feat]
+
+        #weights = x_question['SEN']
+        weights_np = x_question['SEN'].to_numpy()
+        weights = (weights_np + abs(weights_np.min())) / (weights_np.max() + abs(weights_np.min()))
 
         if settings.settings['weight'] is True:
-            weights = x_question['SEN']
             x_question = x_question[num_feat]
             try:
                 y_pred = clf_pipeline.predict(x_question, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
@@ -64,14 +75,20 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         else:
             x_question = x_question[num_feat]
             y_pred = clf_pipeline.predict(x_question)
+
         result_class[test_name_pred] = y_pred
         # print(y_pred)
         score = accuracy_score(y_answer, y_pred)
         # print('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
 
+        slopestabilityML.plot_sen_corr(y_pred, y_answer, weights_np,
+                                       clf_name, test_name_pred, batch_name,
+                                       training=False)
+
         importance = permutation_importance(clf_pipeline, x_question, y_pred)
 
-        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_question, test_name_pred, batch_name=batch_name)
+        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_question, test_name_pred,
+                                                 batch_name=batch_name)
 
         log_file_name = settings.settings['log_file_name']
         log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')

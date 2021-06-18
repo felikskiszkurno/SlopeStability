@@ -122,7 +122,8 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     '''
     classes = slopestabilitytools.assign_class01(input_model2, resistivity_map)
 
-    classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array))
+    # classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array))
+    classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array_norm))
 
     # Create sensitivity values
     jac = ert_manager.fop.jacobian()  #
@@ -176,8 +177,14 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     experiment_results.to_csv(settings.settings['data_folder'] + '/' + test_name + '.csv')
 
     plot_title = '_in_inv_diff'
-    slopestabilitytools.plot_and_save_pg(test_name, plot_title, ert_manager,
-                                         input_model2, result_full)
+    if settings.settings['norm_class'] is True:
+        slopestabilitytools.plot_and_save_pg(test_name, plot_title, ert_manager,
+                                             input_model2, result_full, classesn)
+        slopestabilitytools.plot_class_inv(classesn, ert_manager, test_name, plot_title)
+    else:
+        slopestabilitytools.plot_and_save_pg(test_name, plot_title, ert_manager,
+                                             input_model2, result_full, classes)
+        slopestabilitytools.plot_class_inv(classes, ert_manager, test_name, plot_title)
 
     if settings.settings['grd'] is True:
         # Results on structured grid

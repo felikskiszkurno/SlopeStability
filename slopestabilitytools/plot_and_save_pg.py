@@ -10,10 +10,10 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 import slopestabilitytools
 import pygimli as pg
-import settings
+import numpy as np
 
 
-def plot_and_save_pg(test_name, plot_title, ert_manager, input_model, result_full):
+def plot_and_save_pg(test_name, plot_title, ert_manager, input_model, result_full, class_result):
 
     print('Plotting and saving overview figure... ')
 
@@ -36,40 +36,43 @@ def plot_and_save_pg(test_name, plot_title, ert_manager, input_model, result_ful
     #cb[0].locator = tick_locator
     #cb[0].update_ticks()
 
-    limits = pg.utils.interperc(ert_manager.inv.model, trimval=5.0)
+    limits = pg.utils.interperc(ert_manager.inv.model, trimval=7.0)
     print(limits)
 
     im1 = pg.show(ert_manager.paraDomain, ert_manager.inv.model, c_min=limits[0], c_max=limits[1], showMesh=True, ax=ax[1],
                   label='Resistivity \u03A9 *m')
-    #im1 = ax[1].contourf(xi, yi, res_i, vmax=rho_max, vmin=rho_min)
     ax[1].set_title('Result')
     ax[1] = slopestabilitytools.set_labels(ax[1])
     #cb.append(plt.colorbar(im1, ax=ax[1], label='Resistivity [om]'))#, shrink=0.9)
-    tick_locator = ticker.MaxNLocator(nbins=4)
+    #tick_locator = ticker.MaxNLocator(nbins=4)
     #cb[1].locator = tick_locator
     #cb[1].update_ticks()
 
     im2 = pg.show(ert_manager.paraDomain,
                   input_model-result_full, ax=ax[2], label='Resistivity \u03A9 *m')
-    #im2 = ax[2].contourf(xi, yi, inm_i-res_i, cmap='RdBu')
     ax[2].set_title('Difference')
     ax[2] = slopestabilitytools.set_labels(ax[2])
-    #b.append(plt.colorbar(im2, ax=ax[2], label='Resistivity [om]'))#, shrink=0.9)
-    tick_locator = ticker.MaxNLocator(nbins=4)
+    #cb.append(plt.colorbar(im2, ax=ax[2], label='Resistivity [om]'))#, shrink=0.9)
+    #tick_locator = ticker.MaxNLocator(nbins=4)
     #cb[2].locator = tick_locator
     #cb[2].update_ticks()
 
     im3 = pg.show(ert_manager.paraDomain, ert_manager.coverage(), ax=ax[3])
-    # im0 = ax_cov.contourf(xi, yi, cov_i)
     ax[3].set_title(plot_title + ' coverage')
     ax[3] = slopestabilitytools.set_labels(ax[3])
     #cb_cov = plt.colorbar(im3, ax=ax[3], label='Coverage')  # , shrink=0.9)
-    tick_locator = ticker.MaxNLocator(nbins=4)
+    #tick_locator = ticker.MaxNLocator(nbins=4)
     #cb_cov.locator = tick_locator
     #cb_cov.update_ticks()
 
+
+    #cb.append(plt.colorbar(im5, ax=ax[5], label='Sensitivity'))  # , shrink=0.9)
+    #tick_locator = ticker.MaxNLocator(nbins=4)
+    #cb[5].locator = tick_locator
+    #cb[5].update_ticks()
+
     fig.tight_layout()
-    slopestabilitytools.save_plot(fig, test_name, '_in_inv_diff')
+    slopestabilitytools.save_plot(fig, test_name, plot_title)
 
     # Plot coverage
     # cb_cov = []

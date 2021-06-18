@@ -61,6 +61,12 @@ def init():
     settings['norm'] = True  # True to use normalized data, False to use raw data
     settings['use_labels'] = False  # True to use labels instead of classes
 
+    # Ignore data points with insufficient sensitivity
+    settings['min_sen_pred'] = True
+    settings['min_sen_pred_val'] = 0.3
+    settings['min_sen_train'] = True
+    settings['min_sen_train_val'] = 0.3
+
     # Include sensitivity
     settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
 
