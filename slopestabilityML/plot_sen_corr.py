@@ -6,7 +6,7 @@ Created on 18.06.2021
 @author: Feliks Kiszkurno
 """
 
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import slopestabilitytools
@@ -26,14 +26,15 @@ def plot_sen_corr(y_pred, y_answer, sen, clf_name, test_name, batch_name, *, tra
     sen_plot = data_sort['SEN'].to_numpy()
     match_plot = data_sort['MATCH'].to_numpy()
 
-    fig, ax = plt.plot(sen_plot, match_plot)
-    fig.title('Sensitivity vs correctness of classification')
+    fig, ax = plt.subplots(1, 1) 
+    ax.plot(sen_plot, match_plot)
+    fig.suptitle('Sensitivity vs correctness of classification')
     ax.set_xlabel('Sensitivity [normalized]')
     ax.set_ylabel('Correctness of classification [T/F]')
 
     if training is True:
         slopestabilitytools.save_plot(fig, clf_name, '_ML_{}_sen_cor'.format(test_name),
-                                      subfolder='ML/training', batch_name=batch_name)
+                                      subfolder='ML/training')
 
     else:
         slopestabilitytools.save_plot(fig, clf_name, '_ML_{}_sen_cor'.format(test_name),

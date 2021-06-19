@@ -103,6 +103,12 @@ def classification_train(test_training, test_results, clf, clf_name):
         test_results_combined_bh = test_results_combined.copy()
         test_results_combined = test_resampled.copy()
 
+    if settings.settings['min_sen_train'] is True:
+        sen = test_results_combined['SEN'].to_numpy()
+        senn = (sen + abs(sen.min())) / (sen.max() + abs(sen.min()))
+        test_results_combined['SENN'] = senn
+        test_results_combined = test_results_combined[test_results_combined['SENN'] > settings.settings['min_sen_train_val']]
+
     test_results_combined = test_results_combined.drop(['index'], axis='columns')
     x_train, y_train = slopestabilityML.preprocess_data(test_results_combined)
     x_position = test_results_combined['X']
@@ -145,7 +151,7 @@ def classification_train(test_training, test_results, clf, clf_name):
             class_correct = test_results_combined['CLASS'].loc[index]
         x_train_temp = x_train.loc[index]
         y_pred = clf_pipeline.predict(x_train_temp)
-        slopestabilityML.plot_sen_corr(y_pred, class_correct, weights_np, clf_name, test_name,
+        slopestabilityML.plot_sen_corr(y_pred, class_correct, test_results_combined['SEN'].loc[index], clf_name, name,
                                        'training', training=True)
         result_class_training[name] = y_pred
         score_training = accuracy_score(class_correct, y_pred)

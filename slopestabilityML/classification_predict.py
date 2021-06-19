@@ -44,6 +44,8 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             clf_name_ext = clf_name + '.sav'
             clf_pipeline = joblib.load(os.path.join(settings.settings['clf_folder'], clf_name_ext))
 
+    test_results_orig = test_results.copy()
+
     # Predict with classifier
     for test_name_pred in test_prediction:
         # Prepare data
@@ -51,13 +53,19 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         # test_name_pred_orig = test_name_pred
         test_name_pred, test_name_pred_orig = slopestabilityML.check_name(test_name_pred)
 
+        test_results = test_results_orig[test_name_pred]
+
         if settings.settings['min_sen_pred'] is True:
-            test_results_temp = test_results[test_name_pred]
-            test_results_temp = test_results_temp[test_results_temp > settings.settings['min_sen_pred_val']]
+            #test_results_temp = test_results[test_name_pred]
+            sen = test_results['SEN'].to_numpy()
+            senn = (sen + abs(sen.min())) / (sen.max() + abs(sen.min()))
+            test_results['SENN'] = senn
+            test_results_temp = test_results[test_results['SENN'] > settings.settings['min_sen_pred_val']]
             x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results_temp,
                                                                                 return_x=True)
         else:
-            x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results[test_name_pred],
+            test_results_temp = test_results.copy()
+            x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results,
                                                                                 return_x=True)
             #x_question = x_question[num_feat]
 
@@ -81,7 +89,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         score = accuracy_score(y_answer, y_pred)
         # print('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
 
-        slopestabilityML.plot_sen_corr(y_pred, y_answer, weights_np,
+        slopestabilityML.plot_sen_corr(y_pred, y_answer.to_numpy().reshape(y_answer.size), weights_np,
                                        clf_name, test_name_pred, batch_name,
                                        training=False)
 
@@ -104,11 +112,11 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         log_file.close()
 
         if settings.settings['norm_class'] is True:
-            class_in = test_results[test_name_pred]['CLASSN']
+            class_in = test_results_temp['CLASSN']
         elif settings.settings['norm_class'] is False and settings.settings['use_labels'] is False:
-            class_in = test_results[test_name_pred]['CLASS']
+            class_in = test_results_temp['CLASS']
         elif settings.settings['use_labels'] is True:
-            class_in = test_results[test_name_pred]['LABELS']
+            class_in = test_results_temp['LABELS']
         else:
             print('I don\'t know which class to use! Exiting...')
             exit(0)
@@ -116,7 +124,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         # Evaluate the accuracy of interface depth detection
         x = x_position.to_numpy()
         x = x.reshape([x.size])
-        y = test_results[test_name_pred]['Y'].to_numpy()
+        y = test_results_temp['Y'].to_numpy()
         xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
         y_pred_grid = gridded_data['class']
 
@@ -190,7 +198,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         # slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred, class_in, y_pred, clf_name, depth_estimate=depth_interface_estimate,
         #                                     depth_accuracy=depth_interface_accuracy)
 
-        slopestabilityML.plot_class_overview(test_results[test_name_pred], test_name_pred_orig, class_in, y_pred,
+        slopestabilityML.plot_class_overview(test_results_temp, test_name_pred_orig, class_in, y_pred,
                                              clf_name, training=False, depth_estimate=depth_interface_estimate,
                                              interface_y=y_estimate_interp, interface_x=sorted(x),
                                              depth_accuracy=depth_interface_accuracy, batch_name=batch_name)

@@ -14,22 +14,36 @@ import slopestabilityML
 
 
 def ask_committee(ml_result_class, test_results, *, random_seed=False):
+
     classes_correct = {}
+
     if any(key in test_results.keys() for key in ('training', 'prediction')):
         test_results_orig = test_results.copy()
-        test_results = test_results['prediction']
+        test_results = test_results_orig['prediction'].copy()
+
+    test_results_orig_pred = test_results.copy()
 
     for test_name in sorted(test_results.keys()):
+
+        test_results_curr = test_results[test_name].copy()
+
+        if settings.settings['min_sen_pred'] is True:
+            sen = test_results_curr['SEN'].to_numpy()
+            senn = (sen + abs(sen.min())) / (sen.max() + abs(sen.min()))
+            test_results_curr['SENN'] = senn
+            test_results_curr = test_results_curr[test_results_curr['SENN'] > settings.settings['min_sen_pred_val']]
+
         if settings.settings['norm_class'] is True:
-            class_in = test_results[test_name]['CLASSN']
+            class_in = test_results_curr['CLASSN']
         elif settings.settings['norm_class'] is False and settings.settings['use_labels'] is False:
-            class_in = test_results[test_name]['CLASS']
+            class_in = test_results_curr['CLASS']
         elif settings.settings['use_labels'] is True:
-            class_in = test_results[test_name]['LABELS']
+            class_in = test_results_curr['LABELS']
             class_in = slopestabilitytools.label2numeric(class_in)
         else:
             print('I don\'t know which class to use! Exiting...')
             exit(0)
+
         classes_correct[test_name] = class_in
 
     # First create list of datasets and verify if all classifiers has been run over the same sets

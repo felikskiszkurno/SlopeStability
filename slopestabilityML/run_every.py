@@ -44,21 +44,21 @@ def run_all_tests(test_results):
 
     gc.collect()
 
-    print('Running SGD...')
-    sgd_results, sgd_result_class = slopestabilityML.SGD.sgd_run(test_results, random_seed)
-    ml_results['sgd'] = sgd_results
-
-    ml_results_class['sgd'] = sgd_result_class
-
-    gc.collect()
-
-    print('Running KNN...')
-    knn_results, knn_result_class = slopestabilityML.KNN.knn_run(test_results, random_seed)
-    ml_results['KNN'] = knn_results
-
-    ml_results_class['knn'] = knn_result_class
-
-    gc.collect()
+    # print('Running SGD...')
+    # sgd_results, sgd_result_class = slopestabilityML.SGD.sgd_run(test_results, random_seed)
+    # ml_results['sgd'] = sgd_results
+    #
+    # ml_results_class['sgd'] = sgd_result_class
+    #
+    # gc.collect()
+    #
+    # print('Running KNN...')
+    # knn_results, knn_result_class = slopestabilityML.KNN.knn_run(test_results, random_seed)
+    # ml_results['KNN'] = knn_results
+    #
+    # ml_results_class['knn'] = knn_result_class
+    #
+    # gc.collect()
 
     # print('Running ADABOOST...')
     # ada_result_class, ada_accuracy_score, ada_accuracy_labels, ada_accuracy_score_training, ada_accuracy_labels_training, ada_depth_estim, ada_depth_estim_accuracy, ada_depth_estim_labels, ada_depth_estim_training, ada_depth_estim_accuracy_training, ada_depth_estim_labels_training = \
