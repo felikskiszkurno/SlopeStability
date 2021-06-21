@@ -228,6 +228,7 @@ def classification_train(test_training, test_results, clf, clf_name):
         interfaces_detected = slopestabilitytools.detect_interface(xi, yi, y_pred_grid)
         depth_interface_estimate = {}
         y_estimate_interp = {}
+        x_interpolator = {}
         depth_interface_estimate_count = 0
         depth_interface_accuracy_mean = 0
         depth_interface_estimate_mean = 0
@@ -264,9 +265,10 @@ def classification_train(test_training, test_results, clf, clf_name):
             depth_interface_estimate_count += 1
 
             interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
-                                                y_estimate[np.isfinite(y_estimate)],
-                                                bounds_error=False)  # , fill_value='extrapolate')
-            y_estimate_interp[interfaces_key] = interpolator(sorted(x))
+                                                y_estimate[np.isfinite(y_estimate)])  # , fill_value='extrapolate')
+            x_interpolator[interfaces_key] = sorted(x[(x > x_estimate[np.isfinite(y_estimate)].min()) & (x < x_estimate[np.isfinite(y_estimate)].max())])
+            y_estimate_interp[interfaces_key] = interpolator(x_interpolator[interfaces_key])
+
         if depth_interface_estimate_count == 0:
             depth_interface_accuracy_mean = 0
         else:
@@ -280,7 +282,7 @@ def classification_train(test_training, test_results, clf, clf_name):
 
         slopestabilityML.plot_class_overview(test_results_combined.loc[index], name, y_train.loc[index], y_pred,
                                              clf_name, training=True, depth_estimate=depth_interface_estimate,
-                                             interface_y=y_estimate_interp, interface_x=x,
+                                             interface_y=y_estimate_interp, interface_x=x_interpolator,
                                              depth_accuracy=depth_interface_accuracy_mean)
 
     #del y_pred, y_pred_grid, y_pred_grid_deri, y, x, y_actual, xi, yi, y_estimate_interp, depth_interface_accuracy

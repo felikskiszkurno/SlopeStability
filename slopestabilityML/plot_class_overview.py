@@ -66,7 +66,7 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     for interface_key in depth_estimate.keys():
         ax[1].hlines(y=depth_estimate[interface_key], xmin=x.min(), xmax=x.max(), linestyle='-')#, color='g')
     for interface_key in interface_y.keys():
-        ax[1].plot(interface_x, interface_y[interface_key], 'x')
+        ax[1].plot(interface_x[interface_key], interface_y[interface_key], 'x')
     ax[1].set_title('Predicted classes')
     ax[1] = slopestabilitytools.set_labels(ax[1])
     cb.append(plt.colorbar(im1, ax=ax[1], label='Class'))  # , shrink=0.9)
