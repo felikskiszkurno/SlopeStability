@@ -53,7 +53,7 @@ def init():
 
     # Reduce sample population
     settings['reduce_samples'] = True
-    settings['reduce_samples_factor'] = 0.5
+    settings['reduce_samples_factor'] = 0.25
 
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids
@@ -62,9 +62,9 @@ def init():
     settings['use_labels'] = False  # True to use labels instead of classes
 
     # Ignore data points with insufficient sensitivity
-    settings['min_sen_pred'] = True
+    settings['min_sen_pred'] = False
     settings['min_sen_pred_val'] = 0.3
-    settings['min_sen_train'] = True
+    settings['min_sen_train'] = False
     settings['min_sen_train_val'] = 0.3
 
     # Include sensitivity
@@ -77,6 +77,9 @@ def init():
     settings['sim_bh'] = True
     settings['bh_pos'] = {1: {'x_start': -17, 'x_end': -15, 'y_start': -18, 'y_end': 0},
                           2: {'x_start': 0, 'x_end': 2, 'y_start': -18, 'y_end': 0}}
+
+    # Balance classes
+    settings['balance'] = True
 
     # Classifiers
     settings['optimize_ml'] = False  # True - performs hyperparameter search

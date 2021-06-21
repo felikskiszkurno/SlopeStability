@@ -71,12 +71,48 @@ def classification_train(test_training, test_results, clf, clf_name):
     test_results_combined = pd.DataFrame()
     for name in test_training:
         print('Training on: ' + name)
+        test_results_temp = test_results[name]
         if settings.settings['resample'] is False:
-            test_results_combined = test_results_combined.append(test_results[name])
+
+            if settings.settings['min_sen_train'] is True:
+
+                sen = test_results_temp['SEN'].to_numpy()
+                senn = (sen + abs(sen.min())) / (sen.max() + abs(sen.min()))
+                test_results_temp['SENN'] = senn
+                test_results_temp = test_results_temp[
+                    test_results_temp['SENN'] > settings.settings['min_sen_train_val']]
+            #test_results_combined = test_results_combined.reset_index(drop=True)
+
+            if settings.settings['balance'] is True:
+
+                test_results_bal = slopestabilityML.balance_classes(test_results_temp, test_name=name)
+                test_results_combined = test_results_combined.append(test_results_bal)
+
+            else:
+
+                test_results_combined = test_results_combined.append(test_results_temp)
+
         elif settings.settings['resample'] is True:
-            test_result_resampled = slopestabilitytools.resample_profile(test_results[name])
-            test_results_combined = test_results_combined.append(test_result_resampled)
-    test_results_combined = test_results_combined.reset_index()
+
+            test_results_resampled = slopestabilitytools.resample_profile(test_results[name])
+            if settings.settings['min_sen_train'] is True:
+                sen = test_results_resampled['SEN'].to_numpy()
+                senn = (sen + abs(sen.min())) / (sen.max() + abs(sen.min()))
+                test_results_temp = test_results_resampled
+                test_results_temp['SENN'] = senn
+                test_results_temp = test_results_temp[
+                    test_results_temp['SENN'] > settings.settings['min_sen_train_val']]
+
+            if settings.settings['balance'] is True:
+
+                test_results_bal = slopestabilityML.balance_classes(test_results_temp, test_name=name)
+                test_results_combined = test_results_combined.append(test_results_bal)
+
+            else:
+
+                test_results_combined = test_results_combined.append(test_results_temp)
+
+    test_results_combined = test_results_combined.reset_index(drop=True)
 
     # Apply bh simulation
     if settings.settings['sim_bh'] is True:
@@ -91,7 +127,12 @@ def classification_train(test_training, test_results, clf, clf_name):
             test_results_combined = test_results_combined.append(df_temp)
             # test_results_combined.append(test_results_combined_orig[index_bh])
             # del index_bh
+    test_results_combined = test_results_combined.reset_index(drop=True)
 
+    #test_results_combined = test_results_combined.drop(['index'], axis='columns')
+    # here will balance_class be called
+
+    #test_results_combined = test_results_combined.reset_index(drop=True)
     # Sample to reduce amount of data
     if settings.settings['reduce_samples'] is True:
         test_resampled = pd.DataFrame(columns=test_results_combined.columns.values.tolist())
@@ -102,16 +143,10 @@ def classification_train(test_training, test_results, clf, clf_name):
             test_resampled = test_resampled.append(temp_df_resampled)
         test_results_combined_bh = test_results_combined.copy()
         test_results_combined = test_resampled.copy()
+    test_results_combined = test_results_combined.reset_index(drop=True)
+    x_train, y_train, x_position = slopestabilityML.preprocess_data(test_results_combined, return_x=True)
 
-    if settings.settings['min_sen_train'] is True:
-        sen = test_results_combined['SEN'].to_numpy()
-        senn = (sen + abs(sen.min())) / (sen.max() + abs(sen.min()))
-        test_results_combined['SENN'] = senn
-        test_results_combined = test_results_combined[test_results_combined['SENN'] > settings.settings['min_sen_train_val']]
-
-    test_results_combined = test_results_combined.drop(['index'], axis='columns')
-    x_train, y_train = slopestabilityML.preprocess_data(test_results_combined)
-    x_position = test_results_combined['X']
+    #x_position = test_results_combined['X']
 
     x_train = x_train[num_feat]
     #x_train = x_train.reset_index()
@@ -140,6 +175,7 @@ def classification_train(test_training, test_results, clf, clf_name):
     joblib.dump(clf_pipeline, clf_file_name)
     settings.settings['clf_trained'] = slopestabilitytools.find_clf()
 
+    # Prediction to obtain quality of training figures and stuff
     for name in test_training:
         print(name)
         name_orig = name
@@ -179,7 +215,8 @@ def classification_train(test_training, test_results, clf, clf_name):
         slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_train_temp, name)
 
         # Evaluate the accuracy of interface depth detection
-        x = x_position.loc[index].to_numpy()
+        x_temp = x_position.loc[index].to_numpy()
+        x = x_temp.reshape(len(x_temp))
         y = test_results_combined['Y'].loc[index]
         xi, yi, gridded_data = slopestabilitytools.grid_data(x, y, {'class': y_pred})
         y_pred_grid = gridded_data['class']
@@ -214,20 +251,25 @@ def classification_train(test_training, test_results, clf, clf_name):
             depth_interface_estimate_mean = depth_interface_estimate_mean + interfaces_detected[0]['depth_mean']
             y_estimate = interfaces_detected[interfaces_key]['depths']
             x_estimate = interfaces_detected[interfaces_key]['x']
-            # depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
+            #depth_interface_accuracy = ((depth_interface_estimate-test_definitions.test_parameters[name]['layers_pos'][0])/test_definitions.test_parameters[name]['layers_pos'][0])*100
             y_actual = np.ones([y_estimate.size]) * \
                        best_match_depth
             y_actual = y_actual.reshape([y_actual.shape[0]])
+
             depth_interface_accuracy = mean_squared_error(y_actual[np.isfinite(y_estimate)],
                                                           y_estimate[np.isfinite(y_estimate)],
                                                           squared=False)
+            depth_interface_accuracy = (depth_interface_accuracy / abs(best_match_depth[0])) * 100
             depth_interface_accuracy_mean += depth_interface_accuracy
             depth_interface_estimate_count += 1
+
             interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
                                                 y_estimate[np.isfinite(y_estimate)],
                                                 bounds_error=False)  # , fill_value='extrapolate')
             y_estimate_interp[interfaces_key] = interpolator(sorted(x))
 
+        depth_interface_accuracy_mean = depth_interface_accuracy_mean / depth_interface_estimate_count
+        #depth_interface_accuracy = depth_interface_accuracy_mean / depth_interface_estimate_count#
         # depth_estim_training.append(depth_interface_estimate_mean/depth_interface_estimate_count)
         depth_estim_training.append(depth_detected_train)
         depth_true_training.append(depth_detected_true_train)
@@ -237,7 +279,7 @@ def classification_train(test_training, test_results, clf, clf_name):
         slopestabilityML.plot_class_overview(test_results_combined.loc[index], name, y_train.loc[index], y_pred,
                                              clf_name, training=True, depth_estimate=depth_interface_estimate,
                                              interface_y=y_estimate_interp, interface_x=x,
-                                             depth_accuracy=depth_interface_accuracy)
+                                             depth_accuracy=depth_interface_accuracy_mean)
 
     #del y_pred, y_pred_grid, y_pred_grid_deri, y, x, y_actual, xi, yi, y_estimate_interp, depth_interface_accuracy
     #del depth_interface_estimate, depth_interface_accuracy_mean, depth_interface_estimate_count, depth_interface_estimate_mean

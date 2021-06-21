@@ -178,20 +178,22 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
                        best_match_depth
             y_actual = y_actual.reshape([y_actual.shape[0]])
             depth_interface_accuracy = mean_squared_error(y_actual[np.isfinite(y_estimate)],
-                                                          y_estimate[np.isfinite(y_estimate)], squared=False)
+                                                          y_estimate[np.isfinite(y_estimate)],
+                                                          squared=False)
+            depth_interface_accuracy = (depth_interface_accuracy / abs(best_match_depth[0])) * 100
             depth_interface_accuracy_mean += depth_interface_accuracy
+            depth_interface_estimate_count += 1
             interpolator = interpolate.interp1d(x_estimate[np.isfinite(y_estimate)],
                                                 y_estimate[np.isfinite(y_estimate)],  # bounds_error=False,
                                                 fill_value='extrapolate')
 
             y_estimate_interp[interfaces_key] = interpolator(sorted(x))
 
-
-
+        depth_interface_accuracy_mean = depth_interface_accuracy_mean / depth_interface_estimate_count
         # depth_estim.append(depth_interface_estimate_mean/depth_interface_estimate_count)
         depth_estim.append(depth_detected)
         depth_true.append(depth_detected_true)
-        depth_estim_accuracy.append(depth_interface_accuracy)
+        depth_estim_accuracy.append(depth_interface_accuracy_mean)
         depth_estim_labels.append(
             test_name_pred + '_' + str(test_definitions.test_parameters[test_name_pred]['layers_pos'][0]))
 
@@ -201,7 +203,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         slopestabilityML.plot_class_overview(test_results_temp, test_name_pred_orig, class_in, y_pred,
                                              clf_name, training=False, depth_estimate=depth_interface_estimate,
                                              interface_y=y_estimate_interp, interface_x=sorted(x),
-                                             depth_accuracy=depth_interface_accuracy, batch_name=batch_name)
+                                             depth_accuracy=depth_interface_accuracy_mean, batch_name=batch_name)
 
         # Evaluate result
         # accuracy_.append(len(np.where(y_pred == y_answer.to_numpy())) / len(y_answer.to_numpy()) * 100)

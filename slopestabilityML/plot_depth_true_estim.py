@@ -15,7 +15,8 @@ def plot_depth_true_estim(ml_results, *, batch_name=''):
 
     fig, ax = plt.subplots()
 
-    colors = ['red', 'green', 'orange', 'blue']
+    colors = ['red', 'green', 'orange', 'blue', 'yellow', 'cyan', 'black', 'purple', 'khaki', 'orange', 'gold',
+              'turquoise', 'orangered']
     colors_count = 0
 
     for classifier in ml_results.keys():

@@ -36,7 +36,8 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     depth_estimate_list = []
     for depth_estimate_key in depth_estimate.keys():
         depth_estimate_list.append('{:.2f}'.format(depth_estimate[depth_estimate_key]))
-    fig.suptitle('Classification overview: {}, {}, depth estimate RMSE: {:.2f}%, depth (est/true): {}/{}'.format(test_name, clf_name, depth_accuracy, depth_estimate_list, depth_true))
+    fig.suptitle('Classification overview: {}, {}, depth estimate [%]: {:.2f}%, depth (est/true): {}/{}'.format(
+        test_name, clf_name, depth_accuracy, depth_estimate_list, depth_true))
     fig.subplots_adjust(hspace=0.8)
 
     # Convert labels to numerical for plotting
@@ -77,8 +78,8 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     im2 = ax[2].scatter(x, y, c=test_results['INMN'].to_numpy())
     for depth in test_definitions.test_parameters[test_name]['layers_pos']:
         ax[2].hlines(y=depth, xmin=x.min(), xmax=x.max(), linestyle='-', color='r')
-    for depth_estimate_curr in depth_estimate:
-        ax[2].hlines(y=depth_estimate_curr, xmin=x.min(), xmax=x.max(), linestyle='-', color='g')
+    for depth_estimate_key in depth_estimate.keys():
+        ax[2].hlines(y=depth_estimate[depth_estimate_key], xmin=x.min(), xmax=x.max(), linestyle='-', color='g')
     ax[2].set_title('Input model')
     ax[2] = slopestabilitytools.set_labels(ax[2])
     cb.append(plt.colorbar(im2, ax=ax[2], label='Resistivity log(ohm*m)'))  # , shrink=0.9)

@@ -17,7 +17,6 @@ import settings
 
 
 def knn_run(test_results, random_seed):
-
     # Split the data set
     test_results, test_training, test_prediction = slopestabilityML.select_split_type(test_results, random_seed)
 

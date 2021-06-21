@@ -23,6 +23,7 @@ from .classification_train import classification_train
 from .classification_predict import classification_predict
 from .plot_feature_importance import plot_feature_importance
 from .plot_sen_corr import plot_sen_corr
+from .balance_classes import balance_classes
 
 
 from .SVM.svm_run import svm_run
