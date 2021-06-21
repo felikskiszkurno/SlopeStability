@@ -267,8 +267,10 @@ def classification_train(test_training, test_results, clf, clf_name):
                                                 y_estimate[np.isfinite(y_estimate)],
                                                 bounds_error=False)  # , fill_value='extrapolate')
             y_estimate_interp[interfaces_key] = interpolator(sorted(x))
-
-        depth_interface_accuracy_mean = depth_interface_accuracy_mean / depth_interface_estimate_count
+        if depth_interface_estimate_count == 0:
+            depth_interface_accuracy_mean = 0
+        else:
+            depth_interface_accuracy_mean = depth_interface_accuracy_mean / depth_interface_estimate_count
         #depth_interface_accuracy = depth_interface_accuracy_mean / depth_interface_estimate_count#
         # depth_estim_training.append(depth_interface_estimate_mean/depth_interface_estimate_count)
         depth_estim_training.append(depth_detected_train)
