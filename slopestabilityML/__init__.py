@@ -24,7 +24,7 @@ from .classification_predict import classification_predict
 from .plot_feature_importance import plot_feature_importance
 from .plot_sen_corr import plot_sen_corr
 from .balance_classes import balance_classes
-
+from .plot_confusion import plot_confusion
 
 from .SVM.svm_run import svm_run
 from .GBC.gbc_run import gbc_run
@@ -34,3 +34,4 @@ from .ADABOOST.adaboost_run import adaboost_run
 from .RVM.rvm_run import rvm_run
 from .MGC.max_grad_classi import max_grad_classi
 from .MGC.mgc_run import mgc_run
+from .DNN.dnn_run import dnn_run

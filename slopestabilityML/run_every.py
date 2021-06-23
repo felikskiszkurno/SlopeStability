@@ -12,6 +12,7 @@ import slopestabilityML.GBC.gbc_run
 import slopestabilityML.SGD.sgd_run
 import slopestabilityML.KNN.knn_run
 import slopestabilityML.ADABOOST.adaboost_run
+import slopestabilityML.DNN.dnn_run
 import slopestabilityML
 import os
 import settings
@@ -65,6 +66,14 @@ def run_all_tests(test_results):
     ml_results['ADA'] = ada_results
 
     ml_results_class['ada'] = ada_result_class
+
+    gc.collect()
+
+    print('Running DNN...')
+    ada_results, ada_result_class = slopestabilityML.DNN.dnn_run(test_results, random_seed)
+    ml_results['DNN'] = ada_results
+
+    ml_results_class['dnn'] = ada_result_class
 
     gc.collect()
 

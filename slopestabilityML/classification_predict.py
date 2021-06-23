@@ -46,6 +46,9 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
 
     test_results_orig = test_results.copy()
 
+    confusion_matrix_sum = np.zeros([settings.settings['norm_class_num'],
+                                     settings.settings['norm_class_num']])
+
     # Predict with classifier
     for test_name_pred in test_prediction:
         # Prepare data
@@ -92,6 +95,13 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         slopestabilityML.plot_sen_corr(y_pred, y_answer.to_numpy().reshape(y_answer.size), weights_np,
                                        clf_name, test_name_pred, batch_name,
                                        training=False)
+
+        conf_matr_temp = slopestabilityML.plot_confusion(clf_name, clf_pipeline, y_pred=x_question,
+                                                         y_true=y_answer['CLASSN'].to_numpy().reshape(-1).astype('int'),
+                                                         test_name=test_name_pred, training=False,
+                                                         batch_name=batch_name)
+
+        confusion_matrix_sum = confusion_matrix_sum + conf_matr_temp
 
         importance = permutation_importance(clf_pipeline, x_question, y_pred)
 
