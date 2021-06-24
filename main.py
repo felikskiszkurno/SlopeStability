@@ -21,11 +21,11 @@ from datetime import datetime
 settings.init()
 
 # Config
-create_new_data = False # set to True if you need to reassign the classes
+create_new_data = True # set to True if you need to reassign the classes
 invert_existing_data = False  # invert existing measurements
-create_new_data_only = False  # set to False in order to run ML classifications
+create_new_data_only = True  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
-param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/4case_balanced.csv')
+param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/sen_study.csv')
 test_definitions.init(path=param_path)
 
 # Load existing data instead of creating new one.

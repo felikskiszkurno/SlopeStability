@@ -20,10 +20,10 @@ import settings
 
 
 def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=0.6):
-    world_boundary_v = [-200, 0]  # [NW edge] relatively to the middle
-    world_boundary_h = [200, -100]  # [SE edge]
-    # world_boundary_v = [-500, 0]  # [right, left border] relatively to the middle
-    # world_boundary_h = [500, -100]  # [top, bottom border]
+    #world_boundary_v = [-200, 0]  # [NW edge] relatively to the middle
+    #world_boundary_h = [200, -100]  # [SE edge]
+    world_boundary_v = [-1000, 0]  # [right, left border] relatively to the middle
+    world_boundary_h = [1000, -100]  # [top, bottom border]
 
     test_results = {}
 
@@ -43,7 +43,8 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     slopestabilitytools.save_plot(fig_geometry, test_name, '_1_geometry')
 
     measurement_scheme = ert.createERTData(
-        elecs=np.linspace(start=-32, stop=32, num=44),
+        #elecs=np.linspace(start=-32, stop=32, num=44),
+        elecs=np.linspace(start=-50, stop=50, num=100),
         schemeName='dd')
 
     for electrode in measurement_scheme.sensors():
@@ -77,12 +78,16 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     k0 = pg.physics.ert.createGeometricFactors(data)
     #inversion_Domain = mt.createMesh(mt.createRectangle([-35, 0], [35, -25], quality=34, area=1))
     #inversion_mesh = pg.meshtools.appendTriangleBoundary(inversion_Domain, marker=0, xbound=30, ybound=30)
-    model_inverted = ert_manager.invert(data=data, lam=lambda_param, paraDX=0.25, paraMaxCellSize=2, zWeight=z_weight, # paraDepth=2 * max_depth,
+    model_inverted = ert_manager.invert(data=data, lam=lambda_param, paraDX=0.25, paraMaxCellSize=2, zWeight=z_weight, paraDepth=15,
                                         quality=34, zPower=0.4)
 
     result_full = ert_manager.inv.model
 
     result_array = result_full.array()
+
+    limits = pg.utils.interperc(ert_manager.inv.model, trimval=10.0)
+    result_array[result_array <= limits[0]] = limits[0]
+    result_array[result_array >= limits[1]] = limits[1]
 
     fig_result, ax_result = plt.subplots(1)
     pg.show(ert_manager.paraDomain, result_full, label=pg.unit('res'), showMesh=True, ax=ax_result)
@@ -138,6 +143,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     rho_arr = np.array(rho_arr)
     rho_max = np.max(rho_arr)
     rho_min = np.min(rho_arr)
+
 
     result_array_norm = np.log10(result_array)
     # result_array_norm = slopestabilitytools.normalize(result_array)
