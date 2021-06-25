@@ -36,10 +36,10 @@ def plot_and_save_pg(test_name, plot_title, ert_manager, input_model, result_ful
     #cb[0].locator = tick_locator
     #cb[0].update_ticks()
 
-    limits = pg.utils.interperc(ert_manager.inv.model, trimval=7.0)
+    limits = pg.utils.interperc(ert_manager.inv.model, trimval=10.0)
     print(limits)
 
-    im1 = pg.show(ert_manager.paraDomain, ert_manager.inv.model, c_min=limits[0], c_max=limits[1], showMesh=True, ax=ax[1],
+    im1 = pg.show(ert_manager.paraDomain, ert_manager.inv.model, cMin=limits[0], cMax=limits[1], showMesh=True, ax=ax[1],
                   label='Resistivity \u03A9 *m')
     ax[1].set_title('Result')
     ax[1] = slopestabilitytools.set_labels(ax[1])

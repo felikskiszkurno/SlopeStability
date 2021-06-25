@@ -27,7 +27,7 @@ def plot_sen_corr(y_pred, y_answer, sen, clf_name, test_name, batch_name, *, tra
     match_plot = data_sort['MATCH'].to_numpy()
 
     fig, ax = plt.subplots(1, 1) 
-    ax.plot(sen_plot, match_plot)
+    ax.scatter(sen_plot, match_plot)
     fig.suptitle('Sensitivity vs correctness of classification')
     ax.set_xlabel('Sensitivity [normalized]')
     ax.set_ylabel('Correctness of classification [T/F]')
