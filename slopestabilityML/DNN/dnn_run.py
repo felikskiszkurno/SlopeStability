@@ -26,7 +26,9 @@ def dnn_run(test_results, random_seed):
 
     if settings.settings['optimize_ml'] is True:
 
-        hyperparameters = {}
+        hyperparameters = {'activation': ['identity', 'logistic', 'tanh', 'relu'],
+                           'solver': ['lbfgs', 'sgd', 'adam'],
+                           }
 
         clf_base = MLPClassifier()
 
