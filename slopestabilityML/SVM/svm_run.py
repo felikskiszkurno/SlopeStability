@@ -27,8 +27,8 @@ def svm_run(test_results, random_seed):
 
     if settings.settings['optimize_ml'] is True:
 
-        hyperparameters = {'C': list(np.argmin(0.5, 1.5, 0.1)),
-                           'kernel': ['linear', 'rbf', 'poly', 'sigmoid', 'precomputed'],
+        hyperparameters = {'C': list(np.arange(0.5, 1.5, 0.1)),
+                           'kernel': ['linear', 'rbf', 'poly', 'sigmoid'],
                            'decision_function_shape': ['ovr', 'ovo']}
 
         clf_base = svm.SVC()

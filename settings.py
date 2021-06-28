@@ -30,7 +30,7 @@ def init():
     settings['log_file_name'] = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
 
     # Training and prediction split
-    settings['split_proportion'] = 0.75  # Part of available profiles that will be used for prediction
+    settings['split_proportion'] = 0.5  # Part of available profiles that will be used for prediction
     settings['data_split'] = 'predefined' # 'random' or 'predefined'
     settings['use_batches'] = True  # True or False
     if settings['use_batches'] is True:
@@ -44,7 +44,9 @@ def init():
         settings['clf_trained'] = []
     # Interpolate results to grid inside create_data script
     settings['grd'] = True
-    settings['weight'] = True
+
+    # Sample weight
+    settings['weight'] = False
 
     # Parameters for resampling
     settings['resample'] = False
@@ -52,12 +54,12 @@ def init():
     settings['resample_y_spacing'] = 1
 
     # Reduce sample population
-    settings['reduce_samples'] = True
+    settings['reduce_samples'] = False
     settings['reduce_samples_factor'] = 0.25
 
     # Normalization and classes
     settings['norm_class'] = True  # True to use normalized classes, False to use class_ids
-    settings['norm_class_num'] = 5  # Number of classes for normalized data
+    settings['norm_class_num'] = 2  # Number of classes for normalized data
     settings['norm'] = True  # True to use normalized data, False to use raw data
     settings['use_labels'] = False  # True to use labels instead of classes
 
@@ -71,7 +73,7 @@ def init():
     settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
 
     # Include depth
-    settings['depth'] = False   # True - include depth, False - ignore depth
+    settings['depth'] = True   # True - include depth, False - ignore depth
 
     # Borehole simulation
     settings['sim_bh'] = True
@@ -79,10 +81,10 @@ def init():
                           2: {'x_start': 0, 'x_end': 2, 'y_start': -18, 'y_end': 0}}
 
     # Balance classes
-    settings['balance'] = True
+    settings['balance'] = False
 
     # Classifiers
-    settings['optimize_ml'] = False  # True - performs hyperparameter search
+    settings['optimize_ml'] = True  # True - performs hyperparameter search
     settings['optimize_ml_type'] = 'exhaustive'  # Type of grid search exhaustive or halved
 
     # Plots

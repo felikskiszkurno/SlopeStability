@@ -13,7 +13,7 @@ from sklearn.model_selection import HalvingGridSearchCV
 import settings
 
 
-def select_search_types(clf_base, hyperparameters):
+def select_search_type(clf_base, hyperparameters):
 
     if settings.settings['optimize_ml_type'] is 'exhaustive':
 
