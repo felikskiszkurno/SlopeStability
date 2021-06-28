@@ -23,7 +23,7 @@ def sgd_run(test_results, random_seed):
     if settings.settings['optimize_ml'] is True:
 
         hyperparameters = {'loss': ['modified_huber', 'perceptrone', 'hinge', 'squared_hinge'],
-                           'penalty': ['l1', 'l2', 'elastinet'],
+                           'penalty': ['l1', 'l2'],
                            'alpha': [0.0001]}
 
         clf_base = SGDClassifier()
