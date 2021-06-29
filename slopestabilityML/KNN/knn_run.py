@@ -22,7 +22,7 @@ def knn_run(test_results, random_seed):
 
     if settings.settings['optimize_ml'] is True:
 
-        hyperparameters = {'neighbours': list(np.arange(2, 9, 1)),
+        hyperparameters = {'n_neighbors': list(np.arange(2, 9, 1)),
                            'weights': ['uniform', 'distance'],
                            'p': [1, 2]}
 

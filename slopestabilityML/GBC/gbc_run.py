@@ -6,7 +6,7 @@ Created on 19.01.2021
 @author: Feliks Kiszkurno
 """
 
-from sklearn import ensemble
+from sklearn.ensemble import GradientBoostingClassifier
 
 import numpy as np
 
@@ -28,13 +28,13 @@ def gbc_run(test_results, random_seed):
                            'learning_rate': list(np.arange(0.2, 1.5, 0.1)),
                            'n_estimators': list(np.arange(70, 160, 10))}
 
-        clf_base = ensemble.GradientBoostingClassifier()
+        clf_base = GradientBoostingClassifier()
 
         clf = slopestabilityML.select_search_type(clf_base, hyperparameters)
 
     else:
         # Create classifier
-        clf = ensemble.GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
+        clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
 
     # Train classifier
     results, result_class = \

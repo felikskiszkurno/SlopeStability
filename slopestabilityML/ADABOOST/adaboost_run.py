@@ -13,6 +13,10 @@ import slopestabilityML.run_classification
 import numpy as np
 
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import SGDClassifier
+from sklearn.neural_network import MLPClassifier
 
 #from sklearn.tree import DecisionTreeClassifier
 
@@ -25,7 +29,8 @@ def adaboost_run(test_results, random_seed):
 
     if settings.settings['optimize_ml'] is True:
 
-        hyperparameters = {'base_estimator': ['SVM', 'GBC', 'KNN'],
+        hyperparameters = {'base_estimator': [GradientBoostingClassifier(), KNeighborsClassifier(),
+                                              MLPClassifier(), SGDClassifier()],
                       'n_estimators': list(np.arange(10, 90, 10)),
                       'learning_rate': list(np.arange(0.2, 1.5, 0.1))}
 
