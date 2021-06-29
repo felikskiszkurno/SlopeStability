@@ -66,17 +66,23 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
             test_results_temp = test_results[test_results['SENN'] > settings.settings['min_sen_pred_val']]
             x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results_temp,
                                                                                 return_x=True)
+            weights_np = test_results_temp['SEN'].to_numpy()
+            weights = (weights_np + abs(weights_np.min())) / (weights_np.max() + abs(weights_np.min()))
+
         else:
             test_results_temp = test_results.copy()
             x_question, y_answer, x_position = slopestabilityML.preprocess_data(test_results,
                                                                                 return_x=True)
+            weights_np = test_results_temp['SEN'].to_numpy()
+            weights = (weights_np + abs(weights_np.min())) / (weights_np.max() + abs(weights_np.min()))
             #x_question = x_question[num_feat]
 
         #weights = x_question['SEN']
-        weights_np = x_question['SEN'].to_numpy()
-        weights = (weights_np + abs(weights_np.min())) / (weights_np.max() + abs(weights_np.min()))
+
 
         if settings.settings['weight'] is True:
+
+
             x_question = x_question[num_feat]
             try:
                 y_pred = clf_pipeline.predict(x_question, **{clf_pipeline.steps[1][0]+'__sample_weight': weights})
