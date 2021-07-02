@@ -64,13 +64,13 @@ def init():
     settings['use_labels'] = False  # True to use labels instead of classes
 
     # Ignore data points with insufficient sensitivity
-    settings['min_sen_pred'] = False
+    settings['min_sen_pred'] = True
     settings['min_sen_pred_val'] = 0.3
-    settings['min_sen_train'] = False
+    settings['min_sen_train'] = True
     settings['min_sen_train_val'] = 0.3
 
     # Include sensitivity
-    settings['sen'] = False  # True - include sensitivity, False - ignore sensitivity
+    settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
 
     # Include depth
     settings['depth'] = True   # True - include depth, False - ignore depth

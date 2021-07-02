@@ -12,7 +12,7 @@ import os
 import settings
 
 
-def plot_feature_importance(clf, importance, x_train, test_name, *, batch_name=''):
+def plot_feature_importance(clf_name, importance, x_train, test_name, *, batch_name=''):
     # importance = permutation_importance(clf, x_train, y_question)
 
     importance_mean_norm = importance.importances_mean / sum(importance.importances_mean)
@@ -28,7 +28,7 @@ def plot_feature_importance(clf, importance, x_train, test_name, *, batch_name='
     plt.subplots_adjust(left=.3)
 
     for file_format in settings.settings['plot_formats']:
-        figure_name = clf.steps[1][0] + '_' + test_name + '.' + file_format
+        figure_name = clf_name + '_' + test_name + '.' + file_format
 
 
         fig.figure.savefig(os.path.join(settings.settings['figures_folder'], batch_name, 'ML', 'feature_importance',

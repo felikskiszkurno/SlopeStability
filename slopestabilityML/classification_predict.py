@@ -111,7 +111,7 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
 
         importance = permutation_importance(clf_pipeline, x_question, y_pred)
 
-        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_question, test_name_pred,
+        slopestabilityML.plot_feature_importance(clf_name, importance, x_question, test_name_pred,
                                                  batch_name=batch_name)
 
         log_file_name = settings.settings['log_file_name']

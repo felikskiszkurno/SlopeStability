@@ -201,7 +201,7 @@ def classification_train(test_training, test_results, clf, clf_name):
         accuracy_labels_training.append(name)
 
         importance = permutation_importance(clf_pipeline, x_train_temp, y_pred)
-        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_train_temp, name)
+        slopestabilityML.plot_feature_importance(clf_name, importance, x_train_temp, name)
 
         log_file_name = settings.settings['log_file_name']
         log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
