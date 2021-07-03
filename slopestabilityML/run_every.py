@@ -13,6 +13,7 @@ import slopestabilityML.SGD.sgd_run
 import slopestabilityML.KNN.knn_run
 import slopestabilityML.ADABOOST.adaboost_run
 import slopestabilityML.DNN.dnn_run
+import slopestabilityML.clusters.kmeans_run
 import slopestabilityML
 import os
 import settings
@@ -29,51 +30,67 @@ def run_all_tests(test_results):
     ml_results = {}
     ml_results_class = {}
 
-    print('Running SVM...')
-    svm_results, svm_result_class = slopestabilityML.SVM.svm_run(test_results, random_seed)
-    ml_results['svm'] = svm_results
+    # print('Running SVM...')
+    # svm_results, svm_result_class = slopestabilityML.SVM.svm_run(test_results, random_seed)
+    # ml_results['svm'] = svm_results
+    #
+    # ml_results_class['svm'] = svm_result_class
+    #
+    # gc.collect()
+    #
+    # print('Running GBC...')
+    # gbc_results, gbc_result_class = slopestabilityML.GBC.gbc_run(test_results, random_seed)
+    # ml_results['gbc'] = gbc_results
+    #
+    # ml_results_class['gbc'] = gbc_result_class
+    #
+    # gc.collect()
+    #
+    # print('Running SGD...')
+    # sgd_results, sgd_result_class = slopestabilityML.SGD.sgd_run(test_results, random_seed)
+    # ml_results['sgd'] = sgd_results
+    #
+    # ml_results_class['sgd'] = sgd_result_class
+    #
+    # gc.collect()
+    #
+    # print('Running KNN...')
+    # knn_results, knn_result_class = slopestabilityML.KNN.knn_run(test_results, random_seed)
+    # ml_results['KNN'] = knn_results
+    #
+    # ml_results_class['knn'] = knn_result_class
+    #
+    # gc.collect()
+    #
+    # print('Running ADABOOST...')
+    # ada_results, ada_result_class = slopestabilityML.ADABOOST.adaboost_run(test_results, random_seed)
+    # ml_results['ADA'] = ada_results
+    #
+    # ml_results_class['ada'] = ada_result_class
+    #
+    # gc.collect()
+    #
+    # print('Running DNN...')
+    # dnn_results, dnn_result_class = slopestabilityML.DNN.dnn_run(test_results, random_seed)
+    # ml_results['DNN'] = dnn_results
+    #
+    # ml_results_class['dnn'] = dnn_result_class
+    #
+    # gc.collect()
 
-    ml_results_class['svm'] = svm_result_class
+    print('Running KMeans...')
+    kmeans_results, kmeans_result_class = slopestabilityML.clusters.kmeans_run(test_results, random_seed)
+    ml_results['KMeans'] = kmeans_results
+
+    ml_results_class['KMeans'] = kmeans_result_class
 
     gc.collect()
 
-    print('Running GBC...')
-    gbc_results, gbc_result_class = slopestabilityML.GBC.gbc_run(test_results, random_seed)
-    ml_results['gbc'] = gbc_results
+    print('Running MeanShift...')
+    meanshift_results, meanshift_result_class = slopestabilityML.clusters.meanshift_run(test_results, random_seed)
+    ml_results['MeanShift'] = meanshift_results
 
-    ml_results_class['gbc'] = gbc_result_class
-
-    gc.collect()
-
-    print('Running SGD...')
-    sgd_results, sgd_result_class = slopestabilityML.SGD.sgd_run(test_results, random_seed)
-    ml_results['sgd'] = sgd_results
-
-    ml_results_class['sgd'] = sgd_result_class
-
-    gc.collect()
-
-    print('Running KNN...')
-    knn_results, knn_result_class = slopestabilityML.KNN.knn_run(test_results, random_seed)
-    ml_results['KNN'] = knn_results
-
-    ml_results_class['knn'] = knn_result_class
-
-    gc.collect()
-
-    print('Running ADABOOST...')
-    ada_results, ada_result_class = slopestabilityML.ADABOOST.adaboost_run(test_results, random_seed)
-    ml_results['ADA'] = ada_results
-
-    ml_results_class['ada'] = ada_result_class
-
-    gc.collect()
-
-    print('Running DNN...')
-    ada_results, ada_result_class = slopestabilityML.DNN.dnn_run(test_results, random_seed)
-    ml_results['DNN'] = ada_results
-
-    ml_results_class['dnn'] = ada_result_class
+    ml_results_class['MeanShift'] = meanshift_result_class
 
     gc.collect()
 

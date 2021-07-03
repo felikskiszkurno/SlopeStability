@@ -35,3 +35,4 @@ from .RVM.rvm_run import rvm_run
 from .MGC.max_grad_classi import max_grad_classi
 from .MGC.mgc_run import mgc_run
 from .DNN.dnn_run import dnn_run
+from .clusters.kmeans_run import kmeans_run

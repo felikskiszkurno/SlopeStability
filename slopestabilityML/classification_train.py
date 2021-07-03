@@ -21,6 +21,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.inspection import permutation_importance
+from sklearn.base import is_classifier
 
 import slopestabilitytools
 import test_definitions
@@ -161,12 +162,16 @@ def classification_train(test_training, test_results, clf, clf_name):
         # weights = x_train['SEN']
         # x_train.pop('SEN')
         try:
-            clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[1][0] + '__sample_weight': weights})
+            clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[-1][-1].estimator + '__sample_weight': weights})
         except TypeError:
-            clf_pipeline.fit(x_train, y_train)
+            try:
+                clf_pipeline.fit(x_train, y_train)
+            except TypeError:
+                clf_pipeline.fit(x_train, y_train, scoring="accuracy")
 
     else:
         clf_pipeline.fit(x_train, y_train)
+
 
     clf_name_ext = clf_name + '.sav'
     clf_file_name = os.path.join(settings.settings['clf_folder'], clf_name_ext)
@@ -189,36 +194,42 @@ def classification_train(test_training, test_results, clf, clf_name):
         y_pred = clf_pipeline.predict(x_train_temp)
         slopestabilityML.plot_sen_corr(y_pred, class_correct, test_results_combined['SEN'].loc[index], clf_name, name,
                                        'training', training=True)
-        conf_matr_temp = slopestabilityML.plot_confusion(clf_name, clf, y_pred=x_train_temp,
-                                                         y_true=class_correct,
-                                                         test_name=name, training=True)
+        if not is_classifier(clf):
+            print('Skipping confusion matrix as clssifier {} doesnt support it...'.format(clf_name))
+        else:
+            conf_matr_temp = slopestabilityML.plot_confusion(clf_name, clf, y_pred=x_train_temp,
+                                                             y_true=class_correct,
+                                                             test_name=name, training=True)
 
-        confusion_matrix_sum = confusion_matrix_sum + conf_matr_temp
+            confusion_matrix_sum = confusion_matrix_sum + conf_matr_temp
 
         result_class_training[name] = y_pred
         score_training = accuracy_score(class_correct, y_pred)
         accuracy_result_training.append(score_training * 100)
         accuracy_labels_training.append(name)
 
-        importance = permutation_importance(clf_pipeline, x_train_temp, y_pred)
-        slopestabilityML.plot_feature_importance(clf_name, importance, x_train_temp, name)
+        if not is_classifier(clf):
+            print('Skipping feature importance as clssifier {} doesnt support it...'.format(clf_name))
+        else:
+            importance = permutation_importance(clf_pipeline, x_train_temp, y_pred)
+            slopestabilityML.plot_feature_importance(clf_name, importance, x_train_temp, name)
+            slopestabilityML.plot_feature_importance(clf_name, importance, x_train_temp, name)
+        # log_file_name = settings.settings['log_file_name']
+        # log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+        # log_file.write('\n')
+        # log_file.write('Starting training on profile: {tn}'.format(tn=name))
+        # log_file.write('\n')
+        # log_file.write('{tn} score: {score:.2f} %'.format(tn=name, score=score_training * 100))
+        # log_file.write('\n')
+        # log_file.write('{tn} feature list: {fl}'.format(tn=name,
+        #                                                 fl=x_train_temp.columns.values.tolist()))
+        # log_file.write('\n')
+        # #log_file.write('{tn}  feature importance: {fi}'.format(tn=name,
+        # #                                                       fi=importance.importances_mean))
+        # log_file.write('\n')
+        # log_file.close()
 
-        log_file_name = settings.settings['log_file_name']
-        log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
-        log_file.write('\n')
-        log_file.write('Starting training on profile: {tn}'.format(tn=name))
-        log_file.write('\n')
-        log_file.write('{tn} score: {score:.2f} %'.format(tn=name, score=score_training * 100))
-        log_file.write('\n')
-        log_file.write('{tn} feature list: {fl}'.format(tn=name,
-                                                        fl=x_train_temp.columns.values.tolist()))
-        log_file.write('\n')
-        log_file.write('{tn}  feature importance: {fi}'.format(tn=name,
-                                                               fi=importance.importances_mean))
-        log_file.write('\n')
-        log_file.close()
 
-        slopestabilityML.plot_feature_importance(clf_pipeline, importance, x_train_temp, name)
 
         # Evaluate the accuracy of interface depth detection
         x_temp = x_position.loc[index].to_numpy()

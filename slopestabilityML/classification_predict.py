@@ -21,6 +21,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.inspection import permutation_importance
+from sklearn.base import is_classifier
 
 import slopestabilitytools
 import test_definitions
@@ -101,31 +102,36 @@ def classification_predict(test_prediction, test_results, clf_name, num_feat, *,
         slopestabilityML.plot_sen_corr(y_pred, y_answer.to_numpy().reshape(y_answer.size), weights_np,
                                        clf_name, test_name_pred, batch_name,
                                        training=False)
+        if not is_classifier(clf_pipeline):
+            print('Skipping confusion matrix as clssifier {} doesnt support it...'.format(clf_name))
+        else:
+            conf_matr_temp = slopestabilityML.plot_confusion(clf_name, clf_pipeline, y_pred=x_question,
+                                                             y_true=y_answer['CLASSN'].to_numpy().reshape(-1).astype('int'),
+                                                             test_name=test_name_pred, training=False,
+                                                             batch_name=batch_name)
 
-        conf_matr_temp = slopestabilityML.plot_confusion(clf_name, clf_pipeline, y_pred=x_question,
-                                                         y_true=y_answer['CLASSN'].to_numpy().reshape(-1).astype('int'),
-                                                         test_name=test_name_pred, training=False,
-                                                         batch_name=batch_name)
+            confusion_matrix_sum = confusion_matrix_sum + conf_matr_temp
 
-        confusion_matrix_sum = confusion_matrix_sum + conf_matr_temp
+        if not is_classifier(clf_pipeline):
+            print('Skipping confusion matrix as clssifier {} doesnt support it...'.format(clf_name))
+        else:
+            importance = permutation_importance(clf_pipeline, x_question, y_pred)
 
-        importance = permutation_importance(clf_pipeline, x_question, y_pred)
+            slopestabilityML.plot_feature_importance(clf_name, importance, x_question, test_name_pred,
+                                                     batch_name=batch_name)
 
-        slopestabilityML.plot_feature_importance(clf_name, importance, x_question, test_name_pred,
-                                                 batch_name=batch_name)
-
-        log_file_name = settings.settings['log_file_name']
-        log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
-        log_file.write('\n')
-        log_file.write('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
-        log_file.write('\n')
-        log_file.write('{bn}, {tn} feature list: {fl}'.format(bn=batch_name, tn=test_name_pred,
-                                                              fl=x_question.columns.values.tolist()))
-        log_file.write('\n')
-        log_file.write('{bn}, {tn}  feature importance: {fi}'.format(bn=batch_name, tn=test_name_pred,
-                                                                     fi=importance.importances_mean))
-        log_file.write('\n')
-        log_file.close()
+        # log_file_name = settings.settings['log_file_name']
+        # log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+        # log_file.write('\n')
+        # log_file.write('{bn}, {tn} score: {score:.2f} %'.format(bn=batch_name, tn=test_name_pred, score=score * 100))
+        # log_file.write('\n')
+        # log_file.write('{bn}, {tn} feature list: {fl}'.format(bn=batch_name, tn=test_name_pred,
+        #                                                       fl=x_question.columns.values.tolist()))
+        # log_file.write('\n')
+        # #log_file.write('{bn}, {tn}  feature importance: {fi}'.format(bn=batch_name, tn=test_name_pred,
+        # #                                                             fi=importance.importances_mean))
+        # log_file.write('\n')
+        # log_file.close()
 
         if settings.settings['norm_class'] is True:
             class_in = test_results_temp['CLASSN']
