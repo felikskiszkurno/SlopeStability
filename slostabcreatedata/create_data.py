@@ -128,7 +128,7 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     classes = slopestabilitytools.assign_class01(result_array, resistivity_map)
 
     # classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(input_model2_array))
-    classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(result_array))
+    classesn = slopestabilitytools.assign_classes(slopestabilitytools.normalize(np.log10(result_array)))
 
     # Create sensitivity values
     jac = ert_manager.fop.jacobian()  #
