@@ -88,7 +88,7 @@ def plot_class_overview(test_results, test_name, class_in, y_pred, clf_name, *, 
     cb[2].update_ticks()
 
     class_diff = np.zeros_like(y_pred)
-    class_diff[np.where(class_in == y_pred)] = 1
+    class_diff[np.where(class_in.astype('int') == y_pred.astype('int'))] = 1
 
     # Plot difference between correct and predicted classes
     im3 = ax[3].scatter(x, y, c=class_diff)
