@@ -39,20 +39,29 @@ def classification_train(test_training, test_results, clf, clf_name):
     depth_estim_labels_training = []
 
     num_feat = []
-
+    
     if settings.settings['norm'] is True:
         num_feat.append('RESN')
     else:
         num_feat.append('RES')
 
-    if settings.settings['sen'] is True:
-        num_feat.append('SEN')
-
     if settings.settings['depth'] is True:
         num_feat.append('Y')
 
     if settings.settings['weight'] is True:
-        num_feat.remove('SEN')
+        try:
+            num_feat.remove('SEN')
+        except ValueError:
+            print('SEN already removed')
+            
+    if settings.settings['sen'] is False:
+        try:
+            num_feat.remove('SEN')
+        except ValueError:
+            print('SEN already removed')
+    
+    if settings.settings['sen'] is True:
+        num_feat.append('SEN')
 
     num_trans = StandardScaler()
 
