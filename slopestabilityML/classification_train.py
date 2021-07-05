@@ -168,6 +168,13 @@ def classification_train(test_training, test_results, clf, clf_name):
                 clf_pipeline.fit(x_train, y_train)
             except TypeError:
                 clf_pipeline.fit(x_train, y_train, scoring="accuracy")
+        except AttributeError:
+            try:
+                print('No support for sample_weight... running classifier without it!')
+                clf_pipeline.fit(x_train, y_train)
+            except TypeError:
+                print('No support for sample_weight... running classifier without it!')
+                clf_pipeline.fit(x_train, y_train, scoring="accuracy")
 
     else:
         clf_pipeline.fit(x_train, y_train)
