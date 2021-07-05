@@ -49,7 +49,7 @@ def combine_results(ml_results, *, batch_name=''):
     x_limits = ax.get_xlim()
     ax.axhline(y=prediction_score_avg, xmin=x_limits[0], xmax=x_limits[1])
     plt.xlabel('Test name')
-    plt.setp(ax.get_xticklabels(), rotation=45)
+    plt.setp(ax.get_xticklabels(), rotation=90)
     plt.ylabel('Correct points [%]')
     plt.legend(loc='lower right')
 
