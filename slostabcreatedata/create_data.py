@@ -145,8 +145,8 @@ def create_data(test_name, test_config, max_depth, *, lambda_param=20, z_weight=
     rho_min = np.min(rho_arr)
 
 
-    result_array_norm = np.log10(result_array)
-    # result_array_norm = slopestabilitytools.normalize(result_array)
+    #result_array_norm = np.log10(result_array)
+    result_array_norm = slopestabilitytools.normalize(np.log10(result_array))
 
     labels = slopestabilitytools.classes_labels.numeric2label(classesn)
     '''

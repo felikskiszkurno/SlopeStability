@@ -129,7 +129,7 @@ def classification_train(test_training, test_results, clf, clf_name):
         for borehole_id in settings.settings['bh_pos'].keys():
             bh_pos = settings.settings['bh_pos'][borehole_id]
             df_temp = test_results_combined_orig.loc[(test_results_combined_orig['X'] > bh_pos['x_start']) &
-                                                     (test_results_combined_orig['X'] < bh_pos['x_end']) &
+                                                     (test_results_combined_orig['X'] < bh_pos['x_end'])&
                                                      (test_results_combined_orig['Y'] > bh_pos['y_start']) &
                                                      (test_results_combined_orig['Y'] < bh_pos['y_end'])]
             test_results_combined = test_results_combined.append(df_temp)

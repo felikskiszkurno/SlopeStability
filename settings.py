@@ -46,7 +46,7 @@ def init():
     settings['grd'] = True
 
     # Sample weight
-    settings['weight'] = False
+    settings['weight'] = True
 
     # Parameters for resampling
     settings['resample'] = False
@@ -64,16 +64,16 @@ def init():
     settings['use_labels'] = False  # True to use labels instead of classes
 
     # Ignore data points with insufficient sensitivity
-    settings['min_sen_pred'] = True
+    settings['min_sen_pred'] = False
     settings['min_sen_pred_val'] = 0.3
-    settings['min_sen_train'] = True
+    settings['min_sen_train'] = False
     settings['min_sen_train_val'] = 0.3
 
     # Include sensitivity
     settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
 
     # Include depth
-    settings['depth'] = True   # True - include depth, False - ignore depth
+    settings['depth'] = False   # True - include depth, False - ignore depth
 
     # Borehole simulation
     settings['sim_bh'] = True
@@ -81,10 +81,10 @@ def init():
                           2: {'x_start': 0, 'x_end': 2, 'y_start': -18, 'y_end': 0}}
 
     # Balance classes
-    settings['balance'] = False
+    settings['balance'] = True
 
     # Classifiers
-    settings['optimize_ml'] = True  # True - performs hyperparameter search
+    settings['optimize_ml'] = False  # True - performs hyperparameter search
     settings['optimize_ml_type'] = 'exhaustive'  # Type of grid search exhaustive or halved
 
     # Plots

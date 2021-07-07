@@ -27,23 +27,22 @@ def balance_classes(test_results, *, test_name='name'):
             classes_count[class_id] = len(test_results[test_results['CLASSN'] == classes_list[class_id]].index)
 
         classes_count_max = np.max(classes_count)
-        classes_max = classes_list[np.where(classes_count == classes_count_max)]
+        classes_max = classes_list[np.where(classes_count == classes_count_max)][0]
 
         test_results_resamp = pd.DataFrame(columns=test_results.columns.values.tolist())
 
         for class_id in range(len(classes_list)):
-            if class_id != classes_max:
 
-                test_results_temp = test_results[test_results['CLASSN'] == class_id].copy()
-                test_results_temp = test_results_temp.drop(columns=['CLASSN'])
+            test_results_temp = test_results[test_results['CLASSN'] == class_id].copy()
+            test_results_temp = test_results_temp.drop(columns=['CLASSN'])
 
-                test_results_temp_resamp = resample(test_results_temp,
-                                                    replace=True,
-                                                    n_samples=int(classes_count_max))
+            test_results_temp_resamp = resample(test_results_temp,
+                                                replace=True,
+                                                n_samples=int(classes_count_max))
 
-                test_results_temp_resamp['CLASSN'] = np.ones(len(test_results_temp_resamp.index))*classes_list[class_id]
+            test_results_temp_resamp['CLASSN'] = np.ones(len(test_results_temp_resamp.index))*classes_list[class_id]
 
-                test_results_resamp = pd.concat([test_results_resamp, test_results_temp_resamp])
+            test_results_resamp = pd.concat([test_results_resamp, test_results_temp_resamp])
 
         test_results_resamp['NAME'] = [test_name]*len(test_results_resamp.index)
 
