@@ -46,6 +46,14 @@ def combine_results(ml_results, *, batch_name=''):
     prediction_score_avg = prediction_score_sum / prediction_score_num
     print('Prediction accuracy: {result:.2f}%'.format(result=prediction_score_avg))
 
+    log_file_name = settings.settings['log_file_name']
+    log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+    log_file.write('\n')
+    log_file.write('Combine results...')
+    log_file.write('Prediction accuracy: {result:.2f}%'.format(result=prediction_score_avg))
+    log_file.write('\n')
+    log_file.close()
+
     x_limits = ax.get_xlim()
     ax.axhline(y=prediction_score_avg, xmin=x_limits[0], xmax=x_limits[1])
     plt.xlabel('Test name')
