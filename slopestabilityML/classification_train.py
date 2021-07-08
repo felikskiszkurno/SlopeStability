@@ -171,7 +171,8 @@ def classification_train(test_training, test_results, clf, clf_name):
         # weights = x_train['SEN']
         # x_train.pop('SEN')
         try:
-            clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[-1][-1].estimator + '__sample_weight': weights})
+            #clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[-1][-1].estimator + '__sample_weight': weights})  # This line may be neccessary for clusters
+            clf_pipeline.fit(x_train, y_train, **{clf_pipeline.steps[-1][0] + '__sample_weight': weights})
         except TypeError:
             try:
                 clf_pipeline.fit(x_train, y_train)
