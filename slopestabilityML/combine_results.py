@@ -50,6 +50,7 @@ def combine_results(ml_results, *, batch_name=''):
     log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
     log_file.write('\n')
     log_file.write('Combine results...')
+    log_file.write('\n')
     log_file.write('Prediction accuracy: {result:.2f}%'.format(result=prediction_score_avg))
     log_file.write('\n')
     log_file.close()
@@ -97,7 +98,6 @@ def combine_results(ml_results, *, batch_name=''):
     log_file_name = settings.settings['log_file_name']
     log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
     log_file.write('\n')
-    log_file.write('Combine results...')
     log_file.write('Training accuracy: {result:.2f}%'.format(result=training_score_avg))
     log_file.write('\n')
     log_file.close()
@@ -156,6 +156,7 @@ def combine_results(ml_results, *, batch_name=''):
     log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
     log_file.write('\n')
     log_file.write('Prediction depth accuracy: {result:.2f}%'.format(result=prediction_depth_estim_avg))
+    log_file.write('\n')
     log_file.close()
 
     x_limits = ax.get_xlim()
@@ -206,6 +207,7 @@ def combine_results(ml_results, *, batch_name=''):
     log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
     log_file.write('\n')
     log_file.write('Training depth accuracy: {result:.2f}%'.format(result=training_depth_estim_avg))
+    log_file.write('\n')
     log_file.close()
 
     x_limits = ax.get_xlim()
