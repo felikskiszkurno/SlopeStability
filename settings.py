@@ -70,7 +70,7 @@ def init():
     settings['min_sen_train_val'] = 0.3
 
     # Include sensitivity
-    settings['sen'] = True  # True - include sensitivity, False - ignore sensitivity
+    settings['sen'] = False  # True - include sensitivity, False - ignore sensitivity
 
     # Include depth
     settings['depth'] = False   # True - include depth, False - ignore depth
