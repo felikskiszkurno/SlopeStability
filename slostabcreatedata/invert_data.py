@@ -32,12 +32,20 @@ def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2):
     model_inverted = ert_manager.invert(lam=lambda_param, paraDX=0.25, paraMaxCellSize=2, zWeight=z_weight_param,  # paraDepth=2 * max_depth,
                                         quality=34, zPower=0.4)
 
+    log_file_name = settings.settings['log_file_name']
+    log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
+    log_file.write('\n')
+    log_file.write('Inverted profile: {}'.format(profile_name))
+    log_file.write('\n')
+    log_file.write('Last chi2 = {}'.format(ert_manager.inv.chi2()))
+    log_file.write('\n')
+
     result_full = ert_manager.inv.model
 
     result_array = result_full.array()
 
     limits = pg.utils.interperc(ert_manager.inv.model, trimval=25.0)
-    limits = [50, 2000]
+    limits = [4, 50]
     result_array[result_array <= limits[0]] = limits[0]
     result_array[result_array >= limits[1]] = limits[1]
 
