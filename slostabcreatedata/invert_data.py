@@ -44,7 +44,7 @@ def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2):
 
     result_array = result_full.array()
 
-    limits = pg.utils.interperc(ert_manager.inv.model, trimval=25.0)
+    limits = pg.utils.interperc(ert_manager.inv.model, trimval=15.0)
     limits = [4, 50]
     result_array[result_array <= limits[0]] = limits[0]
     result_array[result_array >= limits[1]] = limits[1]
