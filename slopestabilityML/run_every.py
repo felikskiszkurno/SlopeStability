@@ -96,18 +96,18 @@ def run_all_tests(test_results):
 
     gc.collect()
 
-    ada_result_class, ada_accuracy_score, ada_accuracy_labels, ada_accuracy_score_training, ada_accuracy_labels_training, ada_depth_estim, ada_depth_estim_accuracy, ada_depth_estim_labels, ada_depth_estim_training, ada_depth_estim_accuracy_training, ada_depth_estim_labels_training = \
-        slopestabilityML.ADABOOST.adaboost_run(test_results, random_seed)
-    ml_results['ADABOOST'] = {'score': ada_accuracy_score, 'labels': ada_accuracy_labels,
-                         'score_training': ada_accuracy_score_training, 'labels_training': ada_accuracy_labels_training,
-                         'depth_estim': ada_depth_estim, 'depth_accuracy': ada_depth_estim_accuracy,
-                         'depth_labels': ada_depth_estim_labels,
-                         'depth_estim_training': ada_depth_estim_training,
-                         'depth_accuracy_training': ada_depth_estim_accuracy_training,
-                         'depth_labels_training': ada_depth_estim_labels_training
-                         }
-    ml_results_class['ADABOOST'] = ada_result_class
-    gc.collect()
+    # ada_result_class, ada_accuracy_score, ada_accuracy_labels, ada_accuracy_score_training, ada_accuracy_labels_training, ada_depth_estim, ada_depth_estim_accuracy, ada_depth_estim_labels, ada_depth_estim_training, ada_depth_estim_accuracy_training, ada_depth_estim_labels_training = \
+    #     slopestabilityML.ADABOOST.adaboost_run(test_results, random_seed)
+    # ml_results['ADABOOST'] = {'score': ada_accuracy_score, 'labels': ada_accuracy_labels,
+    #                      'score_training': ada_accuracy_score_training, 'labels_training': ada_accuracy_labels_training,
+    #                      'depth_estim': ada_depth_estim, 'depth_accuracy': ada_depth_estim_accuracy,
+    #                      'depth_labels': ada_depth_estim_labels,
+    #                      'depth_estim_training': ada_depth_estim_training,
+    #                      'depth_accuracy_training': ada_depth_estim_accuracy_training,
+    #                      'depth_labels_training': ada_depth_estim_labels_training
+    #                      }
+    # ml_results_class['ADABOOST'] = ada_result_class
+    # gc.collect()
 
     # print('Running RVM...')
     # rvm_accuracy_score, rvm_accuracy_labels, rvm_accuracy_score_training, rvm_accuracy_labels_training = \
