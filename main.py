@@ -25,7 +25,7 @@ create_new_data = True # set to True if you need to reassign the classes
 invert_existing_data = True  # invert existing measurements
 create_new_data_only = True  # set to False in order to run ML classifications
 reassign_classes = False; class_type = 'norm'
-param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/hor1_final_5case.csv')
+param_path = os.path.abspath(os.path.join(os.getcwd()) + '/' + 'TestDefinitions/BERT_final.csv')
 test_definitions.init(path=param_path)
 
 # Load existing data instead of creating new one.
@@ -113,7 +113,7 @@ else:
                                                                  abs_path=settings.settings['data_measurement'])
 
         for profile_name in profile_names:
-            slostabcreatedata.invert_data(profile_name)
+            slostabcreatedata.invert_data(profile_name, baseline_profile=profile_names[0])
 
         # Evaluate data with ML techniques
 if not create_new_data_only:
