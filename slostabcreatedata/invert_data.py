@@ -33,8 +33,8 @@ def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2, baseline_p
 
 
     # Load data
-    ert_manager = ert.ERTManager(os.path.join(settings.settings['data_measurement'], profile_name+'.ohm'),
-                                 useBert=True, verbose=True, debug=False)
+    ert_manager = ert.ERTManager(os.path.join(settings.settings['data_measurement'], profile_name+'.ohm'))
+                                 #useBert=False, verbose=True, debug=False)
 
     ert_manager.checkData(ert_manager.data)
     ert_manager.data['k'] = pg.physics.ert.createGeometricFactors(ert_manager.data, numerical=True)
@@ -64,7 +64,7 @@ def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2, baseline_p
     result_array = result_full.array()
 
     limits = pg.utils.interperc(ert_manager.inv.model, trimval=15.0)
-    limits = [4, 50]
+    limits = [5, 50]
     result_array[result_array <= limits[0]] = limits[0]
     result_array[result_array >= limits[1]] = limits[1]
 
@@ -73,8 +73,8 @@ def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2, baseline_p
     resistivity_map.append([2, max(result_array)])
 
     fig_result, ax_result = plt.subplots(1)
-    ert_manager.showModel(ert_manager.inv.model, ax=ax_result, cMin=5, cMax=50)
-    #pg.show(ert_manager.paraDomain, result_array, label=pg.unit('res'), showMesh=True, ax=ax_result)
+    #ert_manager.showModel(ert_manager.inv.model, ax=ax_result, cMin=5, cMax=50)
+    pg.show(ert_manager.paraDomain, result_array, label=pg.unit('res'), showMesh=True, ax=ax_result)
     ax_result = slopestabilitytools.set_labels(ax_result)
     ax_result.set_title('3 Result')
     fig_result.tight_layout()
