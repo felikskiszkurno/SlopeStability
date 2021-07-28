@@ -20,17 +20,36 @@ import settings
 import os
 
 
-def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2):
+def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2, baseline_profile=''):
+
+    # Create baseline
+    if baseline_profile is not '':
+        ert_base = ert.ERTManager(data=os.path.join(settings.settings['data_measurement'], baseline_profile+'.ohm'))
+        ert_base.checkData(ert_base.data)
+        print(ert_base.data)
+
+        ert_base.data['k'] = pg.physics.ert.createGeometricFactors(ert_base.data, numerical=True)
+        model0 = ert_base.invert(quality=34.3, maxCellArea=1.0, lam=20, robustData=True)
+
 
     # Load data
     ert_manager = ert.ERTManager(os.path.join(settings.settings['data_measurement'], profile_name+'.ohm'),
                                  useBert=True, verbose=True, debug=False)
 
+    ert_manager.checkData(ert_manager.data)
+    ert_manager.data['k'] = pg.physics.ert.createGeometricFactors(ert_manager.data, numerical=True)
+
+    ert_manager.inv.inv.setModel(np.array(ert_base.inv.model))
+    ert_manager.inv.inv.setReferenceModel(np.array(ert_base.inv.model))
+
     # RUN INVERSION
     #k0 = pg.physics.ert.createGeometricFactors(data)
 
-    model_inverted = ert_manager.invert(lam=lambda_param, paraDX=0.25, paraMaxCellSize=2, zWeight=z_weight_param,  # paraDepth=2 * max_depth,
-                                        quality=34, zPower=0.4)
+    if baseline_profile is not '':
+        model_inverted = ert_manager.invert(lam=20, robustData=True, mesh=ert_base.mesh, startmodel=np.array(ert_base.inv.model))
+    else:
+        model_inverted = ert_manager.invert(lam=lambda_param, paraDX=0.25, paraMaxCellSize=2, zWeight=z_weight_param,  # paraDepth=2 * max_depth,
+                                            quality=34, zPower=0.4)
 
     log_file_name = settings.settings['log_file_name']
     log_file = open(os.path.join(settings.settings['results_folder'], log_file_name), 'a')
@@ -54,7 +73,8 @@ def invert_data(profile_name, *, lambda_param=20, z_weight_param=0.2):
     resistivity_map.append([2, max(result_array)])
 
     fig_result, ax_result = plt.subplots(1)
-    pg.show(ert_manager.paraDomain, result_array, label=pg.unit('res'), showMesh=True, ax=ax_result)
+    ert_manager.showModel(ert_manager.inv.model, ax=ax_result, cMin=5, cMax=50)
+    #pg.show(ert_manager.paraDomain, result_array, label=pg.unit('res'), showMesh=True, ax=ax_result)
     ax_result = slopestabilitytools.set_labels(ax_result)
     ax_result.set_title('3 Result')
     fig_result.tight_layout()
